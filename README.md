@@ -1,8 +1,8 @@
 # Catan Island Board Game
 
-![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)
-![Status](https://img.shields.io/badge/status-Planning-white.svg)
-![Last Update](https://img.shields.io/github/last-commit/Flyingdolar/Catan_Island.svg)
+![Version](https://img.shields.io/badge/version-0.0.1-lightblue.svg?style=for-the-badge&labelColor=5588aa)
+![Status](https://img.shields.io/badge/status-In_Progress-ffddaa.svg?style=for-the-badge&labelColor=c97555)
+![Last Update](https://img.shields.io/badge/Last_Update-2023/04/21-eee999?style=for-the-badge&labelColor=green)
 
 ## Download
 
@@ -55,6 +55,8 @@ git clone git@github.com:Flyingdolar/Catan_Island.git
 <div style="color: gray">Now Working on it... Soon to be updated.</div>
 
 ## Development
+
+1. [Develop Tips](DEV_TIPS.md)
 
 ## Work Members
 

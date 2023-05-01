@@ -14,7 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Using Makefile to Build the project
-      run: ../../make
+      run: |
+        ls -la
+        make
+      
       
       
       

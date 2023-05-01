@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-0.0.1-lightblue.svg?style=for-the-badge&labelColor=5588aa)
 ![Status](https://img.shields.io/badge/status-In_Progress-ffddaa.svg?style=for-the-badge&labelColor=c97555)
-![Last Update](https://img.shields.io/badge/Last_Update-2023/04/21-eee999?style=for-the-badge&labelColor=green)
+![Last Update](https://img.shields.io/badge/Last_Update-2023/05/01-eee999?style=for-the-badge&labelColor=green)
 
 ## Download
 
@@ -60,30 +60,46 @@ git clone git@github.com:Flyingdolar/Catan_Island.git
 
 ## Work Members
 
+> Main Contributors of the project.
+
 <table>
 <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
     <a href=https://github.com/Flyingdolar>
-        <img src=https://avatars.githubusercontent.com/u/31057818?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Vedant Chainani/>
+        <img src=https://avatars.githubusercontent.com/u/31057818?v=4 width="90;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Vedant Chainani/>
         <br />
-        <div style="font-size:16px"><b>Flydoco</b></div>
+        <div style="font-size:14px"><b>Flydoco</b></div>
     </a>
-    <div style="font-size:12px">NTNU Design</div>
 </td>
 <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-    <a href=https://github.com/Flyingdolar>
-        <img src=https://yt3.googleusercontent.com/TIjqoYX2wtDSGIzj928euK_ehQh4p_EymUlDbh14ZDrJ4quntQbsURWO4yr6bzYpUX7rjIFxyw=s176-c-k-c0x00ffffff-no-rj width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Vedant Chainani/>
+    <a href=https://github.com/Vvvicky-Fang>
+        <img src=https://avatars.githubusercontent.com/u/121799654?v=4 width="90;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Vedant Chainani/>
         <br />
-        <div style="font-size:16px"><b>Name</b></div>
+        <div style="font-size:14px"><b>Vvvicky-Fang</b></div>
     </a>
-    <div style="font-size:12px">Info</div>
 </td>
 <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-    <a href=https://github.com/Flyingdolar>
-        <img src=https://yt3.googleusercontent.com/TIjqoYX2wtDSGIzj928euK_ehQh4p_EymUlDbh14ZDrJ4quntQbsURWO4yr6bzYpUX7rjIFxyw=s176-c-k-c0x00ffffff-no-rj width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Vedant Chainani/>
+    <a href=https://github.com/TANgent1010>
+        <img src=https://avatars.githubusercontent.com/u/115709368?v=4 width="90;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Vedant Chainani/>
         <br />
-        <div style="font-size:16px"><b>Name</b></div>
+        <div style="font-size:14px"><b>TANgent</b></div>
     </a>
-    <div style="font-size:12px">Info</div>
+</td>
+</table>
+
+## Special Thanks
+
+> The contributors who gave us the help.
+
+<table>
+<td align="center" style="word-wrap: break-word; width: 100.0; height: 100.0">
+    <a href=https://github.com/jw910731>
+        <img src=https://avatars.githubusercontent.com/u/16759389?v=4 width="70;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Vedant Chainani/>
+        <br />
+        <div style="font-size:14px"><b>jw910731</b></div>
+    </a>
+</td>
+<td align="left" style="word-wrap: break-word; width: full; height: 100.0">
+    <div style="font-size:14px">- Create essential Makefile for the project.</div>
 </td>
 </table>
 

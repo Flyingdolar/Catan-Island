@@ -10,9 +10,11 @@ on:
   
 jobs:
   build:
-
+    name: make testing
     runs-on: ubuntu-latest
-
     steps:
-    - name: make
-      run: make
+      - run: sudo apt-get install libdev
+      - run: make
+      
+      
+      

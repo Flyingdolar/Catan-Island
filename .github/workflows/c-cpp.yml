@@ -13,8 +13,8 @@ jobs:
     name: make testing
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt-get install libdev
-      - run: make
+    - name: Using Makefile to Build the project
+    - run: ../../make
       
       
       

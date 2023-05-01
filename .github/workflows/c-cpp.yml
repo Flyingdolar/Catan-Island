@@ -10,14 +10,16 @@ on:
   
 jobs:
   build:
-    name: make testing
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
-    - name: Using Makefile to Build the project
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y build-essential
+      
+    - name: Build and test
       run: |
-        ls -la
         make
-      
-      
-      
-      
+        ./

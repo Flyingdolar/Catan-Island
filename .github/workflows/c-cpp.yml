@@ -22,4 +22,4 @@ jobs:
     - name: Build and test
       run: |
         make
-        ./
+        ./Catan

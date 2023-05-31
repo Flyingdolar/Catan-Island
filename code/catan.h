@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 // Include User Library
+#include "../inc/function.h"
 #include "../inc/list.h"
 #include "../inc/macros.h"
 #include "../inc/structs.h"

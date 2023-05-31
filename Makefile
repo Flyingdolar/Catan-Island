@@ -1,15 +1,13 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11
 LDLIBS = -lm
-# LDFLAGS = -L./library -I./library
+LDFLAGS = -L./library -I./include
 
-SRCDIR = src
+SRCDIR = code
 OBJDIR := $(shell [ -d obj ] || mkdir obj && echo "obj")
 SRC=$(notdir $(wildcard $(SRCDIR)/*.c))
 
-.PHONY: clean
-clean:
-	rm -rf Catan $(OBJDIR)
+.PHONY: all clean
 
 all: Catan
 
@@ -24,3 +22,6 @@ $(OBJDIR)/%.d: $(SRCDIR)/%.c
 
 .PRECIOUS: $(OBJDIR)/%.d
 -include $(patsubst %.c, $(OBJDIR)/%.d, $(SRC))
+
+clean:
+	rm -rf Catan $(OBJDIR)

@@ -3,6 +3,8 @@ Catan
 *.d
 
 # Object files
+obj
+object
 *.o
 *.ko
 *.obj
@@ -51,3 +53,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# vscode
+.vscode

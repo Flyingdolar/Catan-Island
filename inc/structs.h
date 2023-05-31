@@ -5,8 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum {
+    NONE = -1,  // 無 (用於 src, user, cType)
+};
+
 typedef enum _source_ {  // 資源
-    NONE = -1,           // --無
     WOOD = 0,            // --木頭
     BRICK = 1,           // --磚塊
     SHEEP = 2,           // --羊毛
@@ -16,7 +19,6 @@ typedef enum _source_ {  // 資源
 } src;
 
 typedef enum _user_ {  // 使用者
-    NONE = -1,         // --無
     PLAYER1 = 0,       // --玩家1
     PLAYER2 = 1,       // --玩家2 (電腦)
     PLAYER3 = 2,       // --玩家3 (電腦)
@@ -24,7 +26,6 @@ typedef enum _user_ {  // 使用者
 } user;
 
 typedef enum _cType_ {   // 卡片類型
-    NONE = -1,           // --無
     KNIGHT = 0,          // --騎士
     MONOPOLY = 1,        // --壟斷
     ROAD_BUILDING = 2,   // --建路
@@ -91,6 +92,3 @@ typedef struct _sGame_ {     // 遊戲
     sKing roadKing;          // --最長道路
     sKing armyKing;          // --最大軍隊
 } sGame;
-
-// Global Variable
-pGame game;

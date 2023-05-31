@@ -10,3 +10,6 @@
 
 // Include User Library
 #include "../inc/structs.h"
+
+// Global Variable
+pGame game;

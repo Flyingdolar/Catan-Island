@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 // Include User Library
+#include "../inc/macros.h"
 #include "../inc/structs.h"
 
 // Global Variable

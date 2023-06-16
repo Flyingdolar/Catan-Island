@@ -1,108 +1,111 @@
 #pragma once
 #include "../code/catan.h"
 
-#define NONE -1  // 無 (用於 src, user, cType)
+#define NONE 0  // 無 
 
-typedef enum _source_ {  // 資源
-    WOOD = 0,            // --木頭 (港口 2:1)
-    BRICK = 1,           // --磚塊 (港口 2:1)
-    SHEEP = 2,           // --羊毛 (港口 2:1)
-    WHEAT = 3,           // --小麥 (港口 2:1)
-    STONE = 4,           // --石頭 (港口 2:1)
-    DESERT = 5,          // --沙漠
-    ALL = 5,             // --全部 (港口 3:1)
-} src;
+/*
+eState: 遊戲狀態 完成後跳到下一個狀態(不一定照順序)
+0: STATE_START，初始化
+1: STATE_SETTLE，玩家依序放置兩個村莊
+2: STATE_DICE，這個狀態下玩家可以做的事情有
+    使用發展卡 (騎士卡、x2道路卡*)
+    擲骰子 依點數給/棄資源牌
+3: STATE_BUILD，這個狀態下玩家可以做的事情有
+    建設道路*
+    建設村莊*
+    購買發展卡 (分數卡*)
+    使用發展卡 (騎士卡、x2道路卡*)
+    交易(暫時只用銀行交易)
+  按下結束回合按鈕後會跳到2 (STATE_DICE)
+  *: 這些動作做完要檢查是否勝利條件，如果達成則跳到5 (STATE_END)
+4. STATE_ROBBER，這個狀態下要做的事情
+    移動強盜
+    搶奪其中一位玩家資源
+  完成後會跳到3 (STATE_BUILD)
+5: STATE_END，遊戲結束，顯示勝利者
+*/
+typedef enum _game_state_ {
+    START   = 0,
+    SETTLE  = 1,
+    DICE    = 2,
+    BUILD   = 3,
+    ROBBER  = 4,
+    END     = 5,
+} eState;
 
-typedef enum _user_ {  // 使用者
-    PLAYER1 = 0,       // --玩家1
-    PLAYER2 = 1,       // --玩家2 (電腦)
-    PLAYER3 = 2,       // --玩家3 (電腦)
-    PLAYER4 = 3,       // --玩家4 (電腦)
-} user;
+typedef struct _sBlock_*   pBlock;
+typedef struct _sNode_*    pNode;
+typedef struct _sHarbor_*  pHarbor;
+typedef struct _sRoad_*    pRoad;
+typedef struct _sDevcard_* pDevcard;
+typedef struct _sPlayer_*  pPlayer;
+typedef struct _sGame_*    pGame;
 
-typedef enum _cType_ {   // 卡片類型
-    KNIGHT = 0,          // --騎士
-    MONOPOLY = 1,        // --壟斷
-    ROAD_BUILDING = 2,   // --建路
-    YEAR_OF_PLENTY = 3,  // --豐收
-    VICTORY_POINT = 4,   // --勝利點
-} cType;
+typedef struct _sDevcard_ {  // 發展卡
+    uint8_t type;            // --種類
+    uint8_t status;          // --卡片狀態
+    sList   list;
+} sDevcard;
 
-typedef enum _cState_ {  // 卡片狀態
-    WAIT = -1,           // --拿到當下，下回合才能使用
-    READY = 0,           // --可使用
-    USED = 1,            // --已使用
-} cState;
+typedef struct _sNode_ {   // 節點
+    uint8_t coord[2];      // --坐標 0~5 (row)、0~10 (col)
+    uint8_t owner;         // --節點擁有者 (0: 無人、1~4: 玩家)
+    uint8_t building;      // --建築物種類 (0: 無、1: 村莊、2: 城市)
+    pBlock  block[3];      // --節點三個角落的板塊
+    pNode   node[3];       // --節點三個角落的節點
+    pRoad   road[3];       // --節點三條邊的道路
+    pHarbor harbor;        // --節點的港口 (若有)
+    sList   list;
+} sNode;
 
-typedef struct _sBlock_* pBlock;
-typedef struct _sBuild_* pBuild;
-typedef struct _sHarbor_* pHarbor;
-typedef struct _sRoad_* pRoad;
-typedef struct _sCard_* pCard;
-typedef struct _sPlayer_* pPlayer;
-typedef struct _sGame_* pGame;
-
-typedef struct _sBlock_ {  // 板塊
-    uint8_t id;            // --板塊編號
-    src source;            // --板塊資源
-    uint8_t number;        // --板塊數字（骰子）
-    pBuild BUILD[6];       // --板塊上的建築物 [0]: 左上、[1]: 右上、[2]: 下、[3]: 左下、[4]: 右下、[5]: 中間
-    pBlock NEIGHBOR[6];    // --鄰近的板塊 [0]: 上、[1]: 右上、[2]: 右下、[3]: 下、[4]: 左下、[5]: 左上
-    sList list;
-} sBlock;
-
-typedef struct _sBuild_ {  // 建築物
-    uint8_t id;            // --建築物編號
-    user owner;            // --建築物擁有者
-    pBlock BLOCK[3];       // --建築物三個角落的板塊
-    pRoad ROAD[3];         // --建築物三條邊的道路
-    pHarbor HARBOR;        // --建築物的港口 (若有)
-    sList list;
-} sBuild;
-
-typedef struct _sHarbor_ {  // 港口
-    uint8_t id;             // --港口編號
-    src source;             // --港口資源
-    pBuild BUILD[2];        // --港口所在的建築物
-    sList list;
-} sHarbor;
-
-typedef struct _sRoad_ {  // 道路
-    uint8_t id;           // --道路編號
-    user owner;           // --道路擁有者
-    pBuild BUILD[2];      // --道路兩端的建築物
-    sList list;
+typedef struct _sRoad_ {   // 道路
+    uint8_t coord[2];      // --坐標 0~10 (row even: 橫的道路;odd: 直的道路)、0~9 (col)
+    uint8_t owner;         // --道路擁有者 (0: 無人、1~4: 玩家)
+    pNode   node[2];       // --道路兩端的節點
+    sList   list;
 } sRoad;
 
-typedef struct _sCard_ {  // 卡片
-    cType func;           // --卡片功能、類型
-    cState state;         // --卡片狀態
-    pCard PREV, NEXT;     // --上下一張卡片
-} sCard;
+typedef struct _sBlock_ {  // 板塊
+    uint8_t   coord[2];     // --坐標 0~4 (row)、0~5 (col)
+    uint8_t   number;      // --對應骰子 
+    uint8_t   source;      // --對應資源 
+    pNode     node[6];     // --板塊上的節點 由正上方開始順時針計算 
+    pBlock    block[6];    // --鄰近的板塊 由正上方開始順時針計算
+    sList     list;
+} sBlock;
 
-typedef struct _sPlayer_ {      // 玩家
-    uint8_t score;              // --玩家分數
-    uint8_t source[5];          // --玩家持有資源
-    pList village, city, road;  // --玩家村莊、城市、道路
-    pList cards;                // --玩家持有卡片
-    sList list;
+typedef struct _sHarbor_ { // 港口
+    uint8_t owner;         // --擁有者 (0: 無人、1~4: 玩家)
+    uint8_t type;          // --港口種類 (0: 三換一、1~5: 對應資源二換一)
+    pNode   node[2];       // --港口所在的節點
+    sList   list;
+} sHarbor;
+
+typedef struct _sPlayer_ { // 玩家
+    uint8_t  id;           // --編號 0: 無人(銀行)、1~4: 玩家
+    uint8_t  score;        // --玩家分數
+    uint8_t *resource;     // --玩家資源 大小為5+1的陣列，分別對應五種資源 第一項為總數
+    uint8_t *building;     // --玩家建築物 大小為3的陣列，分別對應三種建築物
+    uint8_t *harbor;       // --玩家港口 大小為6的陣列，分別對應六種港口。0表示沒有擁有
+    uint8_t  roadlength;   // --玩家道路數量
+    uint8_t  armySize;     // --玩家軍隊數量
+    pList    devcard;      // --玩家發展卡
 } sPlayer;
 
-typedef struct _sKing_ {  // 王（最長道路、最大軍隊）
-    user owner;           // --持有玩家
-    uint8_t count;        // --持有數量
+typedef struct _sking_ { //最長路、最大騎士
+    uint8_t  owner;      // --玩家編號 0: 無人、1~4: 玩家
+    uint8_t  size;       // --數量
 } sKing;
 
-typedef struct _sGame_ {       // 遊戲
-    uint8_t round, turn;       // --回合、輪到誰
-    uint8_t dice;              // --骰子點數
-    uint8_t source[5];         // --資源牌
-    pBlock blocks[19];         // --板塊
-    pBuild builds[54];         // --建築物
-    pHarbor harbors[9];        // --港口
-    pRoad roads[72];           // --道路
-    pList players;             // --玩家
-    pList cards;               // --卡片
-    pBlock robber;             // --強盜
-    sKing armyKing, roadKing;  // --最大軍隊、最長道路
+typedef struct _sGame_{ // 遊戲
+    eState  state    ;  // --遊戲狀態 0~5
+    uint8_t turn     ;  // --輪到誰 1~4
+    uint8_t dice[2]  ;  // --骰子點數 2個1~6
+    pPlayer player   ;  // --玩家 0: 無人(銀行)、1~4: 玩家
+    pList block      ;  // --板塊的list head
+    pList node       ;  // --節點的list head
+    pList road       ;  // --道路的list head
+    pList harbor     ;  // --港口的list head
+    sKing roadKing   ;  // --最長道路
+    sKing armyKing   ;  // --最大騎士
 } sGame;

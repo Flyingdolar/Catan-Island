@@ -1,23 +1,23 @@
-name: C/C++ CI
+# name: C/C++ CI
 
-on:
-  push:
-    branches: [ "main", "feat/*", "fix/*" ]
-  pull_request:
-    branches: [ "main", "feat/*", "fix/*"  ]
-  schedule:
-  - cron: "0 3 * * 1"
+# on:
+#   push:
+#     branches: [ "main", "feat/*", "fix/*" ]
+#   pull_request:
+#     branches: [ "main", "feat/*", "fix/*"  ]
+#   schedule:
+#   - cron: "0 3 * * 1"
   
-jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+# jobs:
+#   build:
+#     name: Build and Test
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v2
       
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential
+#     - name: Install dependencies
+#       run: sudo apt-get update && sudo apt-get install -y build-essential
       
-    - name: Build by Makefile
-      run: make
+#     - name: Build by Makefile
+#       run: make

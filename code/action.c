@@ -241,6 +241,8 @@ int32_t buyCard() {
 // 3.4 - STATE_USE_CARD
 int32_t useCard() {
     int32_t pickCard;
+    int32_t monopolyResource;
+    int32_t plentYearResource[2];
 
     if (game->turn == 1) {
         // TODO_S: 開放發展卡讓玩家點擊，並獲取玩家點擊的位置
@@ -295,29 +297,27 @@ int32_t useCard() {
             }
             break;
         case YEAR_OF_PLENTY:
-            int pickResource[2];
             PRINTL("玩家 %d 使用豐收年卡", game->turn);
             if (game->turn == 1) {
                 // TODO_S: 開放資源讓玩家點擊，並獲取玩家點擊的位置
-                // pickResource = ....
+                // plentYearResource = ....
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                // pickResource[0] = randPickResource();
-                // pickResource[1] = randPickResource();
+                // plentYearResource[0] = randPickResource();
+                // plentYearResource[1] = randPickResource();
             }
-            PRINTL("玩家 %d 選擇獲得 %d 資源和 %d 資源", game->turn, pickResource[0], pickResource[1]);
+            PRINTL("玩家 %d 選擇獲得 %d 資源和 %d 資源", game->turn, plentYearResource[0], plentYearResource[1]);
             // TODO_F: 獲得資源
-            // gainPlentyResource(game->turn, pickResource[0], pickResource[1]);
+            // gainPlentyResource(game->turn, plentYearResource[0], plentYearResource[1]);
             break;
         case MONOPOLY:
-            int pickResource;
             PRINTL("玩家 %d 使用獨佔卡", game->turn);
             if (game->turn == 1) {
                 // TODO_S: 開放資源讓玩家點擊，並獲取玩家點擊的位置
-                // pickResource = ....
+                // monopolyResource = ....
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                // pickResource = randPickResource();
+                // monopolyResource = randPickResource();
             }
             PRINTL("玩家 %d 選擇獨佔 %d 資源", game->turn, pickResource);
             // TODO_F: 獲得資源

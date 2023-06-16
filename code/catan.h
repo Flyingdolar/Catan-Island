@@ -1,6 +1,7 @@
 #pragma once
 // Include Standard Library
 #include <stdbool.h>
+#include <SDL2/SDL.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

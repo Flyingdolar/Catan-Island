@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11
-LDLIBS = -lm
+LDLIBS = -lm -lSDL2
 LDFLAGS = -L./library -I./include
 
 SRCDIR = code

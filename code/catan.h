@@ -15,3 +15,15 @@
 
 // Global Variable
 pGame game;
+
+// Function Declaration
+
+// init.c
+int32_t init(void);
+int32_t init_player(void);
+int32_t init_block(void);
+int32_t init_node(void);
+int32_t init_road(void);
+int32_t init_harbor(void);
+int32_t init_map(void);
+int32_t init_map_randomize(void);

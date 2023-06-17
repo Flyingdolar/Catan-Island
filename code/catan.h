@@ -1,7 +1,8 @@
 #pragma once
 // Include Standard Library
+
 #include <stdbool.h>
-//#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,3 +29,14 @@ int32_t init_road(void);
 int32_t init_harbor(void);
 int32_t init_map(void);
 int32_t init_map_randomize(void);
+
+// action.c
+int32_t settleAction();
+int32_t diceAction();
+int32_t buildAction();
+int32_t robberAction();
+int32_t buildRoad();
+int32_t buildNode();
+int32_t buyCard();
+int32_t useCard();
+int32_t bankTrade();

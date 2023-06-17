@@ -1,7 +1,13 @@
 #include "catan.h"
 
+pGame game;
+
 int playGame(int isNewGame) {
     if (isNewGame > 0) init();
+    if (game == NULL) {
+        PRINTD("遊戲初始化失敗");
+        return -1;
+    }
 
     // 直到分出勝負前，遊戲都不會結束
     while (1) {

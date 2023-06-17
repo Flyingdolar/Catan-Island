@@ -22,13 +22,12 @@ extern pGame game;
 
 // init.c
 int32_t init(void);
-int32_t init_player(void);
-int32_t init_block(void);
-int32_t init_node(void);
-int32_t init_road(void);
-int32_t init_harbor(void);
-int32_t init_map(void);
-int32_t init_map_randomize(void);
+int32_t initPlayer(void);
+int32_t initBlock(void);
+int32_t initNode(void);
+int32_t initRoad(void);
+int32_t initHarbor(void);
+int32_t initMap(void);
 
 // action.c
 int32_t settleAction();
@@ -40,6 +39,12 @@ int32_t buildNode();
 int32_t buyCard();
 int32_t useCard();
 int32_t bankTrade();
+
+
+//random.c
+int32_t randMap(void);
+int32_t randDiceNum(void);
+int32_t randPickBlock(void);
 
 // setprop.c
 int32_t placeNode(int32_t playerID, int32_t nodePos);

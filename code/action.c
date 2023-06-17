@@ -338,6 +338,7 @@ int32_t useCard() {
                 }
             } else {
                 // TODO_T: 讓電腦選擇一個位置
+                // pickNode = randPickBlock();
                 // pickBlock = randPickBlock();
                 DEV() {
                     printf("玩家 %d 請選擇放置強盜的位置：", game->turn);

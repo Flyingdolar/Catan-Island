@@ -12,10 +12,12 @@
     PRINTC(GREEN, "%s:%d:%s(): ", __FILE__, __LINE__, __func__); \
     PRINTC(GREEN, __VA_ARGS__);                                  \
     PRINTC(GREEN, "\n");
-
+// Developer Mode
+#define DEV() if (true)
 #else
 #define PRINTD(...)
 #define PRINTL(...)
+#define DEV() if (false)
 #endif
 
 // Define Color

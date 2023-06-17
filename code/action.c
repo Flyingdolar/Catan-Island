@@ -267,7 +267,7 @@ int32_t useCard() {
                 // pickNode = ....
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                // pickNode = randPickNode();
+                // pickNode = randPickBlock();
             }
             PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickNode);
             // TODO_F: 更新分數資訊
@@ -382,7 +382,7 @@ int32_t robberAction() {
         // pickNode = ....
     } else {
         // TODO_T: 讓電腦選擇一個位置
-        // pickNode = randPickNode();
+        // pickNode = randPickBlock();
     }
     PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickNode);
     // TODO_F: 檢查是否合法

@@ -106,6 +106,7 @@ typedef struct _sGame_{ // 遊戲
     pList node       ;  // --節點的list head
     pList road       ;  // --道路的list head
     pList harbor     ;  // --港口的list head
+    uint8_t robber[2];  // --強盜的坐標
     sKing roadKing   ;  // --最長道路
     sKing armyKing   ;  // --最大騎士
 } sGame;

@@ -28,25 +28,35 @@ int32_t init(){
 
   // 初始化玩家
   game->player = NULL;
-  if(init_player()) return -1;
+  if(initPlayer()) return -1;
 
   // 初始化板塊
   game->block = NULL;
-  if(init_block()) return -2;
+  if(initBlock()) return -2;
 
   // 初始化節點
   game->node = NULL;
-  if(init_node()) return -3;
+  if(initNode()) return -3;
 
   // 初始化道路
   game->road = NULL;
-  if(init_road()) return -4;
+  if(initRoad()) return -4;
 
   //初始化地圖，將板塊 節點 道路連結起來
-  if(init_map()) return -5;
+  if(initMap()) return -5;
 
   //隨機化地圖板塊資源、數字，以及港口
-  if(init_map_randomize()) return -6;
+  if(randomMap()) return -6;
+
+  // 初始化robber
+  forList(game->block, element){
+    pBlock blockptr = entry(element, sBlock);
+    if(blockptr->resource == 1){
+      game->robber[0] = blockptr->coord[0];
+      game->robber[1] = blockptr->coord[1];
+    }
+  }
+
 
   // 初始化最長道路
   game->armyKing.owner = 0;
@@ -72,7 +82,7 @@ typedef struct _sPlayer_ { // 玩家
 } sPlayer;
 */
 
-int32_t init_player(){
+int32_t initPlayer(){
   uint8_t maxPlayer  = 4;  // 4個玩家
   uint8_t maxres     = 19; // 19個資源卡每種 
   uint8_t resType    = 5;  // 5種資源
@@ -139,7 +149,7 @@ typedef struct _sBlock_ {  // 板塊
     sList     list;
 } sBlock;
 */
-int32_t init_block(){
+int32_t initBlock(){
   //板塊link head初始化
   game->block = initList();
 
@@ -181,7 +191,7 @@ typedef struct _sNode_ {   // 節點
     sList   list;
 } sNode;
 */
-int32_t init_node(){
+int32_t initNode(){
   //節點link head初始化
   game->node = initList();
 
@@ -221,7 +231,7 @@ typedef struct _sRoad_ {   // 道路
     sList   list;
 } sRoad;
 */
-int32_t init_road(){
+int32_t initRoad(){
   //道路link head初始化
   game->road = initList();
 
@@ -256,7 +266,7 @@ typedef struct _sHarbor_ { // 港口
     sList   list;
 } sHarbor;
 */
-int32_t init_harbor(){
+int32_t initHarbor(){
   //港口link head初始化
   game->harbor = initList();
 
@@ -273,7 +283,7 @@ int32_t init_harbor(){
 }
 
 //將板塊、節點、道路、港口連結起來
-int32_t init_map(){
+int32_t initMap(){
   //板塊互相連結
   int index = 0, index2 = 0;
   forList(game->block, elememt){//連接水平方向
@@ -593,85 +603,3 @@ int32_t init_map(){
 
   return 0;
 }
-
-int32_t init_map_randomize(){//隨機地圖板塊資源&點數
-  int index = 0;
-  uint8_t res[19] = {0};
-  for(uint8_t i = 0; i < 15; i++){
-    res[i] = i % 5 + 1;
-  }
-  uint8_t random_resource[3] = {0,0,0};
-  for(uint8_t i = 1; i < 4; i++){
-    random_resource[i-1] = rand() % 5 + 1;
-    for(uint8_t j = 0; j < i-1; j++){
-      if(random_resource[i-1] == random_resource[j]){
-        i--;
-        break;
-      }
-    }
-  }
-  res[15] = random_resource[0];
-  res[16] = random_resource[1];
-  res[17] = random_resource[2];
-  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
-      for(uint8_t i = 0; i < 19; i++){
-      uint8_t random = rand() % 19;
-      uint8_t temp = res[i];
-      res[i] = res[random];
-      res[random] = temp;
-    }
-  }
-
-  //隨機點數 2~12, 2和12只有一個, 沒有7
-  uint8_t random_point[19] = {0,2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12};
-  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
-      for(uint8_t i = 0; i < 19; i++){
-      uint8_t random = rand() % 19;
-      uint8_t temp = random_point[i];
-      random_point[i] = random_point[random];
-      random_point[random] = temp;
-    }
-  }
-  //賦予地圖板塊資源&點數
-  index = 0;
-  forList(game->block, element){
-    pBlock blockptr = entry(element, sBlock);
-    if(blockptr->resource == 0){
-      blockptr->resource = random_resource[index];
-      blockptr->number = random_point[index];
-      index++;
-    }
-  }
-
-  //港口資源隨機
-  uint8_t port_resource[9] = {0,0,0,1,2,3,4,5,6};
-  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
-      for(uint8_t i = 0; i < 9; i++){
-      uint8_t random = rand() % 9;
-      uint8_t temp = port_resource[i];
-      port_resource[i] = port_resource[random];
-      port_resource[random] = temp;
-    }
-  }
-  //賦予港口資源
-  index = 0;
-  forList(game->harbor, element){
-    pHarbor harborptr = entry(element, sHarbor);
-    harborptr->type = port_resource[index];
-    index++;
-  }
-
-  //確認6 8沒有相鄰
-  forList(game->block, element){
-    pBlock blockptr = entry(element, sBlock);
-    if(blockptr->number == 6 || blockptr->number == 8){
-      for(uint8_t i = 0; i < 6; i++){
-        if(blockptr->block[i]->number == 6 || blockptr->block[i]->number == 8){
-          init_map_randomize();//重新隨機
-        }
-      }
-    }
-  }
-  return 0;
-}
-  

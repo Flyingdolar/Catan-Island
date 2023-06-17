@@ -40,8 +40,7 @@ int32_t buyCard();
 int32_t useCard();
 int32_t bankTrade();
 
-
-//random.c
+// random.c
 int32_t randMap(void);
 int32_t randDiceNum(void);
 int32_t randPickBlock(void);
@@ -49,7 +48,7 @@ int32_t randPickBlock(void);
 // setprop.c
 int32_t placeNode(int32_t playerID, int32_t nodePos);
 int32_t placeRoad(int32_t playerID, int32_t roadPos);
-int32_t placeRobber(int32_t playerID, int32_t robberPos);
+int32_t placeRobber(int32_t robberPos);
 
 // check.c
 int32_t checkNode(int32_t playerID, int32_t nodePos);

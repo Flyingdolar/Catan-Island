@@ -144,7 +144,7 @@ int checkUseCard(int32_t player, int32_t cardID) {
     pList cardHead = game->player[player].devcard;
 
     // 確認玩家是否有該張開發卡
-    if (cardHead->index <= cardID || cardID < 0) {
+    if (cardHead->index <= (size_t)cardID || cardID < 0) {
         PRINTC(YELLOW, "輸入錯誤 - 玩家沒有該張開發卡\n");
         return -1;
     }
@@ -252,6 +252,12 @@ int32_t checkRobAct(int32_t robPlayer, int32_t blockPos) {
             hasTown = true;
             break;
         }
+    }
+
+    // 沒有該玩家的城鎮或村莊
+    if (!hasTown) {
+        PRINTC(YELLOW, "輸入錯誤 - 無法掠奪此玩家，此地沒有該玩家的城鎮或村莊\n");
+        return -1;
     }
 
     // 合法的掠奪行動

@@ -342,7 +342,7 @@ int32_t useCard() {
                 }
             }
             PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
-            placeRobber(game->turn, pickBlock);
+            placeRobber(pickBlock);
             break;
         case ROAD_BUILDING:
             PRINTL("玩家 %d 使用道路建設卡", game->turn);
@@ -526,7 +526,7 @@ int32_t robberAction() {
         break;
     }
     PRINTL("放置強盜合法，進行放置");
-    placeRobber(game->turn, pickBlock);
+    placeRobber(pickBlock);
     // TODO_S: 更新畫面
     // updateMap();
 

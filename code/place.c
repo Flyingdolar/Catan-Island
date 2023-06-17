@@ -57,7 +57,7 @@ int32_t placeNode(int32_t playerID, int32_t nodePos) {
         }
     }
     // 更新玩家分數
-    updateScore();
+    // updateScore();
     return 0;
 }
 
@@ -96,13 +96,12 @@ int32_t placeRoad(int32_t playerID, int32_t roadPos) {
         }
     }
     // 更新玩家分數
-    updateScore();
+    // updateScore();
     return 0;
 }
 
 // 3. 放置盜賊
-int32_t placeRobber(int32_t playerID, int32_t robberPos) {
-    pPlayer player = &game->player[playerID];
+int32_t placeRobber(int32_t robberPos) {
     pList blockList;
     pBlock placeBlock;
 
@@ -112,10 +111,10 @@ int32_t placeRobber(int32_t playerID, int32_t robberPos) {
         return -1;
     }
     placeBlock = entry(blockList, sBlock);
-    PRINTL("正在座標 %d, %d 的地點放置盜賊\n", buildRobber->coord[0], buildRobber->coord[1]);
+    PRINTL("正在座標 %d, %d 的地點放置盜賊\n", placeBlock->coord[0], placeBlock->coord[1]);
     // FIXME: 放置盜賊
 
     // 更新玩家分數
-    updateScore();
+    // updateScore();
     return 0;
 }

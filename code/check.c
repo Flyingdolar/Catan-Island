@@ -20,6 +20,7 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
     if (game->state != SETTLE) {
         bool adjRoad = false;
         for (int32_t idx = 0; idx < 3; idx++) {
+            if (buildNode->road[idx] == NULL) continue;
             if (buildNode->road[idx]->owner == playerID) {
                 adjRoad = true;
                 break;
@@ -34,6 +35,7 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
     // 確認節點是否有相鄰的建築物
     bool adjNode = false;
     for (int32_t idx = 0; idx < 3; idx++) {
+        if (buildNode->node[idx] == NULL) continue;
         if (buildNode->node[idx]->owner != NONE) {
             adjNode = true;
             break;
@@ -47,6 +49,9 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
     // 確認玩家是否有足夠的資源 - 村莊
     if (game->state != SETTLE && buildNode->building == NONE) {
         bool enough = true;
+        // 村莊物件數量限制
+        if (game->player[playerID].building[VILLAGE] >= 5) enough = false;
+        // 持有資源數量限制
         if (game->player[playerID].resource[WOOD] < 1) enough = false;
         if (game->player[playerID].resource[BRICK] < 1) enough = false;
         if (game->player[playerID].resource[SHEEP] < 1) enough = false;
@@ -60,6 +65,9 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
     // 確認玩家是否有足夠的資源 - 城市
     if (game->state != SETTLE && buildNode->building == VILLAGE) {
         bool enough = true;
+        // 城市物件數量限制
+        if (game->player[playerID].building[CITY] >= 5) enough = false;
+        // 持有資源數量限制
         if (game->player[playerID].resource[ORE] < 3) enough = false;
         if (game->player[playerID].resource[WHEAT] < 2) enough = false;
         if (!enough) {
@@ -85,11 +93,13 @@ int32_t checkRoad(int32_t playerID, int32_t roadPos) {
     // 確認道路是否有相鄰的道路、建築物
     bool adjObject = false;
     for (int32_t ndx = 0; ndx < 2; ndx++) {
+        if (buildRoad->node[ndx] == NULL) continue;
         if (buildRoad->node[ndx]->owner == playerID) {
             adjObject = true;
             break;
         }
         for (int32_t idx = 0; idx < 3; idx++) {
+            if (buildRoad->node[ndx]->road[idx] == NULL) continue;
             if (buildRoad->node[ndx]->road[idx]->owner == playerID) {
                 adjObject = true;
                 break;
@@ -105,6 +115,9 @@ int32_t checkRoad(int32_t playerID, int32_t roadPos) {
     // 確認玩家是否有足夠的資源
     if (game->state != SETTLE) {
         bool enough = true;
+        // 道路物件數量限制
+        if (game->player[playerID].building[ROAD] >= 10) enough = false;
+        // 持有資源數量限制
         if (game->player[playerID].resource[WOOD] < 1) enough = false;
         if (game->player[playerID].resource[BRICK] < 1) enough = false;
         if (!enough) {
@@ -226,6 +239,7 @@ int32_t checkRobPlayer(int32_t playerID, int32_t blockPos) {
 
     // 確認該地是否有其他玩家的城鎮或村莊
     for (int idx = 0; idx < 6; idx++) {
+        if (block->node[idx] == NULL) continue;
         if (block->node[idx]->owner == game->turn) continue;
         if (block->node[idx]->owner != 0 && block->node[idx]->owner != playerID) {
             hasTown = true;
@@ -248,6 +262,7 @@ int32_t checkRobAct(int32_t robPlayer, int32_t blockPos) {
 
     // 確認該地是否有該玩家的城鎮或村莊
     for (int idx = 0; idx < 6; idx++) {
+        if (block->node[idx] == NULL) continue;
         if (block->node[idx]->owner == robPlayer) {
             hasTown = true;
             break;

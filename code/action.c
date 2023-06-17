@@ -33,8 +33,7 @@ int32_t settleAction() {
             DEV()
             break;
         }
-        // TODO_F: 設置村莊給該玩家
-        // setNode(playerIdx, pickNode);
+        placeNode(playerIdx, pickNode);
         // TODO_S: 更新畫面
         // updateMap();
 
@@ -61,8 +60,7 @@ int32_t settleAction() {
             // TODO_F: 檢查道路選擇是否合法
             // if (checkRoad(0, pickRoad)) break;
         }
-        // TODO_F: 放置道路
-        // setRoute(playerIdx, pickRoad);
+        placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
         // updateMap();
     }
@@ -93,8 +91,7 @@ int32_t settleAction() {
             // TODO_F: 使用較寬鬆的規則檢查是否合法（不必相鄰）
             // if (checkVillage(0, pickNode)) break;
         }
-        // TODO_F: 放置村莊、並取得對應資源
-        // placeVillage(playerIdx, pickNode);
+        placeNode(playerIdx, pickNode);
         // giveSettleResource(playerIdx, pickNode);
         // TODO_S: 更新畫面
         // updateMap();
@@ -122,8 +119,7 @@ int32_t settleAction() {
             // TODO_F: 使用較寬鬆的規則檢查是否合法（不必相鄰）
             // if (checkRoad(0, pickRoad)) break;
         }
-        // TODO_F: 放置道路
-        // placeRoad(0, pickRoad);
+        placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
         // updateMap();
     }
@@ -253,8 +249,7 @@ int32_t buildRoad() {
     // TODO_F: 檢查是否合法
     // if (checkRoad(game->turn, pickRoad)) return 0;
     PRINTL("建設道路合法，進行建設");
-    // TODO_F: 放置道路
-    // placeRoad(game->turn, pickRoad);
+    placeRoad(game->turn, pickRoad);
     // TODO_S: 更新畫面
     // updateMap();
     return 0;
@@ -283,8 +278,7 @@ int32_t buildNode() {
     // TODO_F: 檢查是否合法
     // if (checkNode(game->turn, pickNode)) return 0;
     PRINTL("建設村莊合法，進行建設");
-    // TODO_F: 放置村莊
-    // placeNode(game->turn, pickNode);
+    placeNode(game->turn, pickNode);
     // TODO_S: 更新畫面
     // updateMap();
     return 0;
@@ -352,10 +346,7 @@ int32_t useCard() {
                 }
             }
             PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
-            // TODO_F: 更新分數資訊
-            // updateScore();
-            // TODO_F: 放置強盜
-            // placeRobber(pickBlock);
+            placeRobber(game->turn, pickBlock);
             break;
         case ROAD_BUILDING:
             PRINTL("玩家 %d 使用道路建設卡", game->turn);
@@ -381,8 +372,7 @@ int32_t useCard() {
                     // TODO_F: 檢查是否合法
                     // if (checkRoad(game->turn, pickRoad)) continue;
                     PRINTL("建設道路合法，進行建設");
-                    // TODO_F: 放置道路
-                    // placeRoad(game->turn, pickRoad);
+                    placeRoad(game->turn, pickRoad);
                     break;
                 }
             }
@@ -481,8 +471,8 @@ int32_t bankTrade() {
 // 4 - STATE_ROBBER
 int32_t robberAction() {
     int32_t pickBlock;
-    int32_t holdCards;
-    int32_t lostResource[5];
+    int32_t holdCards, lostResource[5];
+    int32_t robPlayer;
 
     PRINTL("檢查有無玩家需要丟棄資源");
     for (int32_t playerIdx = 1; playerIdx <= 4; playerIdx++) {
@@ -513,34 +503,69 @@ int32_t robberAction() {
                     }
                 }
             }
+            if (checkLostResource(holdCards, lostResource) == -1) continue;
+            break;
         }
+        PRINTL("丟棄資源合法，丟棄資源");
         // TODO_S: 更新畫面
         // updateMap();
     }
 
-    if (game->turn == 1) {
-        // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-        // pickBlock = ....
-        DEV() {
-            printf("玩家 %d 請選擇放置強盜的位置(0-18)：", game->turn);
-            scanf("%d", &pickBlock);
+    while (1) {  // 直到玩家合法的選擇強盜位置為止
+        if (game->turn == 1) {
+            // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
+            // pickBlock = ....
+            DEV() {
+                printf("玩家 %d 請選擇放置強盜的位置(0-18)：", game->turn);
+                scanf("%d", &pickBlock);
+            }
+        } else {
+            // TODO_T: 讓電腦選擇一個位置
+            // pickBlock = randPickBlock();
+            DEV() {
+                printf("玩家 %d 請選擇放置強盜的位置(0-18)：", game->turn);
+                scanf("%d", &pickBlock);
+            }
         }
-    } else {
-        // TODO_T: 讓電腦選擇一個位置
-        // pickBlock = randPickBlock();
-        DEV() {
-            printf("玩家 %d 請選擇放置強盜的位置(0-18)：", game->turn);
-            scanf("%d", &pickBlock);
-        }
+        PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
+        // TODO_F: 檢查是否合法
+        // if (checkRobber(game->turn, pickBlock) == -1) continue;
+        break;
     }
-    PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
-    // TODO_F: 檢查是否合法
-    // if (checkRobber(game->turn, pickBlock)) return 0;
     PRINTL("放置強盜合法，進行放置");
-    // TODO_F: 放置強盜
-    // placeRobber(pickBlock);
+    placeRobber(game->turn, pickBlock);
     // TODO_S: 更新畫面
     // updateMap();
 
+    // 如果可以掠奪，選擇要掠奪的玩家
+    // TODO_F: 檢查是否可以掠奪
+    // if (checkRobPlayer(game->turn, pickBlock) == -1) return 0;
+    PRINTL("可以掠奪，選擇要掠奪的玩家");
+    while (1) {  // 直到玩家合法的選擇掠奪玩家為止
+        if (game->turn == 1) {
+            // TODO_S: 開放玩家讓玩家點擊，並獲取玩家點擊的位置
+            // robPlayer = ....
+            DEV() {
+                printf("玩家 %d 請選擇掠奪的玩家(1-4)：", game->turn);
+                scanf("%d", &robPlayer);
+            }
+        } else {
+            // TODO_T: 讓電腦選擇一個位置
+            // robPlayer = randRobPlayer();
+            DEV() {
+                printf("玩家 %d 請選擇掠奪的玩家(1-4)：", game->turn);
+                scanf("%d", &robPlayer);
+            }
+        }
+        PRINTL("玩家 %d 選擇掠奪玩家 %d", game->turn, robPlayer);
+        // TODO_F: 檢查是否合法
+        // if (checkRobAct(robPlayer, pickBlock) == -1) continue;
+        break;
+    }
+    PRINTL("掠奪合法，進行掠奪");
+    // TODO_T: 隨機掠奪一張資源
+    // randRobResource(game->turn, robPlayer);
+    // TODO_S: 更新畫面
+    // updateMap();
     return 0;
 }

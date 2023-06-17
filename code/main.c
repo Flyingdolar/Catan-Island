@@ -13,6 +13,9 @@ int playGame(int isNewGame) {
     while (1) {
         if (game->state == END) break;  // 有玩家達成勝利條件，遊戲結束
         switch (game->state) {
+            case START:
+                PRINTD("遊戲尚未初始化，發生錯誤");
+                return -1;
             case SETTLE:  // 首輪回合，放置兩個村莊
                 PRINTL("遊戲開始，請依序放置兩個村莊");
                 settleAction();
@@ -33,6 +36,8 @@ int playGame(int isNewGame) {
                 break;
         }
     }
+    // TODO: 顯示遊戲最終由誰獲勝
+    //
     return 0;
 }
 

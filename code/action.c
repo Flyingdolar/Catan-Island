@@ -28,9 +28,7 @@ int32_t settleAction() {
                     scanf("%d", &pickNode);
                 }
             }
-            // TODO_F: 使用較寬鬆的規則檢查是否合法（不必相鄰）
-            // if (checkVillage(0, pickNode)) break;
-            DEV()
+            if (checkNode(playerIdx, pickNode) == -1) continue;
             break;
         }
         placeNode(playerIdx, pickNode);
@@ -57,8 +55,8 @@ int32_t settleAction() {
                     scanf("%d", &pickRoad);
                 }
             }
-            // TODO_F: 檢查道路選擇是否合法
-            // if (checkRoad(0, pickRoad)) break;
+            if (checkRoad(playerIdx, pickRoad) == -1) continue;
+            break;
         }
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
@@ -88,8 +86,8 @@ int32_t settleAction() {
                     scanf("%d", &pickNode);
                 }
             }
-            // TODO_F: 使用較寬鬆的規則檢查是否合法（不必相鄰）
-            // if (checkVillage(0, pickNode)) break;
+            if (checkNode(playerIdx, pickNode) == -1) continue;
+            break;
         }
         placeNode(playerIdx, pickNode);
         // giveSettleResource(playerIdx, pickNode);
@@ -116,8 +114,8 @@ int32_t settleAction() {
                     scanf("%d", &pickNode);
                 }
             }
-            // TODO_F: 使用較寬鬆的規則檢查是否合法（不必相鄰）
-            // if (checkRoad(0, pickRoad)) break;
+            if (checkRoad(playerIdx, pickRoad) == -1) continue;
+            break;
         }
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
@@ -189,7 +187,7 @@ int32_t buildAction() {
         }
         // 可能操作：
         // 0 - 結束回合, 1 - 建設道路, 2 - 建設村莊, 3 - 購買發展卡
-        // 4 - 使用發展卡, 5 - 與銀行交易, 6 - 與玩家交易
+        // 4 - 使用發展卡, 5 - 與銀行交易, 6 - 與玩家交易(X)
         switch (userCmd) {
             case 1:
                 PRINTL("玩家 %d 選擇建設道路", game->turn);
@@ -246,8 +244,7 @@ int32_t buildRoad() {
         }
     }
     PRINTL("玩家 %d 選擇在 %d 建設道路", game->turn, pickRoad);
-    // TODO_F: 檢查是否合法
-    // if (checkRoad(game->turn, pickRoad)) return 0;
+    if (checkRoad(game->turn, pickRoad) == -1) return -1;
     PRINTL("建設道路合法，進行建設");
     placeRoad(game->turn, pickRoad);
     // TODO_S: 更新畫面
@@ -275,8 +272,7 @@ int32_t buildNode() {
         }
     }
     PRINTL("玩家 %d 選擇在 %d 建設村莊", game->turn, pickNode);
-    // TODO_F: 檢查是否合法
-    // if (checkNode(game->turn, pickNode)) return 0;
+    if (checkNode(game->turn, pickNode) == -1) return -1;
     PRINTL("建設村莊合法，進行建設");
     placeNode(game->turn, pickNode);
     // TODO_S: 更新畫面
@@ -287,10 +283,10 @@ int32_t buildNode() {
 // 3.3 - STATE_BUY_CARD
 int32_t buyCard() {
     // TODO_F: 檢查是否有足夠的資源
-    // if (checkResource(game->turn)) return 0;
+    if (checkBuyCard(game->turn) == -1) return -1;
     PRINTL("玩家 %d 購買發展卡", game->turn);
     // TODO_F: 購買發展卡
-    // buyCard(0);
+    // randBuyCard(0);
     // TODO_S: 更新畫面
     // updateMap();
     return 0;
@@ -319,7 +315,7 @@ int32_t useCard() {
     }
     PRINTL("玩家 %d 選擇使用 %d 號發展卡", game->turn, pickCard);
     // TODO_F: 檢查是否合法
-    // if (checkCard(game->turn, pickCard)) return 0;
+    if (checkUseCard(game->turn, pickCard) == -1) return -1;
     PRINTL("使用發展卡合法，進行使用");
 
     pList tmpList = getNode(game->player[game->turn].devcard, pickCard);
@@ -369,8 +365,7 @@ int32_t useCard() {
                         }
                     }
                     PRINTL("玩家 %d 選擇在 %d 建設道路", game->turn, pickRoad);
-                    // TODO_F: 檢查是否合法
-                    // if (checkRoad(game->turn, pickRoad)) continue;
+                    if (checkRoad(game->turn, pickRoad) == -1) continue;
                     PRINTL("建設道路合法，進行建設");
                     placeRoad(game->turn, pickRoad);
                     break;
@@ -455,8 +450,7 @@ int32_t bankTrade() {
         }
     }
     PRINTL("玩家 %d 選擇以 %d 資源換取 %d 資源", game->turn, pickResource[0], pickResource[1]);
-    // TODO_F: 檢查是否合法
-    // if (checkBankTrade(game->turn, pickResource[0], pickResource[1])) return 0;
+    if (checkBankTrade(game->turn, pickResource[0], pickResource[1]) == -1) return -1;
     PRINTL("交易合法，進行交易");
     // TODO_F: 交易
     // bankTrade(game->turn, pickResource[0], pickResource[1]);
@@ -503,7 +497,7 @@ int32_t robberAction() {
                     }
                 }
             }
-            if (checkLostResource(holdCards, lostResource) == -1) continue;
+            if (checkDiscard(playerIdx, holdCards, lostResource) == -1) continue;
             break;
         }
         PRINTL("丟棄資源合法，丟棄資源");
@@ -528,8 +522,7 @@ int32_t robberAction() {
             }
         }
         PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
-        // TODO_F: 檢查是否合法
-        // if (checkRobber(game->turn, pickBlock) == -1) continue;
+        if (checkRobber(game->turn, pickBlock) == -1) continue;
         break;
     }
     PRINTL("放置強盜合法，進行放置");
@@ -538,8 +531,7 @@ int32_t robberAction() {
     // updateMap();
 
     // 如果可以掠奪，選擇要掠奪的玩家
-    // TODO_F: 檢查是否可以掠奪
-    // if (checkRobPlayer(game->turn, pickBlock) == -1) return 0;
+    if (checkRobPlayer(game->turn, pickBlock) == -1) return 0;
     PRINTL("可以掠奪，選擇要掠奪的玩家");
     while (1) {  // 直到玩家合法的選擇掠奪玩家為止
         if (game->turn == 1) {
@@ -558,8 +550,7 @@ int32_t robberAction() {
             }
         }
         PRINTL("玩家 %d 選擇掠奪玩家 %d", game->turn, robPlayer);
-        // TODO_F: 檢查是否合法
-        // if (checkRobAct(robPlayer, pickBlock) == -1) continue;
+        if (checkRobAct(robPlayer, pickBlock) == -1) continue;
         break;
     }
     PRINTL("掠奪合法，進行掠奪");

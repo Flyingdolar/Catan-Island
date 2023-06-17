@@ -43,7 +43,7 @@ typedef struct _sGame_*    pGame;
 
 typedef struct _sDevcard_ {  // 發展卡
     uint8_t type;            // --種類
-    uint8_t status;          // --卡片狀態
+    uint8_t status;          // --卡片狀態 (0: unused 1:avaiable 2:used)
     sList   list;
 } sDevcard;
 
@@ -106,7 +106,7 @@ typedef struct _sGame_{ // 遊戲
     pList node       ;  // --節點的list head
     pList road       ;  // --道路的list head
     pList harbor     ;  // --港口的list head
-    uint8_t robber[2];  // --強盜的坐標
+    pBlock robber    ;  // --強盜所在的板塊
     sKing roadKing   ;  // --最長道路
     sKing armyKing   ;  // --最大騎士
 } sGame;

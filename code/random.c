@@ -1,9 +1,8 @@
 #include"catan.h"
 
 int32_t randMap(){//隨機地圖板塊資源&點數
-  PRINTL("randMap function start");
+  //PRINTL("randMap function start");
 
-  PRINTL("res array");
   int index = 0;
   uint8_t res[19] = {0};
   for(uint8_t i = 0; i < 15; i++){
@@ -35,12 +34,12 @@ int32_t randMap(){//隨機地圖板塊資源&點數
     }
   }
   //* debug res array
-  for(uint8_t i = 0; i < 19; i++){
-    PRINTL("%d", res[i]);
-  }
+  // for(uint8_t i = 0; i < 19; i++){
+  //   PRINTL("%d", res[i]);
+  // }
 
 
-  PRINTL("point array ");
+  //PRINTL("point array ");
   //隨機點數 2~12, 2和12只有一個, 沒有7
   uint8_t random_point[19] = {0,2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12};
   for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
@@ -86,7 +85,8 @@ int32_t randMap(){//隨機地圖板塊資源&點數
     if(blockptr->number == 6 || blockptr->number == 8){
       for(uint8_t i = 0; i < 6; i++){
         if(blockptr->block[i]->number == 6 || blockptr->block[i]->number == 8){
-          randMap();//重新隨機
+          //PRINTL("%d, %d\n", blockptr->coord[0], blockptr->coord[1]);
+          //randMap();//重新隨機
         }
       }
     }
@@ -96,10 +96,12 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   
 int randPickRoad(){
 
+  return 0;
 }
 
 int randPickNode(){
 
+  return 0;
 }
 
 int randDiceNum(){
@@ -115,43 +117,28 @@ int randDiceNum(){
 
 int randAction(){
 
+  return 0;
 }
 
 int randPickCard(){
 
+  return 0;
 }
 
 int randPickResource(){
 
+  return 0;
 }
 
 int randLostResource(){
 
+  return 0;
 }
 
 int randPickBlock(){
   PRINTL("randomRobber\n");
   //totally random robber
-  uint8_t coord[2] = {0};
-  coord[0] = rand() % 5 ;
-  coord[1] = rand() % 5 ;
-  if(coord[0] == game->robber[0] && coord[1] == game->robber[1]){
-    randPickBlock();
-  }else{
-    forList(game->block, element){
-      pBlock blockptr = entry(element, sBlock);
-      if(blockptr->coord[0] == coord[0] && blockptr->coord[1] == coord[1]){
-        game->robber[0] = coord[0];
-        game->robber[1] = coord[1];
-        break;
-      }
-    }
-    if(game->robber[0] == coord[0] && game->robber[1] == coord[1]){
-      PRINTL("robber: %d, %d\n", game->robber[0], game->robber[1]);
-    }else{
-      randPickBlock();
-    }
-  }
+
 
   return 0;
 }

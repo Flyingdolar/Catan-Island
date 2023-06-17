@@ -1,14 +1,12 @@
 #include"catan.h"
 
 int32_t randMap(){//隨機地圖板塊資源&點數
-  //PRINTL("randMap function start");
-
   int index = 0;
   uint8_t res[19] = {0};
   for(uint8_t i = 0; i < 15; i++){
     res[i] = i % 5 + 1;
   }
-  uint8_t random_resource[3] = {0,0,0};
+  uint8_t random_resource[3] = {0};
   for(uint8_t i = 1; i < 4; i++){
     random_resource[i-1] = rand() % 5 + 1;
     for(uint8_t j = 0; j < i-1; j++){
@@ -17,15 +15,10 @@ int32_t randMap(){//隨機地圖板塊資源&點數
         break;
       }
     }
+    res[14+i] = random_resource[i-1];
   }
-  res[15] = random_resource[0];
-  res[16] = random_resource[1];
-  res[17] = random_resource[2];
 
-  
-
-
-  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
+  for(uint8_t j = 0; j < 5; j++){//隨機交換5輪
       for(uint8_t i = 0; i < 19; i++){
       uint8_t random = rand() % 19;
       uint8_t temp = res[i];
@@ -39,10 +32,9 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   // }
 
 
-  //PRINTL("point array ");
   //隨機點數 2~12, 2和12只有一個, 沒有7
   uint8_t random_point[19] = {0,2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12};
-  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
+  for(uint8_t j = 0; j < 5; j++){//隨機交換5輪
       for(uint8_t i = 0; i < 19; i++){
       uint8_t random = rand() % 19;
       uint8_t temp = random_point[i];
@@ -50,15 +42,28 @@ int32_t randMap(){//隨機地圖板塊資源&點數
       random_point[random] = temp;
     }
   }
+  //check desert resource and number
+  for(uint8_t i = 0; i < 19; i++){
+    if(random_point[i] == 0){
+      for(uint8_t j = 0; j < 19; j++){
+        if(res[j] == 0){
+          uint8_t temp = res[i];
+          res[i] = res[j];
+          res[j] = temp;
+          break;
+        }
+      }
+      break;
+    }
+  }
+
   //賦予地圖板塊資源&點數
   index = 0;
   forList(game->block, element){
     pBlock blockptr = entry(element, sBlock);
-    if(blockptr->resource == 0){
-      blockptr->resource = random_resource[index];
-      blockptr->number = random_point[index];
-      index++;
-    }
+    blockptr->resource = res[index];
+    blockptr->number = random_point[index];
+    index++;
   }
 
   //港口資源隨機
@@ -78,15 +83,22 @@ int32_t randMap(){//隨機地圖板塊資源&點數
     harborptr->type = port_resource[index];
     index++;
   }
-
+  // //* debug block
+  // forList(game->block, element){
+  //   pBlock blockptr = entry(element, sBlock);
+  //   PRINTL("block %d,%d resource %d number %d, index %ld", blockptr->coord[0], blockptr->coord[1], blockptr->resource, blockptr->number, blockptr->list.index);
+  // }
   //確認6 8沒有相鄰
   forList(game->block, element){
     pBlock blockptr = entry(element, sBlock);
     if(blockptr->number == 6 || blockptr->number == 8){
       for(uint8_t i = 0; i < 6; i++){
-        if(blockptr->block[i]->number == 6 || blockptr->block[i]->number == 8){
-          //PRINTL("%d, %d\n", blockptr->coord[0], blockptr->coord[1]);
-          //randMap();//重新隨機
+        if(blockptr->block[i] != NULL){
+          pBlock neighborptr = blockptr->block[i];
+          if(neighborptr->number == 6 || neighborptr->number == 8){
+            randMap();
+            break;
+          }
         }
       }
     }
@@ -95,22 +107,27 @@ int32_t randMap(){//隨機地圖板塊資源&點數
 }
   
 int randPickRoad(){
+  
 
   return 0;
 }
 
 int randPickNode(){
+  forList(game->node, element){
+    pNode nodeptr = entry(element, sNode);
+  
+  }
 
+  //*debug 
   return 0;
 }
 
 int randDiceNum(){
-  PRINTL("randomDice\n");
   //totally random dice
   game->dice[0] = rand() % 6 + 1;
   game->dice[1] = rand() % 6 + 1;
 
-  //test dice
+  //* debug dice
   PRINTL("dice1: %d, dice2: %d\n", game->dice[0], game->dice[1]);
   return 0;
 }
@@ -136,9 +153,6 @@ int randLostResource(){
 }
 
 int randPickBlock(){
-  PRINTL("randomRobber\n");
-  //totally random robber
-
 
   return 0;
 }

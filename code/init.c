@@ -14,7 +14,12 @@ typedef struct _sGame_{ // 遊戲
 #include "catan.h"
 
 int32_t init(){
+  PRINTL("init function");
+
+  srand(time(NULL));
+
   //TODO: calloc
+  PRINTL("malloc game");
   game = (pGame)malloc(sizeof(sGame));
 
   // 初始化遊戲狀態
@@ -46,9 +51,11 @@ int32_t init(){
   if(initMap()) return -5;
 
   //隨機化地圖板塊資源、數字，以及港口
-  if(randomMap()) return -6;
+  if(randMap()) return -6;
 
   // 初始化robber
+  PRINTL("init robber");
+  game->robber[0] = game->robber[1] = 0;
   forList(game->block, element){
     pBlock blockptr = entry(element, sBlock);
     if(blockptr->resource == 1){
@@ -66,6 +73,7 @@ int32_t init(){
   game->roadKing.owner = 0;
   game->roadKing.size = 0;
 
+  PRINTL("init function end\n");
   return 0;
 }
 
@@ -73,9 +81,9 @@ int32_t init(){
 typedef struct _sPlayer_ { // 玩家
     uint8_t  id;           // --編號 0: 無人(銀行)、1~4: 玩家
     uint8_t  score;        // --玩家分數
-    uint8_t *resource;     // --玩家資源 大小為5+1的陣列，分別對應五種資源 第一項為總數 
-    uint8_t *building;     // --玩家建築物 大小為3的陣列，分別對應三種建築物 一開始都是0
-    uint8_t *harbor;       // --玩家港口 大小為6的陣列，分別對應六種港口。等於1表示有、0表示無
+    uint8_t *resource;     // --玩家資源 大小為5+1的陣列，分別對應五種資源 第一項為總數
+    uint8_t *building;     // --玩家建築物 大小為3的陣列，分別對應三種建築物
+    uint8_t *harbor;       // --玩家港口 大小為6的陣列，分別對應六種港口。0表示沒有擁有
     uint8_t  roadlength;   // --玩家道路數量
     uint8_t  armySize;     // --玩家軍隊數量
     pList    devcard;      // --玩家發展卡
@@ -83,6 +91,8 @@ typedef struct _sPlayer_ { // 玩家
 */
 
 int32_t initPlayer(){
+  PRINTL("initPlayer function\n");
+
   uint8_t maxPlayer  = 4;  // 4個玩家
   uint8_t maxres     = 19; // 19個資源卡每種 
   uint8_t resType    = 5;  // 5種資源
@@ -91,6 +101,7 @@ int32_t initPlayer(){
   
   game->player = (pPlayer)malloc(sizeof(sPlayer) * (maxPlayer + 1));
 
+  PRINTL("initializing player struct\n");
   for(uint8_t i = 0; i <= maxPlayer; i++){
     game->player[i].id         = i;
     game->player[i].score      = 0;
@@ -118,6 +129,7 @@ int32_t initPlayer(){
   }
   
   //創造發展卡，並且放到銀行
+  PRINTL("create devcard\n");
   for(uint8_t i = 0; i < 25; i++){ // 25張發展卡
     sDevcard *newcard = (sDevcard*)malloc(sizeof(sDevcard));
     if(i < 14){ // 14張騎士卡
@@ -135,7 +147,10 @@ int32_t initPlayer(){
   }
 
   //洗牌
+  PRINTL("shuffle devcard\n");
   shuffle(game->player[0].devcard);
+
+  PRINTL("initPlayer function end\n");
   return 0;
 }
 
@@ -150,11 +165,13 @@ typedef struct _sBlock_ {  // 板塊
 } sBlock;
 */
 int32_t initBlock(){
+  PRINTL("initBlock function\n");
   //板塊link head初始化
   game->block = initList();
 
   uint8_t minCol = 3;
   //創造板塊
+  PRINTL("create block\n");
   for(uint8_t i = 0; i < 5 ; i++){
     for(uint8_t j = 0 ; j < 5 ; j++){
       if((i == 0 || i == 4) && j >= minCol){
@@ -176,6 +193,7 @@ int32_t initBlock(){
       push(game->block, &newblock->list, FRONT);
     }
   }
+  PRINTL("initBlock function end\n");
   return 0;
 }
 
@@ -192,11 +210,13 @@ typedef struct _sNode_ {   // 節點
 } sNode;
 */
 int32_t initNode(){
+  PRINTL("initNode function\n");
   //節點link head初始化
   game->node = initList();
 
   uint8_t minCol = 7;
   //創造節點
+  PRINTL("create node\n");
   for(uint8_t i = 0; i < 6; i++){
     for(uint8_t j = 0; j < 11; j++){
       if((i == 0 || i == 5) && j >= minCol){
@@ -220,6 +240,7 @@ int32_t initNode(){
       push(game->node, &newnode->list, FRONT);
     }
   }
+  PRINTL("initNode function end\n");
   return 0;
 }
 

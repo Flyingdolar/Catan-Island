@@ -16,7 +16,7 @@
 #include "../inc/structs.h"
 
 // Global Variable
-pGame game;
+extern pGame game;
 
 // Function Declaration
 

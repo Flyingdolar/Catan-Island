@@ -32,19 +32,22 @@ int main(int argc, char *argv[]) {
     //
     // TODO: 開啟 Menu 視窗，顯示選項：開始遊戲、載入遊戲、離開遊戲
     //
-    int userChoice = 1;
-    while (userChoice != 0) {
-        // TODO: 從圖形化介面視窗獲取使用者選擇
+    // int userChoice = 1;
+    // while (userChoice != 0) {
+    //     // TODO: 從圖形化介面視窗獲取使用者選擇
 
-        switch (userChoice) {
-            case 1:  // 開始新遊戲
-                playGame(1);
-                break;
-            case 2:  // 載入遊戲
-                playGame(0);
-            default:
-                break;
-        }
-    }
+    //     switch (userChoice) {
+    //         case 1:  // 開始新遊戲
+    //             playGame(1);
+    //             break;
+    //         case 2:  // 載入遊戲
+    //             playGame(0);
+    //         default:
+    //             break;
+    //     }
+    // }
+    init();
+
+
     return 0;
 }

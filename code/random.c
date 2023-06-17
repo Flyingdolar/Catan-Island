@@ -1,6 +1,9 @@
 #include"catan.h"
 
 int32_t randMap(){//隨機地圖板塊資源&點數
+  PRINTL("randMap function start");
+
+  PRINTL("res array");
   int index = 0;
   uint8_t res[19] = {0};
   for(uint8_t i = 0; i < 15; i++){
@@ -19,6 +22,10 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   res[15] = random_resource[0];
   res[16] = random_resource[1];
   res[17] = random_resource[2];
+
+  
+
+
   for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
       for(uint8_t i = 0; i < 19; i++){
       uint8_t random = rand() % 19;
@@ -27,8 +34,14 @@ int32_t randMap(){//隨機地圖板塊資源&點數
       res[random] = temp;
     }
   }
+  //* debug res array
+  for(uint8_t i = 0; i < 19; i++){
+    PRINTL("%d", res[i]);
+  }
 
- //隨機點數 2~12, 2和12只有一個, 沒有7
+
+  PRINTL("point array ");
+  //隨機點數 2~12, 2和12只有一個, 沒有7
   uint8_t random_point[19] = {0,2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12};
   for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
       for(uint8_t i = 0; i < 19; i++){
@@ -143,7 +156,5 @@ int randPickBlock(){
   return 0;
 }
 
-int randLostResource(){
 
-}
 

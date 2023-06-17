@@ -133,7 +133,7 @@ int32_t init_player(){
 typedef struct _sBlock_ {  // 板塊
     uint8_t   coord[2];     // --坐標 0~4 (row)、0~5 (col)
     uint8_t   number;      // --對應骰子 
-    uint8_t   source;      // --對應資源 
+    uint8_t   resource;      // --對應資源 
     pNode     node[6];     // --板塊上的節點 由正上方開始順時針計算 
     pBlock    block[6];    // --鄰近的板塊 由正上方開始順時針計算
     sList     list;
@@ -158,7 +158,7 @@ int32_t init_block(){
       newblock->coord[0] = i;
       newblock->coord[1] = j;
       newblock->number   = 0;
-      newblock->source   = 0;
+      newblock->resource   = 0;
       for(uint8_t k = 0; k < 6; k++){
         newblock->node[k]  = NULL;
         newblock->block[k] = NULL;
@@ -513,13 +513,80 @@ int32_t init_map(){
   forList(game->block, element){//連上半部
     pBlock blockptr = entry(element, sBlock);
     index++;
-    index2 = 0;
     forList(game->node, element2){
       pNode nodeptr = entry(element2, sNode);
-      if(blockptr->coord[0] == nodeptr->coord[0] && blockptr->coord[1] == nodeptr->coord[1]){
-        blockptr->node[0] = nodeptr;
-        nodeptr->block[0] = blockptr;
-        index2++;
+      if(blockptr->coord[0] < 3){
+        if(blockptr->coord[0] == nodeptr->coord[0] ){
+          if(blockptr->coord[1] * 2 == nodeptr->coord[1]){
+            blockptr->node[5] = nodeptr;
+            nodeptr->block[1] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 1 == nodeptr->coord[1]){
+            blockptr->node[0] = nodeptr;
+            nodeptr->block[2] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 2 == nodeptr->coord[1]){
+            blockptr->node[1] = nodeptr;
+            nodeptr->block[0] = blockptr;
+          }
+        }else if(blockptr->coord[0] +1 == nodeptr->coord[0]){
+          if(blockptr->coord[1] * 2 + 1== nodeptr->coord[1]){
+            blockptr->node[4] = nodeptr;
+            nodeptr->block[1] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 2 == nodeptr->coord[1]){
+            blockptr->node[3] = nodeptr;
+            nodeptr->block[2] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 3 == nodeptr->coord[1]){
+            blockptr->node[2] = nodeptr;
+            nodeptr->block[0] = blockptr;
+          }
+        }
+      }else if(blockptr->coord[0] > 3){
+        if(blockptr->coord[0] == nodeptr->coord[0] ){
+          if(blockptr->coord[1] * 2 + 1 == nodeptr->coord[1]){
+            blockptr->node[5] = nodeptr;
+            nodeptr->block[1] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 2 == nodeptr->coord[1]){
+            blockptr->node[0] = nodeptr;
+            nodeptr->block[2] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 3 == nodeptr->coord[1]){
+            blockptr->node[1] = nodeptr;
+            nodeptr->block[0] = blockptr;
+          }
+        }else if(blockptr->coord[0] + 1 == nodeptr->coord[0]){
+          if(blockptr->coord[1] * 2 == nodeptr->coord[1]){
+            blockptr->node[4] = nodeptr;
+            nodeptr->block[1] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 1 == nodeptr->coord[1]){
+            blockptr->node[3] = nodeptr;
+            nodeptr->block[2] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 2 == nodeptr->coord[1]){
+            blockptr->node[2] = nodeptr;
+            nodeptr->block[0] = blockptr;
+          }
+        }
+      }else{
+        if(blockptr->coord[0] == nodeptr->coord[0] ){
+          if(blockptr->coord[1] * 2 == nodeptr->coord[1]){
+            blockptr->node[5] = nodeptr;
+            nodeptr->block[1] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 1 == nodeptr->coord[1]){
+            blockptr->node[0] = nodeptr;
+            nodeptr->block[2] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 2 == nodeptr->coord[1]){
+            blockptr->node[1] = nodeptr;
+            nodeptr->block[0] = blockptr;
+          }
+        }else if(blockptr->coord[0] +1 == nodeptr->coord[0]){
+          if(blockptr->coord[1] * 2 == nodeptr->coord[1]){
+            blockptr->node[4] = nodeptr;
+            nodeptr->block[1] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 1 == nodeptr->coord[1]){
+            blockptr->node[3] = nodeptr;
+            nodeptr->block[2] = blockptr;
+          }else if(blockptr->coord[1] * 2 + 2 == nodeptr->coord[1]){
+            blockptr->node[2] = nodeptr;
+            nodeptr->block[0] = blockptr;
+          }
+        }
       }
     }
   }
@@ -528,32 +595,83 @@ int32_t init_map(){
 }
 
 int32_t init_map_randomize(){//隨機地圖板塊資源&點數
-  uint8_t resource_num[6] = {0,3,3,3,3,3};
-  //隨機剩下三個板塊的資源，不能重複且不包含沙漠
+  int index = 0;
+  uint8_t res[19] = {0};
+  for(uint8_t i = 0; i < 15; i++){
+    res[i] = i % 5 + 1;
+  }
   uint8_t random_resource[3] = {0,0,0};
-  for(uint8_t i = 0; i < 3; i++){
-    random_resource[i] = rand() % 5 + 1;
-    for(uint8_t j = 0; j < i; j++){
-      if(random_resource[i] == random_resource[j]){
+  for(uint8_t i = 1; i < 4; i++){
+    random_resource[i-1] = rand() % 5 + 1;
+    for(uint8_t j = 0; j < i-1; j++){
+      if(random_resource[i-1] == random_resource[j]){
         i--;
         break;
       }
     }
   }
-  for(uint8_t i = 0; i < 3; i++){//將隨機的資源放入數量陣列
-    resource_num[random_resource[i]]++;
+  res[15] = random_resource[0];
+  res[16] = random_resource[1];
+  res[17] = random_resource[2];
+  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
+      for(uint8_t i = 0; i < 19; i++){
+      uint8_t random = rand() % 19;
+      uint8_t temp = res[i];
+      res[i] = res[random];
+      res[random] = temp;
+    }
   }
 
   //隨機點數 2~12, 2和12只有一個, 沒有7
-  // int random_point[5][5] = {
-  //   {0,2,3,-1,-1},
-  //   {3,4,4,5,-1},
-  //   {5,6,6,8,8},
-  //   {9,9,10,10,-1},
-  //   {11,11,12,-1,-1}
-  // };
+  uint8_t random_point[19] = {0,2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12};
+  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
+      for(uint8_t i = 0; i < 19; i++){
+      uint8_t random = rand() % 19;
+      uint8_t temp = random_point[i];
+      random_point[i] = random_point[random];
+      random_point[random] = temp;
+    }
+  }
+  //賦予地圖板塊資源&點數
+  index = 0;
+  forList(game->block, element){
+    pBlock blockptr = entry(element, sBlock);
+    if(blockptr->resource == 0){
+      blockptr->resource = random_resource[index];
+      blockptr->number = random_point[index];
+      index++;
+    }
+  }
 
+  //港口資源隨機
+  uint8_t port_resource[9] = {0,0,0,1,2,3,4,5,6};
+  for(uint8_t j = 0; j < 10; j++){//隨機交換30輪
+      for(uint8_t i = 0; i < 9; i++){
+      uint8_t random = rand() % 9;
+      uint8_t temp = port_resource[i];
+      port_resource[i] = port_resource[random];
+      port_resource[random] = temp;
+    }
+  }
+  //賦予港口資源
+  index = 0;
+  forList(game->harbor, element){
+    pHarbor harborptr = entry(element, sHarbor);
+    harborptr->type = port_resource[index];
+    index++;
+  }
 
+  //確認6 8沒有相鄰
+  forList(game->block, element){
+    pBlock blockptr = entry(element, sBlock);
+    if(blockptr->number == 6 || blockptr->number == 8){
+      for(uint8_t i = 0; i < 6; i++){
+        if(blockptr->block[i]->number == 6 || blockptr->block[i]->number == 8){
+          init_map_randomize();//重新隨機
+        }
+      }
+    }
+  }
   return 0;
 }
   

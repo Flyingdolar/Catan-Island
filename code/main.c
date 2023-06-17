@@ -46,8 +46,5 @@ int main(int argc, char *argv[]) {
                 break;
         }
     }
-
-    // TODO: 關閉 SDL 視窗，並釋放相關資源
-    //
     return 0;
 }

@@ -68,7 +68,7 @@ typedef struct _sRoad_ {   // 道路
 typedef struct _sBlock_ {  // 板塊
     uint8_t   coord[2];     // --坐標 0~4 (row)、0~5 (col)
     uint8_t   number;      // --對應骰子 
-    uint8_t   source;      // --對應資源 
+    uint8_t   resource;      // --對應資源 
     pNode     node[6];     // --板塊上的節點 由正上方開始順時針計算 
     pBlock    block[6];    // --鄰近的板塊 由正上方開始順時針計算
     sList     list;

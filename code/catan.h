@@ -40,3 +40,8 @@ int32_t buildNode();
 int32_t buyCard();
 int32_t useCard();
 int32_t bankTrade();
+
+// setprop.c
+int32_t placeNode(int32_t playerID, int32_t nodePos);
+int32_t placeRoad(int32_t playerID, int32_t roadPos);
+int32_t placeRobber(int32_t playerID, int32_t robberPos);

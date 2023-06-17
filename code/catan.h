@@ -60,3 +60,6 @@ int32_t checkDiscard(int32_t playerID, int32_t discards, int32_t selectCard[5]);
 int32_t checkRobber(int32_t playerID, int32_t blockPos);
 int32_t checkRobPlayer(int32_t playerID, int32_t blockPos);
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos);
+
+// debug.c
+void printGraph(void);

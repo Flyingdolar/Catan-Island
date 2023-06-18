@@ -85,7 +85,7 @@ int32_t placeRoad(int32_t playerID, int32_t roadPos) {
 }
 
 // 3. 放置盜賊
-int32_t placeRobber(int32_t robberPos) {
+int32_t placeRobberPos(int32_t robberPos) {
     pList blockList;
     pBlock placeBlock;
 
@@ -96,9 +96,107 @@ int32_t placeRobber(int32_t robberPos) {
     }
     placeBlock = entry(blockList, sBlock);
     PRINTL("正在座標 %d, %d 的地點放置盜賊\n", placeBlock->coord[0], placeBlock->coord[1]);
-    // FIXME: 放置盜賊
+    game->robber = placeBlock;
 
     // 更新玩家分數
     // updateScore();
+    return 0;
+}
+
+// 4. 獲得資源 (SETTLE 階段)
+int32_t gainSettleResource(int32_t playerID, int32_t nodePos) {
+    pNode gainNode = entry(getNode(game->node, nodePos), sNode);
+    int resType;
+
+    if (gainNode == NULL) {
+        PRINTD("無法取得節點\n");
+        return -1;
+    }
+    for (int32_t idx = 0; idx < 3; idx++) {
+        if (gainNode->block[idx] == NULL) continue;
+        resType = gainNode->block[idx]->resource;
+        PRINTL("正在獲得資源 %d", resType);
+        game->player[playerID].resource[resType]++;
+        game->player[NONE].resource[resType]--;
+        game->player[playerID].resource[ALL]++;
+        game->player[NONE].resource[ALL]--;
+    }
+    return 0;
+}
+
+// 5. 獲得資源 (DICE 階段)
+int32_t gainDiceResource(void) {
+    int32_t diceSum = game->dice[0] + game->dice[1];
+
+    forList(game->block, blockList) {
+        pBlock block = entry(blockList, sBlock);
+        // 沒有骰到的板塊不會發放資源
+        if (block->number != diceSum) continue;
+        // 被盜賊擋住的板塊不會發放資源
+        if (block->list.index == game->robber->list.index) continue;
+        for (int32_t idx = 0; idx < 6; idx++) {
+            if (block->node[idx] == NULL) continue;
+            if (block->node[idx]->owner == NONE) continue;
+            int32_t playerID = block->node[idx]->owner;
+            int32_t resType = block->resource;
+            PRINTL("正在獲得資源 %d", resType);
+            int32_t gain = block->node[idx]->building == CITY ? 2 : 1;
+            game->player[playerID].resource[resType] += gain;
+            game->player[NONE].resource[resType] -= gain;
+            game->player[playerID].resource[ALL] += gain;
+            game->player[NONE].resource[ALL] -= gain;
+        }
+    }
+    return 0;
+}
+
+// 6. 更新卡片狀態
+int32_t updateCard(void) {
+    for (int32_t idx = 1; idx <= 4; idx++) {
+        forList(game->player[idx].devcard, cardList) {
+            pDevcard card = entry(cardList, sDevcard);
+            if (card->status == UNUSED)
+                card->status = AVAILABLE;
+        }
+    }
+    return 0;
+}
+
+// 7. 壟斷資源
+int32_t gainMonopolyResource(int32_t resType) {
+    int32_t sumRes = 0;
+    for (int32_t idx = 1; idx <= 4; idx++) {
+        sumRes += game->player[idx].resource[resType];
+        game->player[idx].resource[ALL] -= game->player[idx].resource[resType];
+        game->player[idx].resource[resType] = 0;
+    }
+    game->player[game->turn].resource[resType] = sumRes;
+    game->player[game->turn].resource[ALL] += sumRes;
+    return 0;
+}
+
+// 8. 銀行交易
+int32_t placeBankTrade(int32_t outRes, int32_t inRes) {
+    int32_t require = 4;
+
+    if (game->player[game->turn].harbor[ALL] > 0) require = 3;
+    if (game->player[game->turn].harbor[outRes] > 0) require = 2;
+
+    game->player[game->turn].resource[outRes] -= require;
+    game->player[NONE].resource[outRes] += require;
+    game->player[game->turn].resource[inRes]++;
+    game->player[NONE].resource[inRes]--;
+
+    game->player[game->turn].resource[ALL] -= require - 1;
+    game->player[NONE].resource[ALL] += require - 1;
+    return 0;
+}
+
+// 9. 丟棄資源
+int32_t discardResource(int32_t playerID, int32_t lostRes[6]) {
+    for (int32_t idx = 0; idx < 6; idx++) {
+        game->player[playerID].resource[idx] -= lostRes[idx];
+        game->player[NONE].resource[idx] += lostRes[idx];
+    }
     return 0;
 }

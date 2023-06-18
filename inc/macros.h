@@ -28,11 +28,36 @@
 #define PURPLE 35
 #define CYAN 36
 
+// Clear Terminal
+#define CLEAR() printf("\033[H\033[2J");
+
+// forever
+#define FOREVER(count) for (int count = 0;; count++)
+
+// SET global message
+#define setMsg(...) memset(msg, 0, sizeof(msg)), snprintf(msg, sizeof(msg), __VA_ARGS__);
+
 // Print in different color
-#define PRINTC(color, ...)     \
-    printf("\033[%dm", color); \
-    printf(__VA_ARGS__);       \
-    printf("\033[0m");
+#define PRINTC(color, ...) printf("\033[%dm", color), \
+                           printf(__VA_ARGS__),       \
+                           printf("\033[0m")
+
+// readCMD 沒有參數的簡寫方式
+#define NO_ARG ((void*)0), 0, 10000, 0
+
+// 類型
+#define T_BLOCK 0  // 區塊
+#define T_CARD 1   // 發展卡
+#define T_BUILD 2  // 建築物
+#define T_ROAD 3   // 道路
+
+// 建築指令
+#define END_TURN 0    // 結束回合
+#define BUILD_ROAD 1  // 建造道路
+#define BUILD_NODE 2  // 建造村莊
+#define BUY_CARD 3    // 購買發展卡
+#define USE_CARD 4    // 使用發展卡
+#define TRADE_N 5     // 與銀行交易
 
 // 資源 (可增加)
 #define DESERT 0  // 空   (沙漠)

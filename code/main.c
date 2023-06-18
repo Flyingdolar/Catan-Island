@@ -63,6 +63,7 @@ int main(/*int argc, char *argv[]*/) {
     //             break;
     //     }
     // }
+    initScreen();
     init();
     PRINTL("遊戲開始，請依序放置兩個村莊");
     return 0;

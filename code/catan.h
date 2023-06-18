@@ -61,5 +61,15 @@ int32_t checkRobber(int32_t playerID, int32_t blockPos);
 int32_t checkRobPlayer(int32_t playerID, int32_t blockPos);
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos);
 
+//screen.c
+int initScreen();
+void event_loop(SDL_Window *win);
+void draw(SDL_Window *win);
+void drawNumber(int x, int y, int number);
+void handleMouseClick_BUILD(int x, int y);
+void handleMouseClick_ROBBER(int x, int y);
+int getRobberBlockIndex(int x, int y);
+SDL_Rect getEdgeRect(pBlock block, int blockIndex, int edgeIndex);
+
 // debug.c
 void printGraph(void);

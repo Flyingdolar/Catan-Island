@@ -332,7 +332,6 @@ int32_t useCard() {
                 pickBlock = readPos("<使用騎士卡>\n將強盜驅趕到一個新板塊，請輸入 X Y 座標：", T_BLOCK, 0 - USE_CARD);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                // pickNode = randPickBlock();
                 // pickBlock = randPickBlock();
                 DEV() {
                     printf("玩家 %d 請選擇放置強盜的位置：", game->turn);
@@ -365,7 +364,7 @@ int32_t useCard() {
                     pickPlayer = readCMD("選擇搶奪資源的玩家：", 2, 4, Attempt);
                 } else {
                     // TODO_T: 讓電腦選擇一個位置
-                    // pickPlayer = randPickPlayer();
+                    // pickPlayer = randPickPlayer(pickBlock);
                     DEV() {
                         printf("玩家 %d 請選擇搶奪資源的玩家：", game->turn);
                         scanf("%d", &pickPlayer);
@@ -597,7 +596,7 @@ int32_t robberAction() {
             robPlayer = readCMD("掠奪一個玩家，請輸入玩家編號(1-4)：", 2, 4, Attempt);
         } else {
             // TODO_T: 讓電腦選擇一個位置
-            // robPlayer = randRobPlayer();
+            // robPlayer = randRobPlayer(pickBlock);
             DEV() {
                 printf("玩家 %d 請選擇掠奪的玩家(1-4)：", game->turn);
                 scanf("%d", &robPlayer);

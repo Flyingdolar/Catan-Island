@@ -60,7 +60,9 @@ int32_t randPickCard(void);
 int32_t randPickResource(void);
 int32_t randLostResource(int32_t lostResource[5]);
 int32_t randAction(void);
-
+int32_t randBuyCard(void);
+int32_t randPickPlayer(int blockIdx);
+int32_t randRobPlayer(int target);
 
 // setprop.c
 int32_t placeNode(int32_t playerID, int32_t nodePos);

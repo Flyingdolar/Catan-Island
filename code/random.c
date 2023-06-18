@@ -106,30 +106,58 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   return 0;
 }
   
-int randPickRoad(){//not random
-  pRoad maxRoad = NULL;
-  uint8_t max = 0;
+int randPickRoad(){//random
+  int idx[100] = {0}, cnt = 0;
+  for(uint8_t i = 0 ; i < 100 ; i++){
+    idx[i] = -1;
+  }
+  forList(game->node, element){
+    pNode nodeptr = entry(element, sNode);
+    if(nodeptr->owner != game->turn) continue;
+    for(uint8_t i = 0 ; i < 3 ; i++){
+      if(nodeptr->road[i] == NULL) continue;
+      if(nodeptr->road[i]->owner == 0){
+        //tempRoad = nodeptr->road[i];
+        idx[cnt] = nodeptr->road[i]->list.index;
+        for(int j = 0 ; j < cnt ; j++){//check if the road is already in the array
+          if(idx[j] == idx[cnt]){
+            idx[cnt] = -1;
+            cnt--;
+            break;
+          }
+        }
+        cnt++;
+      }
+    }
+  }
+  
   forList(game->road, element){
     pRoad roadptr = entry(element, sRoad);
-    for(uint8_t i = 0; i < 2; i++){
-      if(roadptr->node[i]->owner == game->turn){
-        roadptr->owner = game->turn;
-        return roadptr->list.index;
-      }else if(roadptr->node[i]->owner == NONE ){
-        for(uint8_t j = 0; j < 3; j++){
-          if(roadptr->node[i]->road[j] == NULL) continue;
-          if(roadptr->node[i]->road[j]->owner == game->turn){
-            pRoad neighborptr = roadptr->node[i]->road[j];
-            if(neighborptr->owner == game->turn){
-              roadptr->owner = game->turn;
-              return roadptr->list.index;
+    if(roadptr->owner == game->turn){
+      for(uint8_t i = 0 ; i < 2 ; i++){
+        if(roadptr->node[i]->owner == 0 || roadptr->node[i]->owner == game->turn){
+          //tempRoad = roadptr;
+          for(uint8_t j = 0 ; j < 3 ; j++){
+            if(roadptr->node[i]->road[j] == NULL) continue;
+            if(roadptr->node[i]->road[j]->owner == 0){
+              //tempRoad = roadptr->node[i]->road[j];
+              idx[cnt] = roadptr->node[i]->road[j]->list.index;
+              for(int j = 0 ; j < cnt ; j++){//check if the road is already in the array
+                if(idx[j] == idx[cnt]){
+                  idx[cnt] = -1;
+                  cnt--;
+                  break;
+                }
+              }
+              cnt++;
             }
           }
         }
       }
     }
   }
-  return -1;
+  if(cnt == 0) return -1;
+  return idx[rand() % cnt];
 }
 
 int randPickNode(){
@@ -142,9 +170,9 @@ int randPickNode(){
         uint8_t temp = 0;
         for(uint8_t i = 0 ; i < 3 ; i++){
           if(nodeptr->block[i] == NULL) continue;
-          temp += nodeptr->block[i]->number;
+          temp += abs(nodeptr->block[i]->number - 7);
         }
-        if(temp > max){
+        if(temp < max){
           max = temp;
           maxNode = nodeptr;
         }
@@ -152,7 +180,7 @@ int randPickNode(){
       //maxNode->owner = game->turn;
       return maxNode->list.index;
       break;
-    case BUILD://random
+    case BUILD://not random
       forList(game->node, element){
         pNode nodeptr = entry(element, sNode);
         for(uint8_t i = 0 ; i < 3; i++){
@@ -160,9 +188,9 @@ int randPickNode(){
           if(nodeptr->road[i]->owner == game->turn && nodeptr->owner == NONE ){
             for(uint8_t i = 0 ; i < 3; i++){
               if(nodeptr->block[i] == NULL) continue;
-              temp += nodeptr->block[i]->number;
+              temp += abs(nodeptr->block[i]->number - 7);
             }
-            if(max < temp){
+            if(temp < max){//find most valuable node
               max = temp;
               maxNode = nodeptr;
             }
@@ -188,8 +216,35 @@ int randDiceNum(){
 }
 
 int randAction(){
-
-  return -1;
+  int idx = rand() % 6;
+  switch(idx){
+    case 1://BUILD_ROAD
+      if(UNABLE_ROAD)//have not enough resource
+        return randAction();
+      return 1;
+    case 2://BUILD_NODE
+      if(UNABLE_VILLAGE || UNABLE_CITY)//have not enough resource
+        return randAction();
+      return 2;
+    case 3://BUY_CARD
+      if(UNABLE_BUYCARD)//have not enough resource
+        return randAction();
+      return 3;
+    case 4://USE_CARD
+      forList(game->player[game->turn].devcard, element){//have not enough resource
+        pDevcard cardptr = entry(element, sDevcard);
+        if(cardptr->status == 1){
+          return 4;
+        }
+      }
+      return randAction();
+    case 5://TRADE_N
+      return randDiceNum();
+      break;
+    default:
+      return 0;
+      break;
+  }
 }
 
 int randPickCard(){//random
@@ -274,5 +329,39 @@ int randPickBlock(){//rodder; not random
   return leaderblock->list.index;
 }
 
+int randBuyCard(){
+  int cnt = 0, randIdx = 0;
+  forList(game->player[0].devcard, element) cnt++;
+  if(cnt == 0) return -1;
+  randIdx = rand() % cnt;
+  pList idxList = getNode(game->player[0].devcard, randIdx);
 
+  push(game->player[game->turn].devcard, idxList, BACK);
+  return 0;
+}
 
+int randPickPlayer(int blockIdx ){
+  pList pos = getNode(game->block, blockIdx);
+  pBlock blockptr = entry(pos, sBlock);
+  int target = 0;
+  for(uint8_t i = 0 ; i < 6 ; i++){
+    if(blockptr->node[i] == NULL) continue;
+    if(blockptr->node[i]->owner == game->turn) continue;
+    int temp = blockptr->node[i]->owner;
+    if(target == 0 || (game->player[target].score < game->player[temp].score && game->player[temp].resource[0] > 0)){
+      target = temp;
+    }
+  }
+  return target;
+}
+
+int randRobPlayer(int target){
+  int type = rand() % 5 + 1;
+  if(game->player[target].resource[type] == 0) {
+    randRobPlayer(target);
+    return 0;
+  }
+  game->player[target].resource[type]--;
+  game->player[game->turn].resource[type]++;
+  return 0;
+}

@@ -44,6 +44,13 @@ int32_t bankTrade();
 int32_t randMap(void);
 int32_t randDiceNum(void);
 int32_t randPickBlock(void);
+int32_t randPickRoad(void);
+int32_t randPickNode(void);
+int32_t randPickCard(void);
+int32_t randPickResource(void);
+int32_t randLostResource(int32_t lostResource[5]);
+int32_t randAction(void);
+
 
 // setprop.c
 int32_t placeNode(int32_t playerID, int32_t nodePos);

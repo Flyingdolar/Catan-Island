@@ -17,8 +17,16 @@
 
 // Global Variable
 extern pGame game;
+extern char msg[10000];
+extern int roundCount;
 
 // Function Declaration
+
+// input.c
+int32_t readCMD(char *string, int32_t lower, int32_t uppers, int32_t tryTime);
+int32_t readPos(char *string, int32_t type, int32_t tryTime);
+int32_t readCard(char *string, int32_t tryTime);
+int32_t printGameInfo(int32_t buildOption);
 
 // init.c
 int32_t init(void);

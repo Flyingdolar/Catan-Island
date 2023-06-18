@@ -1,13 +1,15 @@
 #include "catan.h"
 
 pGame game;
+char msg[10000];
+int roundCount;
 
 int playGame(int isNewGame) {
     if (isNewGame > 0) init();
-    if (game == NULL) {
-        PRINTD("遊戲初始化失敗");
-        return -1;
-    }
+
+    // 遊戲開始
+    roundCount = 0;
+    game->state = SETTLE;
 
     // 直到分出勝負前，遊戲都不會結束
     while (1) {
@@ -43,30 +45,33 @@ int playGame(int isNewGame) {
 
 int main(/*int argc, char *argv[]*/) {
     int userChoice = 1;
-    // TODO: 開啟 SDL 視窗，並初始化
-    //
-    // TODO: 開啟 Menu 視窗，顯示選項：開始遊戲、載入遊戲、離開遊戲
-    //
-    init();
-    initScreen();
+
     while (userChoice != 0) {
-        // TODO: 從圖形化介面視窗獲取使用者選擇
-        DEV() {
-            printf("請選擇遊戲模式：\n");
-            scanf("%d", &userChoice);
+        FOREVER(Attempt) {
+            CLEAR();
+            printf("------歡迎遊玩卡坦島，請選擇遊戲模式------\n");
+            printf("              開始新遊戲[1]\n");
+            printf("               載入遊戲[2]\n");
+            printf("               離開遊戲[0]\n");
+            printf("-------------------------------------------\n");
+            userChoice = readCMD("你的選擇：", 0, 2, 0);
+            if (userChoice == -1) setMsg("輸入錯誤 - 未知的指令，請重新輸入");
+            if (userChoice == -1) continue;
+            break;
         }
         switch (userChoice) {
             case 1:  // 開始新遊戲
+                printf("     您選擇了開始新遊戲，正在開啟卡坦島...\n");
                 playGame(1);
                 break;
             case 2:  // 載入遊戲
+                printf("     您選擇了載入遊戲，正在載入卡坦島...\n");
                 playGame(0);
             default:
+                printf("     您選擇了離開遊戲，正在關閉卡坦島...\n");
+                userChoice = 0;
                 break;
         }
     }
-    
-    
-    PRINTL("遊戲開始，請依序放置兩個村莊");
     return 0;
 }

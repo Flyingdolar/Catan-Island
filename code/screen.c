@@ -7,8 +7,8 @@
 #define WIDTH 900
 #define HEIGHT 800
 #define FRAMERATE 60
-#define BGFILENAME "./resources/background.png"
-#define FONTPATH "./resources/padmaa.ttf"
+#define BGFILENAME "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/background.png"
+#define FONTPATH "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/padmaa.ttf"
 #define FONTSIZE 24
 #define BLOCK_NUM 19
 
@@ -20,7 +20,7 @@
 SDL_Renderer *renderer;
 SDL_Surface *bgImg;
 SDL_Texture *bgTexture;
-SDL_Texture *blockTexture[4][5];
+SDL_Texture *blockTexture[5][5];
 SDL_Texture *villageTexture;
 SDL_Texture *buttonTexture;
 // SDL_Texture* cityTexture;
@@ -31,7 +31,6 @@ SDL_bool isDraggingRobber = SDL_FALSE;
 
 TTF_Font* font;
 
-pGame game;
 SDL_Rect getEdgeRect(pBlock block, int blockIndex, int edgeIndex) {
     SDL_Rect rect;
     rect.x = buttonPositions[blockIndex][edgeIndex].x;
@@ -133,6 +132,7 @@ void drawNumber(int x, int y, int number){
     if (textSurface == NULL) {
         printf("TTF_RenderText_Solid: %s\n", TTF_GetError());
     }
+    
 
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_FreeSurface(textSurface); // Don't need the surface after texture is created
@@ -162,18 +162,19 @@ void draw(SDL_Window *win) {
     pList element = game->block->NEXT; // Start from the first block
     int index = 0;
     while (element != game->block) { 
-        pBlock block = entry(element, sBlock); // Get the block from the list element
         int xpos = 0;
         int ypos = 0;
-        if(block->coord[0] <= 3){
-            xpos = 248 - 68 * block->coord[1] + block->coord[0] * 136;
-            ypos = 80 + block->coord[1] * 120;   
+        pBlock block = entry(element, sBlock); // Get the block from the list element
+        if(block->coord[0] <= 2){
+            xpos = 248 - 68 * block->coord[0] + block->coord[1] * 136;
+            ypos = 80 + block->coord[0] * 120;   
         }
         else{
-            xpos = 180 + 68 * (block->coord[1] - 4) + block->coord[0] * 136;
-            ypos = 440 + 120 * (block->coord[1] -4);
+            xpos = 180 + 68 * (block->coord[0] - 3) + block->coord[1] * 136;
+            ypos = 440 + 120 * (block->coord[0] - 3);
         }
         SDL_Rect dst = {xpos, ypos, 136, 160};
+        //printf("index: %d, xpos: %d, ypos: %d\n", index, xpos, ypos);
         SDL_RenderCopy(renderer, blockTexture[block->coord[0]][block->coord[1]], NULL, &dst);
 
         buttonPositions[index][0] = (SDL_Rect){xpos -15, ypos + 40 -15, 30, 30};
@@ -255,6 +256,7 @@ int initScreen() {
         printf("TTF_Init: %s\n", TTF_GetError());
         return 1;
     }
+
     SDL_Window *win = SDL_CreateWindow(
             "Catan Island",
             SDL_WINDOWPOS_CENTERED,
@@ -267,7 +269,6 @@ int initScreen() {
         return 1;
     }
 
-
     renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == NULL)
     {
@@ -277,11 +278,11 @@ int initScreen() {
 
     //load font
     font = TTF_OpenFont(FONTPATH, FONTSIZE);
-
     if (font == NULL) {
         printf("TTF_OpenFont: %s\n", TTF_GetError());
         // handle error
     }
+
     //load background image
     bgImg = IMG_Load(BGFILENAME);
     if (bgImg == NULL)
@@ -289,6 +290,9 @@ int initScreen() {
         SDL_Log("Can not load bg image, %s", SDL_GetError());
         return 1;
     }
+    // else{
+    //     SDL_Log("Load bg image successfully");
+    // }
     //create bg image texture
     bgTexture = SDL_CreateTextureFromSurface(renderer, bgImg);
     if (bgTexture == NULL)
@@ -296,11 +300,22 @@ int initScreen() {
         SDL_Log("Can not create bg texture, %s", SDL_GetError());
         return 1;
     }
+    // else{
+    //     SDL_Log("Create bg texture successfully");
+    // }
     //load robber image
-    robberTexture = IMG_LoadTexture(renderer, "./resources/robber.png");
+    robberTexture = IMG_LoadTexture(renderer, "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/robber.png");
+    if (robberTexture == NULL)
+    {
+        SDL_Log("Can not load robber image, %s", SDL_GetError());
+        return 1;
+    }
+    // else{
+    //     SDL_Log("Load robber image successfully");
+    // }
 
     //define block image file name array
-    char blockFileName[BLOCK_NUM][45] = {"./resources/dessert.png", "./resources/mountain.png","./resources/forest.png","./resources/wheat_field.png","./resources/hill.png","./resources/grass.png"};
+    char blockFileName[BLOCK_NUM][105] = {"/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/dessert.png", "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/mountain.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/forest.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/wheat_field.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/hill.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/grass.png"};
     //create block image surface array
     SDL_Surface *blockImg[4][5];
 
@@ -314,14 +329,31 @@ int initScreen() {
             SDL_Log("Can not load block image, %s", SDL_GetError());
             return 1;
         }
+        // else{
+        //     SDL_Log("Load block image successfully");
+            
+        // }
         blockTexture[block->coord[0]][block->coord[1]] = IMG_LoadTexture(renderer, blockFileName[block->resource]);
         element = element->NEXT; // Move to the next block
     }
     
-    buttonTexture = IMG_LoadTexture(renderer, "./resources/button.png");
-    villageTexture = IMG_LoadTexture(renderer, "./resources/village.png");
-    //cityTexture = IMG_LoadTexture(renderer, "city.png");
+    buttonTexture = IMG_LoadTexture(renderer, "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/button.png");
+    if(buttonTexture == NULL)
+    {
+        SDL_Log("Can not load button image, %s", SDL_GetError());
+        return 1;
+    }
     
+    
+    villageTexture = IMG_LoadTexture(renderer, "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/village.png");
+    //cityTexture = IMG_LoadTexture(renderer, "city.png");
+    if(villageTexture == NULL)
+    {
+        SDL_Log("Can not load village image, %s", SDL_GetError());
+        return 1;
+    }
+    
+
     event_loop(win);
     SDL_FreeSurface(bgImg);
     SDL_DestroyTexture(bgTexture);

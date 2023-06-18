@@ -107,28 +107,72 @@ int32_t randMap(){//隨機地圖板塊資源&點數
 }
   
 int randPickRoad(){
-  
-
-  return 0;
+  forList(game->road, element){
+    pRoad roadptr = entry(element, sRoad);
+    for(uint8_t i = 0; i < 2; i++){
+      if(roadptr->node[i]->owner == game->turn){
+        roadptr->owner = game->turn;
+        return roadptr->list.index;
+      }else if(roadptr->node[i]->owner == NONE ){
+        for(uint8_t j = 0; j < 3; j++){
+          if(roadptr->node[i]->road[j] == NULL) continue;
+          if(roadptr->node[i]->road[j]->owner == game->turn){
+            pRoad neighborptr = roadptr->node[i]->road[j];
+            if(neighborptr->owner == game->turn){
+              roadptr->owner = game->turn;
+              return roadptr->list.index;
+            }
+          }
+        }
+      }
+    }
+  }
+  return -1;
 }
 
 int randPickNode(){
-  forList(game->node, element){
-    pNode nodeptr = entry(element, sNode);
-  
+  switch(game->state){
+    case SETTLE://random
+      uint8_t max = 0;
+      pNode maxNode = NULL;
+      forList(game->node, element){
+        pNode nodeptr = entry(element, sNode);
+        uint8_t temp = 0;
+        for(uint8_t i = 0 ; i < 3 ; i++){
+          if(nodeptr->block[i] == NULL) continue;
+          temp += nodeptr->block[i]->number;
+        }
+        if(temp > max){
+          max = temp;
+          maxNode = nodeptr;
+        }
+      }
+      maxNode->owner = game->turn;
+      return maxNode->list.index;
+      break;
+    case BUILD://not random
+      forList(game->node, element){
+        pNode nodeptr = entry(element, sNode);
+        if(nodeptr->owner == NONE && 
+            (nodeptr->road[0]->owner == game->turn || nodeptr->road[1]->owner == game->turn || nodeptr->road[2]->owner == game->turn)){
+          nodeptr->owner = game->turn;
+          return nodeptr->list.index;
+        }
+      }
+      break;
+    default:
+      return -1;
+      break;
   }
-
-  //*debug 
-  return 0;
+  return -1;
 }
 
 int randDiceNum(){
   //totally random dice
   game->dice[0] = rand() % 6 + 1;
   game->dice[1] = rand() % 6 + 1;
-
   //* debug dice
-  PRINTL("dice1: %d, dice2: %d\n", game->dice[0], game->dice[1]);
+  //PRINTL("dice1: %d, dice2: %d\n", game->dice[0], game->dice[1]);
   return 0;
 }
 

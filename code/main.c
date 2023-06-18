@@ -46,7 +46,7 @@ int playGame(int isNewGame) {
 int main(/*int argc, char *argv[]*/) {
     int userChoice = 1;
     while (userChoice != 0) {
-        FOREVER(Attempt) {
+        while (1) {
             CLEAR();
             printf("------歡迎遊玩卡坦島，請選擇遊戲模式------\n");
             printf("              開始新遊戲[1]\n");

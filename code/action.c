@@ -340,7 +340,7 @@ int32_t useCard() {
                 }
             }
             PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
-            if (checkRobberPos(game->turn, pickBlock) == -1) {
+            if (checkRobberPos(pickBlock) == -1) {
                 printGameInfo(USE_CARD);
                 PRINTC(YELLOW, "%s\n", msg);
                 PRINTC(YELLOW, "使用騎士卡失敗，請重新選擇\n");
@@ -502,7 +502,7 @@ int32_t bankTrade() {
 
     if (game->turn == 1) {
         // 顯示輸入介面，並獲取玩家輸入的位置
-        readBankTrade(pickResource[0], pickResource[1], NONE);
+        readBankTrade(&pickResource[0], &pickResource[1], NONE);
     } else {
         // TODO_T: 讓電腦選擇一個位置
         // pickResource[0] = randPickResource();
@@ -518,7 +518,7 @@ int32_t bankTrade() {
     if (checkBankTrade(game->turn, pickResource[0], pickResource[1]) == -1) return -1;
     PRINTL("交易合法，進行交易");
     // 銀行交易
-    bankTrade(pickResource[0], pickResource[1]);
+    placeBankTrade(pickResource[0], pickResource[1]);
     // TODO_S: 更新畫面
     // updateMap();
     return 0;
@@ -537,7 +537,7 @@ int32_t robberAction() {
             PRINTL("玩家 %d 需要丟棄資源卡 %d 張", playerIdx, game->player[playerIdx].resource[ALL] / 2);
             if (playerIdx == 1) {
                 // 顯示輸入介面，並獲取玩家輸入的資源
-                readDiscard(game->player[playerIdx].resource, lostResource[6], Attempt);
+                readDiscard(game->player[playerIdx].resource, lostResource, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇丟棄資源
                 // randLostResource(lostResource);
@@ -575,7 +575,7 @@ int32_t robberAction() {
             }
         }
         PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
-        if (checkRobberPos(game->turn, pickBlock) == -1) continue;
+        if (checkRobberPos(pickBlock) == -1) continue;
         break;
     }
     PRINTL("放置強盜合法，進行放置");

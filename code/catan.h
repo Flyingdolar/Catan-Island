@@ -62,8 +62,8 @@ int32_t placeRobberPos(int32_t robberPos);
 int32_t gainSettleResource(int32_t playerID, int32_t nodePos);
 int32_t gainDiceResource(void);
 int32_t updateCard(void);
-gainMonopolyResource(int32_t resType);
-int32_t bankTrade(int32_t outRes, int32_t inRes);
+int32_t gainMonopolyResource(int32_t resType);
+int32_t placeBankTrade(int32_t outRes, int32_t inRes);
 int32_t discardResource(int32_t playerID, int32_t lostRes[6]);
 
 // check.c
@@ -73,7 +73,7 @@ int32_t checkBuyCard(int32_t playerID);
 int32_t checkUseCard(int32_t playerID, int32_t cardID);
 int32_t checkBankTrade(int32_t playerID, int32_t giveRes, int32_t takeRes);
 int32_t checkDiscard(int32_t playerID, int32_t selectCard[5]);
-int32_t checkRobberPos(int32_t playerID, int32_t blockPos);
+int32_t checkRobberPos(int32_t blockPos);
 int32_t checkRobbable(int32_t playerID, int32_t blockPos);
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos);
 

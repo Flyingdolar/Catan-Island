@@ -237,7 +237,7 @@ int32_t checkDiscard(int32_t playerID, int32_t selectCard[6]) {
 }
 
 // 7. 檢查盜賊移動是否合法
-int32_t checkRobberPos(int32_t playerID, int32_t blockPos) {
+int32_t checkRobberPos(int32_t blockPos) {
     // 確定盜賊的移動位置是否合法
     if (blockPos < 0 || blockPos > 18) {
         setMsg("輸入錯誤 - 盜賊的移動位置不合法");

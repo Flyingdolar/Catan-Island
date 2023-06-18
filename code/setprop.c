@@ -163,7 +163,7 @@ int32_t updateCard(void) {
 }
 
 // 7. 壟斷資源
-gainMonopolyResource(int32_t resType) {
+int32_t gainMonopolyResource(int32_t resType) {
     int32_t sumRes = 0;
     for (int32_t idx = 1; idx <= 4; idx++) {
         sumRes += game->player[idx].resource[resType];
@@ -176,7 +176,7 @@ gainMonopolyResource(int32_t resType) {
 }
 
 // 8. 銀行交易
-int32_t bankTrade(int32_t outRes, int32_t inRes) {
+int32_t placeBankTrade(int32_t outRes, int32_t inRes) {
     int32_t require = 4;
 
     if (game->player[game->turn].harbor[ALL] > 0) require = 3;

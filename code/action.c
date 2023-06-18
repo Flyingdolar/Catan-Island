@@ -204,7 +204,6 @@ int32_t buildAction() {
     }
     PRINTL("玩家 %d 結束回合", game->turn);
     game->turn = (game->turn + 1) % 4;
-    // TODO_F: 更新卡片為可使用狀態
     updateCard();
     return 0;
 }

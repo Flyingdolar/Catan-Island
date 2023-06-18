@@ -241,10 +241,10 @@ int32_t printGameInfo(int32_t buildOption) {
         printf("\n-----------------------------------------------------------------------\n");
         printf("||  持有資源   || %2d 張 |\n", game->player[idx].resource[ALL]);
         printf("||  持有點數   || 道路長度：%2d | 軍隊數量：%2d | 城鎮：%2d | 城市：%2d |\n",
-               game->player[1].roadlength, game->player[1].armySize,
-               game->player[1].building[VILLAGE], game->player[1].building[CITY]);
+               game->player[idx].roadlength, game->player[idx].armySize,
+               game->player[idx].building[VILLAGE], game->player[idx].building[CITY]);
         int32_t cardNum = 0;
-        forList(game->player[1].devcard, cardList) {
+        forList(game->player[idx].devcard, cardList) {
             pDevcard card = entry(cardList, sDevcard);
             if (card->type != VICTORY_POINT && card->status == USED) continue;
             cardNum++;

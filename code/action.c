@@ -4,22 +4,14 @@
 int32_t settleAction() {
     int pickNode, pickRoad;
 
-    // 總共進行兩個輪次，每個輪次都會輪到每個玩家放置一個村莊、一條道路
     PRINTL("第一輪回合，順向，放置一個村莊、一條道路");
     // 1. 第一個輪次，玩家順序由 1 開始
     for (int32_t playerIdx = 1; playerIdx <= 4; playerIdx++) {
-        // if (index == 1) { ...}  // TODO_S: 文字提示玩家應該要放置村莊
-        if (playerIdx != 1) sleep(1);  // 讓電腦等待一秒鐘
-
         PRINTL("輪到玩家 %d 放置村莊", playerIdx);
-        while (1) {  // 直到玩家的操作合法為止
-            if (playerIdx == 1) {
-                // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-                // pickNode = ....SDL FUNCTION....;
-                DEV() {
-                    printf("玩家 %d 選擇村莊(0-53)：", playerIdx);
-                    scanf("%d", &pickNode);
-                }
+        FOREVER(Attempt) {  // 直到玩家的操作合法為止
+            if (playerIdx == PLAYER1) {
+                // 顯示輸入介面，並獲取玩家輸入的位置
+                pickNode = readPos("選擇一個位置建立建築物，請輸入 X Y 座標：", T_BUILD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
                 // pickNode = randPickNode();
@@ -33,20 +25,17 @@ int32_t settleAction() {
         }
         placeNode(playerIdx, pickNode);
         // TODO_S: 更新畫面
+        printGameInfo(0);
+        printf("玩家%d 修建了一個村莊", playerIdx);
         // updateMap();
-
-        // if (playerIdx == 1) { ...}  // TODO_S: 文字提示玩家應該要放置道路
-        if (playerIdx != 1) sleep(1);  // 讓電腦等待一秒鐘
+        // 按下 ENTER 繼續
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
 
         PRINTL("輪到玩家 %d 放置道路", playerIdx);
-        while (1) {  // 直到玩家的操作合法為止
-            if (playerIdx == 1) {
-                // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-                // pickRoad = ....SDL FUNCTION....;
-                DEV() {
-                    printf("玩家 %d 選擇道路(0-100?)：", playerIdx);
-                    scanf("%d", &pickRoad);
-                }
+        FOREVER(Attempt) {  // 直到玩家的操作合法為止
+            if (playerIdx == PLAYER1) {
+                // 顯示輸入介面，並獲取玩家輸入的位置
+                pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
                 // pickRoad = randPickRoad();
@@ -60,24 +49,21 @@ int32_t settleAction() {
         }
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
+        printGameInfo(0);
+        printf("玩家%d 修建了一條道路", playerIdx);
         // updateMap();
+        // 按下 ENTER 繼續
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
     }
 
     PRINTL("第二輪回合，逆向，放置一個村莊、一條道路，並獲得資源");
     // 2. 第二個輪次，玩家順序由 4 開始
     for (int32_t playerIdx = 4; playerIdx >= 1; playerIdx--) {
-        // if (playerIdx == 1) { ...}  // TODO_S: 文字提示玩家應該要放置村莊
-        if (playerIdx != 1) sleep(1);  // 讓電腦等待一秒鐘
-
         PRINTL("輪到玩家 %d 放置村莊", playerIdx);
-        while (1) {  // 直到玩家的操作合法為止
+        FOREVER(Attempt) {  // 直到玩家的操作合法為止
             if (playerIdx == 1) {
-                // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-                // pickNode = ....SDL FUNCTION....;
-                DEV() {
-                    printf("玩家 %d 選擇村莊(0-53)：", playerIdx);
-                    scanf("%d", &pickNode);
-                }
+                // 顯示輸入介面，並獲取玩家輸入的位置
+                pickNode = readPos("選擇一個位置建立建築物，請輸入 X Y 座標：", T_BUILD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
                 // pickNode = randPickNode();
@@ -92,20 +78,17 @@ int32_t settleAction() {
         placeNode(playerIdx, pickNode);
         // giveSettleResource(playerIdx, pickNode);
         // TODO_S: 更新畫面
+        printGameInfo(0);
+        printf("玩家%d 修建了一個村莊，並取得了附近的資源", playerIdx);
         // updateMap();
-
-        // if (playerIdx == 1) { ...}  // TODO_S: 文字提示玩家應該要放置道路
-        if (playerIdx != 1) sleep(1);  // 讓電腦等待一秒鐘
+        // 按下 ENTER 繼續
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
 
         PRINTL("輪到玩家 %d 放置道路", playerIdx);
-        while (1) {  // 直到玩家的操作合法為止
+        FOREVER(Attempt) {  // 直到玩家的操作合法為止
             if (playerIdx == 1) {
-                // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-                // pickRoad = ....
-                DEV() {
-                    printf("玩家 %d 選擇道路(0-100?)：", playerIdx);
-                    scanf("%d", &pickNode);
-                }
+                // 顯示輸入介面，並獲取玩家輸入的位置
+                pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
                 // pickRoad = randPickRoad();
@@ -119,7 +102,11 @@ int32_t settleAction() {
         }
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
+        printGameInfo(0);
+        printf("玩家 %d 修建了一條道路", playerIdx);
         // updateMap();
+        // 按下 ENTER 繼續
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
     }
 
     // 3. 遊戲進入正式階段，玩家順序由 1 開始，返回到遊戲主迴圈
@@ -131,37 +118,43 @@ int32_t settleAction() {
 
 // 2 - STATE_DICE
 int32_t diceAction() {
-    int diceNumA, diceNumB, sum;
+    int diceSum;
 
-    if (game->turn == 1) {
-        // TODO_S: 讓玩家點擊擲骰子按鈕
-        // while (...SDL FUNCTION...)
-    }
-    // TODO_T: 隨機產生一個骰子點數
-    // diceNumA = randDiceNum(), diceNumB = randDiceNum();
-    DEV() {
-        printf("玩家 %d 擲出第一個骰子(1-6)：", game->turn);
-        scanf("%d", &diceNumA);
-        printf("玩家 %d 擲出第二個骰子(1-6)：", game->turn);
-        scanf("%d", &diceNumB);
+    printGameInfo(0);
+    PRINTL("輪到玩家 %d 擲骰子", game->turn);
+    // 按下任意鍵擲骰子
+    if (game->turn == PLAYER1) {
+        PRINTC(BLUE, ".........[按任意鍵擲骰子]"), readCMD(NO_ARG);
     }
 
-    game->dice[0] = diceNumA, game->dice[1] = diceNumB;
-    sum = diceNumA + diceNumB;
-    PRINTL("玩家 %d 擲出 %d 點", game->turn, sum);
+    // 隨機產生一個骰子點數
+    randDiceNum();
+    diceSum = game->dice[0] + game->dice[1];
+    PRINTL("玩家 %d 擲出 %d 點", game->turn, diceSum);
+
     // TODO_S: 更新畫面
+    printGameInfo(0);
+    printf("玩家 %d 擲骰擲出了 %d 與 %d ，一共是 %d 點", game->turn, game->dice[0], game->dice[1], diceSum);
     // updateMap();
+    // 按下 ENTER 繼續
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
 
-    if (sum == 7) {
+    if (diceSum == 7) {
         game->state = ROBBER;
         PRINTL("玩家 %d 擲出 7 點，進入強盜階段", game->turn);
         return 0;
     }
 
-    // TODO_F: 給予玩家資源
-    // giveResource(sum);
-    game->state = BUILD;
     PRINTL("分發資源給玩家，進入建設階段");
+    // TODO_F: 給予玩家資源
+    // giveResource(diceSum);
+    // TODO_S: 更新畫面
+    printGameInfo(0);
+    printf("在 %d 點的位置有建築物的玩家獲得資源", diceSum);
+    // updateMap();
+    // 按下 ENTER 繼續
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+    game->state = BUILD;
     return 0;
 }
 
@@ -170,49 +163,42 @@ int32_t buildAction() {
     int32_t userCmd;
 
     while (1) {
-        if (game->turn == 1) {
-            // TODO_S: 監聽玩家選擇的建設操作
-            // userCmd = ...SDL FUNCTION...
-            DEV() {
-                printf("建設操作：\n");
-                printf("( 0 - 結束回合, 1 - 建設道路, 2 - 建設村莊, 3 - 購買發展卡) \n");
-                printf("( 4 - 使用發展卡, 5 - 與銀行交易, 6 - 與玩家交易(未開發)) \n");
-                printf("玩家 %d 選擇建設操作(0-5)：", game->turn);
-                scanf("%d", &userCmd);
+        if (game->turn == PLAYER1) {
+            FOREVER(Attempt) {
+                printGameInfo(NONE);
+                // 顯示輸入介面，並獲取玩家輸入的操作
+                PRINTC(GREEN, "請選擇建設操作 >> ");
+                printf("建設道路[1] 建設村莊[2] 購買發展卡[3] 使用發展卡[4] 與銀行交易[5] 結束回合[0]：\n\n");
+                userCmd = readCMD("建設操作：", 0, 6, Attempt);
+                if (userCmd == -1) setMsg("輸入錯誤 - 未知的指令，請重新輸入");
+                if (userCmd == -1) continue;
+                break;
             }
         } else {
-            sleep(1);  // 讓電腦等待一秒鐘
             // TODO_T: 讓電腦選擇一個操作
             // userCmd = randAction();
         }
-        // 可能操作：
-        // 0 - 結束回合, 1 - 建設道路, 2 - 建設村莊, 3 - 購買發展卡
-        // 4 - 使用發展卡, 5 - 與銀行交易, 6 - 與玩家交易(X)
         switch (userCmd) {
-            case 1:
+            case BUILD_ROAD:
                 PRINTL("玩家 %d 選擇建設道路", game->turn);
                 buildRoad();
                 break;
-            case 2:
+            case BUILD_NODE:
                 PRINTL("玩家 %d 選擇建設村莊", game->turn);
                 buildNode();
                 break;
-            case 3:
+            case BUY_CARD:
                 PRINTL("玩家 %d 選擇購買發展卡", game->turn);
                 buyCard();
                 break;
-            case 4:
+            case USE_CARD:
                 PRINTL("玩家 %d 選擇使用發展卡", game->turn);
                 useCard();
                 break;
-            case 5:
+            case TRADE_N:
                 PRINTL("玩家 %d 選擇與銀行交易", game->turn);
                 bankTrade();
                 break;
-                // case 6:
-                //     PRINTL("玩家 %d 選擇與玩家交易", game->turn);
-                //     playerTrade();
-                //     break;
         }
         if (game->state == END) return 0;  // 有玩家獲得 10 分，遊戲結束
         if (userCmd == 0) break;           // 結束回合
@@ -229,12 +215,8 @@ int32_t buildRoad() {
     int32_t pickRoad;
 
     if (game->turn == 1) {
-        // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-        // pickRoad = ....
-        DEV() {
-            printf("玩家 %d 請選擇建設道路的位置：", game->turn);
-            scanf("%d", &pickRoad);
-        }
+        // 顯示輸入介面，並獲取玩家輸入的位置
+        pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, 0 - BUILD_ROAD);
     } else {
         // TODO_T: 讓電腦選擇一個位置
         // pickRoad = randPickRoad();
@@ -244,11 +226,21 @@ int32_t buildRoad() {
         }
     }
     PRINTL("玩家 %d 選擇在 %d 建設道路", game->turn, pickRoad);
-    if (checkRoad(game->turn, pickRoad) == -1) return -1;
+    if (checkRoad(game->turn, pickRoad) == -1) {
+        printGameInfo(BUILD_ROAD);
+        PRINTC(YELLOW, "%s\n", msg);
+        PRINTC(YELLOW, "建設道路失敗，請重新選擇\n");
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+        return -1;
+    }
     PRINTL("建設道路合法，進行建設");
     placeRoad(game->turn, pickRoad);
     // TODO_S: 更新畫面
+    printGameInfo(BUILD_ROAD);
+    printf("玩家 %d 修建了一條道路\n", game->turn);
     // updateMap();
+    // 按下 ENTER 繼續
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
     return 0;
 }
 
@@ -257,12 +249,8 @@ int32_t buildNode() {
     int32_t pickNode;
 
     if (game->turn == 1) {
-        // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-        // pickNode = ....
-        DEV() {
-            printf("玩家 %d 請選擇建設村莊的位置：", game->turn);
-            scanf("%d", &pickNode);
-        }
+        // 顯示輸入介面，並獲取玩家輸入的位置
+        pickNode = readPos("選擇一個位置建立村莊，請輸入 X Y 座標：", T_BUILD, 0 - BUILD_NODE);
     } else {
         // TODO_T: 讓電腦選擇一個位置
         // pickNode = randPickNode();
@@ -272,18 +260,32 @@ int32_t buildNode() {
         }
     }
     PRINTL("玩家 %d 選擇在 %d 建設村莊", game->turn, pickNode);
-    if (checkNode(game->turn, pickNode) == -1) return -1;
+    if (checkNode(game->turn, pickNode) == -1) {
+        printGameInfo(BUILD_NODE);
+        PRINTC(YELLOW, "%s\n", msg);
+        PRINTC(YELLOW, "修建村莊失敗，請重新選擇\n");
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+        return -1;
+    }
     PRINTL("建設村莊合法，進行建設");
     placeNode(game->turn, pickNode);
     // TODO_S: 更新畫面
+    printGameInfo(BUILD_NODE);
+    printf("玩家 %d 修建了一個村莊\n", game->turn);
     // updateMap();
     return 0;
 }
 
 // 3.3 - STATE_BUY_CARD
 int32_t buyCard() {
-    // TODO_F: 檢查是否有足夠的資源
-    if (checkBuyCard(game->turn) == -1) return -1;
+    // 檢查是否有足夠的資源
+    if (checkBuyCard(game->turn) == -1) {
+        printGameInfo(BUY_CARD);
+        PRINTC(YELLOW, "%s\n", msg);
+        PRINTC(YELLOW, "購買發展卡失敗，請重新選擇\n");
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+        return -1;
+    }
     PRINTL("玩家 %d 購買發展卡", game->turn);
     // TODO_F: 購買發展卡
     // randBuyCard(0);
@@ -295,16 +297,11 @@ int32_t buyCard() {
 // 3.4 - STATE_USE_CARD
 int32_t useCard() {
     int32_t pickCard;
-    int32_t monopolyResource;
-    int32_t plentYearResource[2];
+    int32_t resourceType;
 
     if (game->turn == 1) {
-        // TODO_S: 開放發展卡讓玩家點擊，並獲取玩家點擊的位置
-        // pickCard = ....
-        DEV() {
-            printf("玩家 %d 請選擇使用的發展卡：", game->turn);
-            scanf("%d", &pickCard);
-        }
+        // 顯示輸入介面，並獲取玩家輸入的位置
+        pickCard = readCard("選擇一張發展卡使用，請輸入卡片編號：", 0 - USE_CARD);
     } else {
         // TODO_T: 讓電腦選擇一個位置
         // pickCard = randPickCard();
@@ -314,8 +311,14 @@ int32_t useCard() {
         }
     }
     PRINTL("玩家 %d 選擇使用 %d 號發展卡", game->turn, pickCard);
-    // TODO_F: 檢查是否合法
-    if (checkUseCard(game->turn, pickCard) == -1) return -1;
+    // 檢查是否合法
+    if (checkUseCard(game->turn, pickCard) == -1) {
+        printGameInfo(USE_CARD);
+        PRINTC(YELLOW, "%s\n", msg);
+        PRINTC(YELLOW, "使用發展卡失敗，請重新選擇\n");
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+        return -1;
+    }
     PRINTL("使用發展卡合法，進行使用");
 
     pList tmpList = getNode(game->player[game->turn].devcard, pickCard);
@@ -326,12 +329,8 @@ int32_t useCard() {
             PRINTL("玩家 %d 使用騎士卡", game->turn);
             int32_t pickBlock;
             if (game->turn == 1) {
-                // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-                // pickBlock = ....
-                DEV() {
-                    printf("玩家 %d 請選擇放置強盜的位置：", game->turn);
-                    scanf("%d", &pickBlock);
-                }
+                // 顯示輸入介面，並獲取玩家輸入的位置
+                pickBlock = readPos("<使用騎士卡>\n將強盜驅趕到一個新板塊，請輸入 X Y 座標：", T_BLOCK, 0 - USE_CARD);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
                 // pickNode = randPickBlock();
@@ -342,84 +341,158 @@ int32_t useCard() {
                 }
             }
             PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
+            if (checkRobber(game->turn, pickBlock) == -1) {
+                printGameInfo(USE_CARD);
+                PRINTC(YELLOW, "%s\n", msg);
+                PRINTC(YELLOW, "使用騎士卡失敗，請重新選擇\n");
+                PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+                return -1;
+            }
             placeRobber(pickBlock);
+            // TODO_S: 更新畫面
+            printGameInfo(USE_CARD);
+            printf("玩家%d 使用了騎士卡\n", game->turn);
+            // updateMap();
+            // 按下 ENTER 繼續
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+
+            // 檢查是否有玩家可以搶奪
+            if (checkRobPlayer(game->turn, pickBlock) == -1) break;
+            FOREVER(Attempt) {
+                int32_t pickPlayer;
+                if (game->turn == PLAYER1) {
+                    // 顯示輸入介面，並獲取玩家輸入的位置
+                    printGameInfo(USE_CARD);
+                    pickPlayer = readCMD("選擇搶奪資源的玩家：", 2, 4, Attempt);
+                } else {
+                    // TODO_T: 讓電腦選擇一個位置
+                    // pickPlayer = randPickPlayer();
+                    DEV() {
+                        printf("玩家 %d 請選擇搶奪資源的玩家：", game->turn);
+                        scanf("%d", &pickPlayer);
+                    }
+                }
+                PRINTL("玩家 %d 選擇搶奪玩家 %d 的資源", game->turn, pickPlayer);
+                if (checkRobPlayer(game->turn, pickBlock) == -1) continue;
+                // TODO_F: 隨機搶奪一個資源
+                // randRobPlayer(pickPlayer);
+                // TODO_S: 更新畫面
+                printGameInfo(USE_CARD);
+                printf("玩家%d 搶奪了玩家%d 的資源\n", game->turn, pickPlayer);
+                // updateMap();
+                // 按下 ENTER 繼續
+                PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+                break;
+            }
             break;
         case ROAD_BUILDING:
             PRINTL("玩家 %d 使用道路建設卡", game->turn);
             for (int32_t idx = 0; idx < 2; idx++) {
                 int32_t pickRoad;
-                while (1) {
+                FOREVER(Attempt) {
                     if (game->turn == 1) {
-                        // TODO_S: 開放地圖讓玩家點擊，並獲取玩家點擊的位置
-                        // pickRoad = ....
-                        DEV() {
-                            printf("玩家 %d 請選擇建設道路的位置：", game->turn);
-                            scanf("%d", &pickRoad);
-                        }
+                        // 顯示輸入介面，並獲取玩家輸入的位置
+                        pickRoad = readPos("<使用建路卡>\n請輸入建設道路的位置：", T_ROAD, Attempt);
                     } else {
                         // TODO_T: 讓電腦選擇一個位置
                         // pickRoad = randPickRoad();
                         DEV() {
-                            printf("玩家 %d 請選擇建設道路的位置：", game->turn);
+                            printf("玩家%d 請選擇建設道路的位置：", game->turn);
                             scanf("%d", &pickRoad);
                         }
                     }
-                    PRINTL("玩家 %d 選擇在 %d 建設道路", game->turn, pickRoad);
+                    PRINTL("玩家%d 修建了一條道路", game->turn);
                     if (checkRoad(game->turn, pickRoad) == -1) continue;
                     PRINTL("建設道路合法，進行建設");
                     placeRoad(game->turn, pickRoad);
+                    // TODO_S: 更新畫面
+                    // updateMap();
                     break;
                 }
             }
+            // TODO_S: 更新畫面
+            printGameInfo(USE_CARD);
+            printf("玩家%d 使用了建路卡\n", game->turn);
+            // updateMap();
+            // 按下 ENTER 繼續
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
             break;
         case YEAR_OF_PLENTY:
-            PRINTL("玩家 %d 使用豐收年卡", game->turn);
-            if (game->turn == 1) {
-                // TODO_S: 開放資源讓玩家點擊，並獲取玩家點擊的位置
-                // plentYearResource = ....
-                DEV() {
-                    printf("玩家 %d 請選擇獲得的資源一(0~4)：", game->turn);
-                    scanf("%d", &plentYearResource[0]);
-                    printf("玩家 %d 請選擇獲得的資源二(0~4)：", game->turn);
-                    scanf("%d", &plentYearResource[1]);
-                }
-            } else {
-                // TODO_T: 讓電腦選擇一個位置
-                // plentYearResource[0] = randPickResource();
-                // plentYearResource[1] = randPickResource();
-                DEV() {
-                    printf("玩家 %d 請選擇獲得的資源一(0~4)：", game->turn);
-                    scanf("%d", &plentYearResource[0]);
-                    printf("玩家 %d 請選擇獲得的資源二(0~4)：", game->turn);
-                    scanf("%d", &plentYearResource[1]);
+            PRINTL("玩家 %d 使用豐收卡", game->turn);
+            for (int idx = 0; idx < 2; idx++) {
+                FOREVER(Attempt) {
+                    if (game->turn == 1) {
+                        // 顯示輸入介面，並獲取玩家輸入的位置
+                        printGameInfo(USE_CARD);
+                        PRINTC(GREEN, "可以選擇的資源 >>> ");
+                        printf(" 木頭[1] 磚塊[2] 羊毛[3] 小麥[4] 石頭[5]\n");
+                        resourceType = readCMD("<使用豐收卡>\n請選擇獲得的資源(1~5)：", 1, 5, Attempt);
+                    } else {
+                        // TODO_T: 讓電腦選擇一個位置
+                        // plentYearResource[0] = randPickResource();
+                        // plentYearResource[1] = randPickResource();
+                        DEV() {
+                            printf("玩家 %d 請選擇獲得的資源(1~5)：", game->turn);
+                            scanf("%d", &resourceType);
+                        }
+                    }
+                    if (resourceType == -1) {
+                        setMsg("輸入錯誤 - 輸入的資源類型不存在，請重新輸入");
+                        continue;
+                    }
+                    // TODO_F: 獲得資源
+                    // gainResource(game->turn, resourceType);
+                    // TODO_S: 更新畫面
+                    printGameInfo(USE_CARD);
+                    // updateMap();
+                    break;
                 }
             }
-            PRINTL("玩家 %d 選擇獲得 %d 資源和 %d 資源", game->turn, plentYearResource[0], plentYearResource[1]);
-            // TODO_F: 獲得資源
-            // gainPlentyResource(game->turn, plentYearResource[0], plentYearResource[1]);
+            // 更新畫面
+            printGameInfo(USE_CARD);
+            printf("玩家%d 使用豐收卡獲得了兩個資源", game->turn);
+            // updateMap();
+            // 按下 ENTER 繼續
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+
             break;
         case MONOPOLY:
             PRINTL("玩家 %d 使用獨佔卡", game->turn);
-            if (game->turn == 1) {
-                // TODO_S: 開放資源讓玩家點擊，並獲取玩家點擊的位置
-                // monopolyResource = ....
-                DEV() {
-                    printf("玩家 %d 請選擇獨佔的資源(0~4)：", game->turn);
-                    scanf("%d", &monopolyResource);
+            FOREVER(Attempt) {
+                if (game->turn == 1) {
+                    // 顯示輸入介面，並獲取玩家輸入的位置
+                    printGameInfo(USE_CARD);
+                    PRINTC(GREEN, "可以選擇的資源 >>> ");
+                    printf(" 木頭[1] 磚塊[2] 羊毛[3] 小麥[4] 石頭[5]\n");
+                    resourceType = readCMD("<使用獨佔卡>\n請選擇獨佔的資源(1~5)：", 1, 5, Attempt);
+                } else {
+                    // TODO_T: 讓電腦選擇一個位置
+                    // resourceType = randPickResource();
+                    DEV() {
+                        printf("玩家 %d 請選擇獨佔的資源(0~4)：", game->turn);
+                        scanf("%d", &resourceType);
+                    }
                 }
-            } else {
-                // TODO_T: 讓電腦選擇一個位置
-                // monopolyResource = randPickResource();
-                DEV() {
-                    printf("玩家 %d 請選擇獨佔的資源(0~4)：", game->turn);
-                    scanf("%d", &monopolyResource);
+                if (resourceType == -1) {
+                    setMsg("輸入錯誤 - 輸入的資源類型不存在，請重新輸入");
+                    continue;
                 }
+                // TODO_F: 獲得資源
+                // gainMonopolyResource(game->turn, resourceType);
+                // TODO_S: 更新畫面
+                printGameInfo(USE_CARD);
+                // updateMap();
+                break;
             }
-            PRINTL("玩家 %d 選擇獨佔 %d 資源", game->turn, monopolyResource);
-            // TODO_F: 獲得資源
-            // gainMonopolyResource(game->turn, monopolyResource);
+            // 更新畫面
+            printGameInfo(USE_CARD);
+            printf("玩家%d 使用獨佔卡霸佔了一種資源", game->turn);
+            // updateMap();
+            // 按下 ENTER 繼續
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
             break;
     }
+    cardType->status = USED;
     // TODO_S: 更新畫面
     // updateMap();
     return 0;

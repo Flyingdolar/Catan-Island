@@ -2,17 +2,22 @@
 
 // 1. 檢查節點是否可以建造村莊、城市
 int32_t checkNode(int32_t playerID, int32_t nodePos) {
+    if (nodePos == -1) {
+        setMsg("輸入錯誤 - 此座標節點不存在");
+        return -1;
+    }
+
     pNode buildNode = entry(getNode(game->node, nodePos), sNode);
 
     // SETTLE 階段不可以建造城市
     if (game->state == SETTLE && buildNode->owner == playerID) {
-        PRINTC(YELLOW, "輸入錯誤 - SETTLE 階段不可以建造城市\n");
+        setMsg("輸入錯誤 - 準備階段不可以建造城市");
         return -1;
     }
 
     // 確認節點是否已經有其他玩家的建築物
     if (buildNode->owner != playerID && buildNode->owner != NONE) {
-        PRINTC(YELLOW, "輸入錯誤 - 節點已經有其他玩家的建築物\n");
+        setMsg("輸入錯誤 - 節點已經有其他玩家的建築物");
         return -1;
     }
 
@@ -27,7 +32,7 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
             }
         }
         if (!adjRoad) {
-            PRINTC(YELLOW, "輸入錯誤 - 節點沒有相鄰的道路\n");
+            setMsg("輸入錯誤 - 節點沒有與之相連的道路");
             return -1;
         }
     }
@@ -42,7 +47,7 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
         }
     }
     if (adjNode) {
-        PRINTC(YELLOW, "輸入錯誤 - 節點有相鄰的建築物\n");
+        setMsg("輸入錯誤 - 節點附近有相鄰的建築物");
         return -1;
     }
 
@@ -57,7 +62,7 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
         if (game->player[playerID].resource[SHEEP] < 1) enough = false;
         if (game->player[playerID].resource[WHEAT] < 1) enough = false;
         if (!enough) {
-            PRINTC(YELLOW, "輸入錯誤 - 資源不足\n");
+            setMsg("輸入錯誤 - 資源不足以建造村莊 或 村莊數量已達上限");
             return -1;
         }
     }
@@ -71,7 +76,7 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
         if (game->player[playerID].resource[ORE] < 3) enough = false;
         if (game->player[playerID].resource[WHEAT] < 2) enough = false;
         if (!enough) {
-            PRINTC(YELLOW, "輸入錯誤 - 資源不足\n");
+            setMsg("輸入錯誤 - 資源不足以建造城市 或 城市數量已達上限");
             return -1;
         }
     }
@@ -82,11 +87,16 @@ int32_t checkNode(int32_t playerID, int32_t nodePos) {
 
 // 2. 檢查道路是否可以建造
 int32_t checkRoad(int32_t playerID, int32_t roadPos) {
+    if (roadPos == -1) {
+        setMsg("輸入錯誤 - 此座標道路不存在");
+        return -1;
+    }
+
     pRoad buildRoad = entry(getNode(game->road, roadPos), sRoad);
 
     // 確認道路是否已佔據
     if (buildRoad->owner != NONE) {
-        PRINTC(YELLOW, "輸入錯誤 - 道路已經有其他玩家佔據\n");
+        setMsg("輸入錯誤 - 道路已經有其他玩家佔據");
         return -1;
     }
 
@@ -108,7 +118,8 @@ int32_t checkRoad(int32_t playerID, int32_t roadPos) {
         if (adjObject) break;
     }
     if (!adjObject) {
-        PRINTC(YELLOW, "輸入錯誤 - 道路沒有相鄰的道路、建築物\n");
+        setMsg("輸入錯誤 - 道路沒有與之相連的道路、建築物");
+
         return -1;
     }
 
@@ -121,7 +132,7 @@ int32_t checkRoad(int32_t playerID, int32_t roadPos) {
         if (game->player[playerID].resource[WOOD] < 1) enough = false;
         if (game->player[playerID].resource[BRICK] < 1) enough = false;
         if (!enough) {
-            PRINTC(YELLOW, "輸入錯誤 - 資源不足\n");
+            setMsg("輸入錯誤 - 資源不足以建造道路 或 道路數量已達上限");
             return -1;
         }
     }
@@ -134,7 +145,7 @@ int32_t checkRoad(int32_t playerID, int32_t roadPos) {
 int32_t checkBuyCard(int32_t playerID) {
     // 確認牌庫裏面還有牌
     if (game->player[NONE].devcard->index == 0) {
-        PRINTC(YELLOW, "輸入錯誤 - 牌庫裏面沒有牌了\n");
+        setMsg("輸入錯誤 - 牌庫裏面沒有牌了");
         return -1;
     }
 
@@ -144,7 +155,7 @@ int32_t checkBuyCard(int32_t playerID) {
     if (game->player[playerID].resource[SHEEP] < 1) enough = false;
     if (game->player[playerID].resource[WHEAT] < 1) enough = false;
     if (!enough) {
-        PRINTC(YELLOW, "輸入錯誤 - 資源不足\n");
+        setMsg("輸入錯誤 - 資源不足以購買開發卡");
         return -1;
     }
 
@@ -158,14 +169,14 @@ int checkUseCard(int32_t player, int32_t cardID) {
 
     // 確認玩家是否有該張開發卡
     if (cardHead->index <= (size_t)cardID || cardID < 0) {
-        PRINTC(YELLOW, "輸入錯誤 - 玩家沒有該張開發卡\n");
+        setMsg("輸入錯誤 - 請正確輸入開發卡代號");
         return -1;
     }
 
     // 確認該卡片為可以使用的狀態
     pDevcard card = entry(getNode(cardHead, cardID), sDevcard);
     if (card->status != AVAILABLE) {
-        PRINTC(YELLOW, "輸入錯誤 - 該卡片不是可以使用的狀態\n");
+        setMsg("輸入錯誤 - 該卡片不是可以使用的狀態");
         return -1;
     }
 
@@ -179,11 +190,11 @@ int32_t checkBankTrade(int32_t playerID, int32_t giveRes, int32_t takeRes) {
 
     // 檢查不合法輸入
     if (giveRes == takeRes) {
-        PRINTC(YELLOW, "輸入錯誤 - 資源不可相同\n");
+        setMsg("輸入錯誤 - 交易資源不可相同");
         return -1;
     }
     if (giveRes < 1 || giveRes > 5 || takeRes < 1 || takeRes > 5) {
-        PRINTC(YELLOW, "輸入錯誤 - 未知的資源種類\n");
+        setMsg("輸入錯誤 - 未知的資源種類");
         return -1;
     }
 
@@ -193,7 +204,7 @@ int32_t checkBankTrade(int32_t playerID, int32_t giveRes, int32_t takeRes) {
 
     // 確認玩家是否有足夠的資源
     if (game->player[playerID].resource[giveRes] < require) {
-        PRINTC(YELLOW, "輸入錯誤 - 資源不足\n");
+        setMsg("輸入錯誤 - 資源不足以完成貿易");
         return -1;
     }
 
@@ -209,7 +220,7 @@ int32_t checkDiscard(int32_t playerID, int32_t discards, int32_t selectCard[5]) 
     for (int32_t ndx = 0; ndx < 5; ndx++) {
         holds = game->player[playerID].resource[ndx + 1];
         if (selectCard[ndx] < 0 || selectCard[ndx] > holds) {
-            PRINTC(YELLOW, "輸入錯誤 - 捨棄的資源張數不合法\n");
+            setMsg("輸入錯誤 - 捨棄的資源張數與持有手牌不相符");
             return -1;
         }
         total += selectCard[ndx];
@@ -217,7 +228,7 @@ int32_t checkDiscard(int32_t playerID, int32_t discards, int32_t selectCard[5]) 
 
     // 檢查捨棄的資源總張數是否合法
     if (total != discards) {
-        PRINTC(YELLOW, "輸入錯誤 - 捨棄的資源總張數不相符\n");
+        setMsg("輸入錯誤 - 捨棄的資源總張數不相符");
         return -1;
     }
 
@@ -257,8 +268,19 @@ int32_t checkRobPlayer(int32_t playerID, int32_t blockPos) {
 
 // 9. 檢查玩家掠奪行動是否合法
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos) {
+    if (robPlayer == -1) {
+        setMsg("輸入錯誤 - 請確認輸入的玩家代號是否正確");
+        return -1;
+    }
+
     pBlock block = entry(getNode(game->block, blockPos), sBlock);
     bool hasTown = false;
+
+    // 確認該玩家是否為自己
+    if (robPlayer == game->turn) {
+        setMsg("輸入錯誤 - 無法掠奪自己");
+        return -1;
+    }
 
     // 確認該地是否有該玩家的城鎮或村莊
     for (int idx = 0; idx < 6; idx++) {
@@ -271,7 +293,7 @@ int32_t checkRobAct(int32_t robPlayer, int32_t blockPos) {
 
     // 沒有該玩家的城鎮或村莊
     if (!hasTown) {
-        PRINTC(YELLOW, "輸入錯誤 - 無法掠奪此玩家，此地沒有該玩家的城鎮或村莊\n");
+        setMsg("輸入錯誤 - 無法掠奪此玩家，此地沒有該玩家的城鎮或村莊");
         return -1;
     }
 

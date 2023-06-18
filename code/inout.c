@@ -58,6 +58,57 @@ int32_t readCard(char *string, int32_t tryTime) {
     return readCMD(NO_ARG);
 }
 
+int32_t readDiscard(uint8_t *hold, int32_t array[6], int32_t tryTime) {
+    int32_t wood = -2, brick = -2, sheep = -2, wheat = -2, ore = -2;
+
+    while (1) {
+        printGameInfo(0);
+        if (tryTime > 0) PRINTC(YELLOW, "%s", msg);
+        if (wood == -1 || brick == -1 || sheep == -1 || wheat == -1 || ore == -1)
+            PRINTC(YELLOW, "  輸入格式錯誤，請重新輸入");
+        printf("\n 需要棄掉資源 >>>  木頭  磚塊  羊毛  小麥  石頭\n");
+        printf("    輸入格式 >>>  ");
+        if (wood >= 0) printf("%d", wood);
+        if (wood < 0) {
+            wood = readCMD(NO_ARG);
+            continue;
+        }
+        printf("    ");
+        if (brick >= 0) printf("%d", brick);
+        if (brick < 0) {
+            brick = readCMD(NO_ARG);
+            continue;
+        }
+        printf("    ");
+        if (sheep >= 0) printf("%d", sheep);
+        if (sheep < 0) {
+            sheep = readCMD(NO_ARG);
+            continue;
+        }
+        printf("    ");
+        if (wheat >= 0) printf("%d", wheat);
+        if (wheat < 0) {
+            wheat = readCMD(NO_ARG);
+            continue;
+        }
+        printf("    ");
+        if (ore >= 0) printf("%d", ore);
+        if (ore < 0) {
+            ore = readCMD(NO_ARG);
+            continue;
+        }
+        if (wood > hold[1] || brick > hold[2] || sheep > hold[3] || wheat > hold[4] || ore > hold[5]) {
+            wood = -2, brick = -2, sheep = -2, wheat = -2, ore = -2, tryTime++;
+            setMsg("  輸入資源超過擁有資源，請重新輸入");
+            continue;
+        }
+        break;
+    }
+    array[1] = wood, array[2] = brick, array[3] = sheep, array[4] = wheat, array[5] = ore;
+    array[0] = wood + brick + sheep + wheat + ore;
+    return 0;
+}
+
 int32_t readPos(char *string, int32_t type, int32_t tryTime) {
     int32_t posX = -2, posY = -2;
     int32_t infoMode = 0;
@@ -99,6 +150,37 @@ int32_t readPos(char *string, int32_t type, int32_t tryTime) {
             return -1;
     }
     return -1;
+}
+
+int32_t readBankTrade(int32_t *giveRes, int32_t *takeRes, int32_t tryTime) {
+    int32_t give = -2, take = -2;
+    while (1) {
+        printGameInfo(TRADE_N);
+        if (tryTime > 0) PRINTC(YELLOW, "%s", msg);
+        if (give == -1 || take == -1)
+            PRINTC(YELLOW, "  輸入格式錯誤，請重新輸入");
+        printf("\n 請選擇交換資源種類 >>> 木頭[1] 磚塊[2]  羊毛[3]  小麥[4]  石頭[5]\n");
+        printf("決定換出資源: ");
+        if (give >= 0) printf("%d", give);
+        if (give < 0) {
+            give = readCMD(NO_ARG);
+            continue;
+        }
+        printf("  決定換入資源: ");
+        if (take >= 0) printf("%d", take);
+        if (take < 0) {
+            take = readCMD(NO_ARG);
+            continue;
+        }
+        if (give == take) {
+            give = -2, take = -2, tryTime++;
+            setMsg("  輸入資源種類重複，請重新輸入");
+            continue;
+        }
+        break;
+    }
+    *giveRes = give, *takeRes = take;
+    return 0;
 }
 
 int32_t printGameInfo(int32_t buildOption) {

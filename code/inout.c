@@ -184,8 +184,7 @@ int32_t readBankTrade(int32_t *giveRes, int32_t *takeRes, int32_t tryTime) {
 }
 
 int32_t printGameInfo(int32_t buildOption) {
-    //CLEAR();
-    printGraph();
+    CLEAR();
     printf("玩家1[你]  分數：%2d", game->player[1].score);
     if (game->roadKing.owner == 1) printf("  { 道路王者 }  ");
     if (game->armyKing.owner == 1) printf("  { 軍隊王者 }  ");
@@ -240,7 +239,14 @@ int32_t printGameInfo(int32_t buildOption) {
         if (game->roadKing.owner == idx) printf("  { 道路王者 }  ");
         if (game->armyKing.owner == idx) printf("  { 軍隊王者 }  ");
         printf("\n-----------------------------------------------------------------------\n");
-        printf("||  持有資源   || %2d 張 |\n", game->player[idx].resource[ALL]);
+        if (cheat == false)
+            printf("||  持有資源   || %2d 張 |\n", game->player[idx].resource[ALL]);
+        else {
+            printf("||  持有資源   || 木頭：%2d | 磚塊：%2d | 羊毛：%2d | 小麥：%2d | 石頭：%2d |\n",
+                   game->player[idx].resource[WOOD], game->player[idx].resource[BRICK],
+                   game->player[idx].resource[SHEEP], game->player[idx].resource[WHEAT],
+                   game->player[idx].resource[ORE]);
+        }
         printf("||  持有點數   || 道路長度：%2d | 軍隊數量：%2d | 城鎮：%2d | 城市：%2d |\n",
                game->player[idx].roadlength, game->player[idx].armySize,
                game->player[idx].building[VILLAGE], game->player[idx].building[CITY]);
@@ -250,7 +256,46 @@ int32_t printGameInfo(int32_t buildOption) {
             if (card->type != VICTORY_POINT && card->status == USED) continue;
             cardNum++;
         }
-        printf("||  持有發展卡 || %2d 張 |\n", cardNum);
+        if (cheat == false)
+            printf("||  持有發展卡 || %2d 張 |\n", cardNum);
+        else {
+            printf("||  持有發展卡 |");
+            forList(game->player[idx].devcard, cardList) {
+                pDevcard card = entry(cardList, sDevcard);
+                switch (card->type) {
+                    case VICTORY_POINT:
+                        printf("| 勝利點數卡");
+                        break;
+                    case KNIGHT:
+                        if (card->status == AVAILABLE)
+                            printf("| 騎士卡 ");
+                        if (card->status == UNUSED)
+                            printf("| 騎士卡(準備中) ");
+                        break;
+                    case ROAD_BUILDING:
+                        if (card->status == AVAILABLE)
+                            printf("| 建路卡 ");
+                        if (card->status == UNUSED)
+                            printf("| 建路卡(準備中) ");
+                        break;
+                    case YEAR_OF_PLENTY:
+                        if (card->status == AVAILABLE)
+                            printf("| 豐收卡 ");
+                        if (card->status == UNUSED)
+                            printf("| 豐收卡(準備中) ");
+                        break;
+                    case MONOPOLY:
+                        if (card->status == AVAILABLE)
+                            printf("| 壟斷卡 ");
+                        if (card->status == UNUSED)
+                            printf("| 壟斷卡(準備中) ");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            printf("|\n");
+        }
     }
     printf("\n\n");
     printf("++++++++++++++ 第 %d 輪 - 現在輪到 玩家%d 的回合 ++++++++++++++\n", roundCount, game->turn);

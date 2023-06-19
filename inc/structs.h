@@ -45,7 +45,7 @@ typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
     TTF_Font* font;
-
+    Mix_Music *music;
     SDL_Texture *bgTexture;
     SDL_Texture *blockTexture[5][6];
     SDL_Rect blockPositons[5][6];

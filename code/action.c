@@ -1,6 +1,6 @@
 #include "catan.h"
 
-// 1 - STATE_SETTLE
+// 1 - STATE_SETTLE  
 int32_t settleAction() {
     int pickNode, pickRoad;
 

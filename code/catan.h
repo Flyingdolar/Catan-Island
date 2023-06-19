@@ -104,9 +104,8 @@ void renderText(Display* display, const char* text, int x, int y);
 void renderArrowY(SDL_Renderer* renderer, int x, int y, int size);
 void renderArrowX(SDL_Renderer* renderer, int x, int y, int size);
 void renderAxis(Display* display);
+int playMusic(Display* display);
 
-//playMusic.c
-int playMusic();
 
 // update.c
 int32_t updateScore(void);

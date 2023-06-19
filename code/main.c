@@ -66,6 +66,7 @@ int main(/*int argc, char *argv[]*/) {
             case 2:  // 載入遊戲
                 printf("     您選擇了載入遊戲，正在載入卡坦島...\n");
                 playGame(0);
+                break;
             default:
                 printf("     您選擇了離開遊戲，正在關閉卡坦島...\n");
                 userChoice = 0;

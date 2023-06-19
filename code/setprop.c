@@ -67,7 +67,7 @@ int32_t placeRoad(int32_t playerID, int32_t roadPos) {
     PRINTL("正在放置道路標記於道路上");
     player->building[ROAD]++;  // 記錄玩家場上道路數量
     PRINTL("玩家 %d 建築物 %d 剩餘 %d", playerID, ROAD, player->building[ROAD]);
-    if (player->building[ROAD] < 0) {
+    if (15 - player->building[ROAD] < 0) {
         PRINTD("沒有足夠建築物建造道路\n");
         return -1;
     }

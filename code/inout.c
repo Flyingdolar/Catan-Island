@@ -184,8 +184,8 @@ int32_t readBankTrade(int32_t *giveRes, int32_t *takeRes, int32_t tryTime) {
 }
 
 int32_t printGameInfo(int32_t buildOption) {
-    CLEAR();
-    //printGraph();
+    //CLEAR();
+    printGraph();
     printf("玩家1[你]  分數：%2d", game->player[1].score);
     if (game->roadKing.owner == 1) printf("  { 道路王者 }  ");
     if (game->armyKing.owner == 1) printf("  { 軍隊王者 }  ");

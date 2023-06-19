@@ -72,6 +72,7 @@ int32_t init(){// 初始化遊戲
   // 初始化最大騎士
   game->roadKing.owner = 0;
   game->roadKing.size = 0;
+  PRINTL("node link:test1")
 
   PRINTL("Ready to start!");
   return 0;
@@ -260,10 +261,9 @@ int32_t initNode(){
     }
   }
   //*debug print
+  // int cnt =0;
   // forList(game->node, element){
-  //   pNode node = entry(element, sNode);
-  //   PRINTL("node %ld: coord: %d, %d, owner: %d, building: %d", node->list.index, node->coord[0], node->coord[1], node->owner, node->building);
-  //   //sleep(1);
+  //   printf("node %d: ", cnt++);
   // }
   return 0;
 }
@@ -611,10 +611,9 @@ int32_t initMap(){
   //   PRINTL("node %ld: coord: %d, %d", nodeptr->list.index, nodeptr->coord[0], nodeptr->coord[1]);
   //   for(int i = 0; i < 3; i++){
   //     if(nodeptr->node[i] != NULL){
-  //       PRINTL("i:%d  node %ld: coord: %d, %d", i, nodeptr->node[i]->list.index, nodeptr->node[i]->coord[0], nodeptr->node[i]->coord[1]);
+  //       PRINTL("  node %ld: coord: %d, %d", nodeptr->node[i]->list.index, nodeptr->node[i]->coord[0], nodeptr->node[i]->coord[1]);
   //     }
   //   }
-  //   //sleep(1);
   // }
   // PRINTL("road link:test1")
   // forList(game->road, elememt){
@@ -710,6 +709,16 @@ int32_t initMap(){
       }
     }
   }
+  //   PRINTL("node link:test1")
+  // forList(game->node, elememt){
+  //   pNode nodeptr = entry(elememt, sNode);
+  //   PRINTL("node %ld: coord: %d, %d", nodeptr->list.index, nodeptr->coord[0], nodeptr->coord[1]);
+  //   for(int i = 0; i < 3; i++){
+  //     if(nodeptr->node[i] != NULL){
+  //       PRINTL("  node %ld: coord: %d, %d", nodeptr->node[i]->list.index, nodeptr->node[i]->coord[0], nodeptr->node[i]->coord[1]);
+  //     }
+  //   }
+  // }
   //*debug print
   // PRINTL("harbor link:test1")
   // forList(game->harbor, elememt){
@@ -817,6 +826,15 @@ int32_t initMap(){
   //     }
   //   }
   // }
-
+  // PRINTL("node link:test1")
+  // forList(game->node, elememt){
+  //   pNode nodeptr = entry(elememt, sNode);
+  //   PRINTL("node %ld: coord: %d, %d", nodeptr->list.index, nodeptr->coord[0], nodeptr->coord[1]);
+  //   for(int i = 0; i < 3; i++){
+  //     if(nodeptr->node[i] != NULL){
+  //       PRINTL("node %ld: coord: %d, %d", nodeptr->node[i]->list.index, nodeptr->node[i]->coord[0], nodeptr->node[i]->coord[1]);
+  //     }
+  //   }
+  // }
   return 0;
 }

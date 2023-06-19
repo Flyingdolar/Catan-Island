@@ -63,6 +63,7 @@ int32_t randMap(){//隨機地圖板塊資源&點數
     pBlock blockptr = entry(element, sBlock);
     blockptr->resource = res[index];
     blockptr->number = random_point[index];
+    if(blockptr->number == 0) game->robber = blockptr;
     index++;
   }
 
@@ -106,98 +107,184 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   return 0;
 }
   
-int randPickRoad(){//random
-  int idx[100] = {0}, cnt = 0;
-  for(uint8_t i = 0 ; i < 100 ; i++){
-    idx[i] = -1;
-  }
-  forList(game->node, element){
-    pNode nodeptr = entry(element, sNode);
-    if(nodeptr->owner != game->turn) continue;
-    for(uint8_t i = 0 ; i < 3 ; i++){
-      if(nodeptr->road[i] == NULL) continue;
-      if(nodeptr->road[i]->owner == 0){
-        //tempRoad = nodeptr->road[i];
-        idx[cnt] = nodeptr->road[i]->list.index;
-        for(int j = 0 ; j < cnt ; j++){//check if the road is already in the array
-          if(idx[j] == idx[cnt]){
-            idx[cnt] = -1;
-            cnt--;
-            break;
-          }
-        }
-        cnt++;
-      }
-    }
-  }
-  
-  forList(game->road, element){
-    pRoad roadptr = entry(element, sRoad);
-    if(roadptr->owner == game->turn){
-      for(uint8_t i = 0 ; i < 2 ; i++){
-        if(roadptr->node[i]->owner == 0 || roadptr->node[i]->owner == game->turn){
-          //tempRoad = roadptr;
-          for(uint8_t j = 0 ; j < 3 ; j++){
-            if(roadptr->node[i]->road[j] == NULL) continue;
-            if(roadptr->node[i]->road[j]->owner == 0){
-              //tempRoad = roadptr->node[i]->road[j];
-              idx[cnt] = roadptr->node[i]->road[j]->list.index;
-              for(int j = 0 ; j < cnt ; j++){//check if the road is already in the array
-                if(idx[j] == idx[cnt]){
-                  idx[cnt] = -1;
-                  cnt--;
-                  break;
+int randPickRoad(){
+  uint8_t player = game->turn;
+  switch(game->state){
+    case SETTLE:
+      pRoad maxValue = NULL;
+      uint8_t threshold = 100;
+      forList(game->node, element){
+        pNode pos = entry(element, sNode);
+        if(pos->owner != player) continue;// not my node
+        for(uint8_t i = 0; i < 3; i++){
+          uint8_t temp = 0;
+          if(pos->road[i] != NULL){
+            if(pos->road[i]->owner == player) break;// already have road
+            if(pos->node[i] != NULL){
+              pNode neighbor = pos->node[i];
+              for(uint8_t j = 0; j < 3; j++){
+                if(neighbor->node[j] != NULL){
+                  pNode possible = neighbor->node[j];
+                  if(possible->owner != 0 ) continue;// not empty node
+                  for(uint8_t k = 0; k < 3; k++){
+                    if(possible->block[k] != NULL){
+                      temp += abs(possible->block[k]->number - 7 );
+                    }else{
+                      temp += 7;
+                    }
+                  }
+                  if(temp < threshold){
+                    threshold = temp;
+                    maxValue = pos->road[i];
+                    PRINTL("maxValue %ld", maxValue->list.index);
+                  }
                 }
               }
-              cnt++;
             }
           }
         }
       }
-    }
+
+      if(maxValue != NULL) return maxValue->list.index;
+      break;
+    case BUILD:
+
+
+      break; 
+    default:
+      break;
   }
-  if(cnt == 0) return -1;
-  return idx[rand() % cnt];
+  return rand() % game->road->index;
 }
 
+// int randPickRoad2(){//random
+//   int idx[100] = {0}, cnt = 0;
+//   int maxValue = 100;
+//   pRoad maxValueRoad = NULL;
+//   for(uint8_t i = 0 ; i < 100 ; i++){
+//     idx[i] = -1;
+//   }
+//   forList(game->node, element){
+//     pNode nodeptr = entry(element, sNode);
+//     if(nodeptr->owner != game->turn) continue;
+//     for(uint8_t i = 0 ; i < 3 ; i++){
+//       if(nodeptr->road[i] == NULL) continue;
+//       if(nodeptr->road[i]->owner == 0){
+//         //tempRoad = nodeptr->road[i];
+//         idx[cnt] = nodeptr->road[i]->list.index;
+//         for(int j = 0 ; j < cnt ; j++){//check if the road is already in the array
+//           if(idx[j] == idx[cnt]){
+//             idx[cnt] = -1;
+//             cnt--;
+//             break;
+//           }
+//         }
+//         cnt++;
+//       }
+//     }
+//   }
+  
+//   printf("cnt = %d\n", cnt);
+//   forList(game->road, element){
+//     pRoad roadptr = entry(element, sRoad);
+//     if(roadptr->owner == game->turn){
+//       for(uint8_t i = 0 ; i < 2 ; i++){
+//         if(roadptr->node[i]->owner == 0 || roadptr->node[i]->owner == game->turn){
+//           //tempRoad = roadptr;
+//           for(uint8_t j = 0 ; j < 3 ; j++){
+//             if(roadptr->node[i]->road[j] == NULL) continue;
+//             if(roadptr->node[i]->road[j]->owner == 0){
+//               //tempRoad = roadptr->node[i]->road[j];
+//               idx[cnt] = roadptr->node[i]->road[j]->list.index;
+//               for(int j = 0 ; j < cnt ; j++){//check if the road is already in the array
+//                 if(idx[j] == idx[cnt]){
+//                   idx[cnt] = -1;
+//                   cnt--;
+//                   break;
+//                 }
+//               }
+//               cnt++;
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+//   for(int i = 0 ; i < cnt ; i++){
+//     printf("%d ", idx[i]);
+//   }
+//   sleep(1);
+//   if(cnt == 0) return -1;
+//   return idx[rand() % cnt];
+// }
+
 int randPickNode(){
-  pNode maxNode = NULL;
-  uint8_t max = 0, temp = 0;
+  PRINTL("TURN %d", game->turn);
+  return rand() % 54;
+  pNode minNode = NULL;
+  uint8_t min = 100, temp = 0;
   switch(game->state){
     case SETTLE://not random; find max value
       forList(game->node, element){
         pNode nodeptr = entry(element, sNode);
-        uint8_t temp = 0;
+        temp = 0;
         for(uint8_t i = 0 ; i < 3 ; i++){
           if(nodeptr->block[i] == NULL) continue;
+          if(nodeptr->node[i] == NULL) continue;
+          if(nodeptr->node[i]->owner != 0) break;
           temp += abs(nodeptr->block[i]->number - 7);
-        }
-        if(temp < max){
-          max = temp;
-          maxNode = nodeptr;
+          if(temp < min && i == 2){
+            min = temp;
+            minNode = nodeptr;
+          }
         }
       }
-      //maxNode->owner = game->turn;
-      return maxNode->list.index;
+      return minNode->list.index;
       break;
     case BUILD://not random
       forList(game->node, element){
         pNode nodeptr = entry(element, sNode);
-        for(uint8_t i = 0 ; i < 3; i++){
-          if(nodeptr->road[i] == NULL) continue;
-          if(nodeptr->road[i]->owner == game->turn && nodeptr->owner == NONE ){
-            for(uint8_t i = 0 ; i < 3; i++){
-              if(nodeptr->block[i] == NULL) continue;
-              temp += abs(nodeptr->block[i]->number - 7);
-            }
-            if(temp < max){//find most valuable node
-              max = temp;
-              maxNode = nodeptr;
+        if(nodeptr->owner == game->turn){
+          for(uint8_t i = 0 ; i < 3; i++){
+            if(nodeptr->road[i] == NULL) continue;
+            if(nodeptr->road[i]->owner == game->turn && nodeptr->owner == game->turn ){
+              for(uint8_t i = 0 ; i < 3; i++){
+                if(nodeptr->block[i] == NULL) continue;
+                temp += abs(nodeptr->block[i]->number - 7);
+              }
+              if(temp < min){//find most valuable node
+                min = temp;
+                minNode = nodeptr;
+              }
             }
           }
         }
-        return maxNode->list.index;
+        // if(nodeptr->owner == NONE){
+        //   for(uint8_t i = 0 ; i < 3; i++){
+        //     if(nodeptr->road[i] == NULL) continue;
+        //     if(nodeptr->road[i]->owner == game->turn && nodeptr->owner == NONE ){
+        //       for(uint8_t i = 0 ; i < 3; i++){
+        //         if(nodeptr->block[i] == NULL) continue;
+        //         temp += abs(nodeptr->block[i]->number - 7);
+        //       }
+        //       if(temp < max){//find most valuable node
+        //         max = temp;
+        //         maxNode = nodeptr;
+        //       }
+        //     }
+        //   }
+        // }else{
+        //   for(uint8_t i = 0 ; i < 3; i++){
+        //     if(nodeptr->block[i] == NULL) continue;
+        //     temp += abs(nodeptr->block[i]->number - 7);
+        //   }
+        //   if(temp < max){//find most valuable node
+        //     max = temp;
+        //     maxNode = nodeptr;
+        //   }
+        // } 
       }
+      return minNode->list.index;
       break;
     default:
       return -1;
@@ -296,6 +383,9 @@ int randLostResource(int32_t lostResource[5]){//robber; not random
   //add back to game->player[game->turn].resource
   for(uint8_t i = 0 ; i < 5 ; i++){
     game->player[game->turn].resource[i+1] += lostResource[i];
+  }
+  for(uint8_t i = 0 ; i < 6 ; i++){
+    PRINTL("player %d resource %d\n", game->turn, game->player[game->turn].resource[i]);
   }
   return 0;
 }

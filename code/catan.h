@@ -81,7 +81,7 @@ int32_t checkRoad(int32_t playerID, int32_t roadPos);
 int32_t checkBuyCard(int32_t playerID);
 int32_t checkUseCard(int32_t playerID, int32_t cardID);
 int32_t checkBankTrade(int32_t playerID, int32_t giveRes, int32_t takeRes);
-int32_t checkDiscard(int32_t playerID, int32_t selectCard[5]);
+int32_t checkDiscard(int32_t playerID, int32_t selectCard[6]);
 int32_t checkRobberPos(int32_t blockPos);
 int32_t checkRobbable(int32_t playerID, int32_t blockPos);
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos);

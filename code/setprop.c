@@ -45,7 +45,7 @@ int32_t placeNode(int32_t playerID, int32_t nodePos) {
         }
     }
     // 更新玩家分數
-    // updateScore();
+    updateScore();
     return 0;
 }
 
@@ -80,7 +80,7 @@ int32_t placeRoad(int32_t playerID, int32_t roadPos) {
         }
     }
     // 更新玩家分數
-    // updateScore();
+    updateScore();
     return 0;
 }
 

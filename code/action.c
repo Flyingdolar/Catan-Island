@@ -30,6 +30,7 @@ int32_t settleAction() {
         // updateMap();
         // 按下 ENTER 繼續
         PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
+                    display();
 
         PRINTL("輪到玩家 %d 放置道路", playerIdx);
         FOREVER(Attempt) {  // 直到玩家的操作合法為止
@@ -49,6 +50,8 @@ int32_t settleAction() {
         }
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
+            display();
+
         printGameInfo(0);
         printf("玩家%d 修建了一條道路", playerIdx);
         // updateMap();

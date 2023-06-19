@@ -2,6 +2,8 @@
 // Include Standard Library
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -70,14 +72,16 @@ int32_t checkRobPlayer(int32_t playerID, int32_t blockPos);
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos);
 
 //screen.c
-int initScreen();
-void event_loop(SDL_Window *win);
-void draw(SDL_Window *win);
-void drawNumber(int x, int y, int number);
-void handleMouseClick_BUILD(int x, int y);
-void handleMouseClick_ROBBER(int x, int y);
-int getRobberBlockIndex(int x, int y);
-SDL_Rect getEdgeRect(pBlock block, int blockIndex, int edgeIndex);
+int display();
+Display* create_display();
+void update_display(Display* display);
+void destroy_display(Display* display);
+int event_loop(Display* display);
+void renderBlocks(Display* display);
+void renderNodesAndVillage(Display* display);
+void renderRoads(Display* display);
+
+
 
 // debug.c
 void printGraph(void);

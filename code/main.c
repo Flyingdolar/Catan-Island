@@ -5,11 +5,14 @@ char msg[10000];
 int roundCount;
 
 int playGame(int isNewGame) {
-    if (isNewGame > 0) init();
-
+    if (isNewGame > 0) {
+        init();
+    }
     // 遊戲開始
-    roundCount = 0;
     game->state = SETTLE;
+    display();
+    roundCount = 0;
+    
 
     // 直到分出勝負前，遊戲都不會結束
     while (1) {

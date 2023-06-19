@@ -1,6 +1,6 @@
-#include "catan.h" 
+#include "catan.h"
 
-// 1 - STATE_SETTLE  
+// 1 - STATE_SETTLE
 int32_t settleAction() {
     int pickNode, pickRoad;
 
@@ -157,7 +157,7 @@ int32_t buildAction() {
                 PRINTC(GREEN, "請選擇建設操作 >>\n");
                 PRINTC(BLUE, ">>>> 建設道路[1] 建設村莊[2] 購買發展卡[3]\n");
                 PRINTC(BLUE, ">>>> 使用發展卡[4] 交換資源[5] 顯示地圖[6]\n");
-                PRINTC(PURPLE, ">>>>  保存並退出遊戲[7]\n");
+                PRINTC(PURPLE, ">>>>  退出遊戲[7]\n");
                 PRINTC(PURPLE, ">>>>  結束回合[0]\n\n");
                 userCmd = readCMD("建設操作：", 0, 7, Attempt);
                 if (userCmd == 6) continue;
@@ -540,7 +540,10 @@ int32_t robberAction() {
     display();  // 按下 ENTER 繼續
 
     // 如果可以掠奪，選擇要掠奪的玩家
-    if (checkRobbable(game->turn, pickBlock) == -1) return 0;
+    if (checkRobbable(game->turn, pickBlock) == -1) {
+        game->state = BUILD;
+        return 0;
+    }
     PRINTL("可以掠奪，選擇要掠奪的玩家");
     FOREVER(Attempt) {  // 直到玩家合法的選擇掠奪玩家為止
         if (game->turn == PLAYER1) {

@@ -4,7 +4,7 @@ int32_t readCMD(char *string, int32_t lower, int32_t upper, int32_t tryTime) {
     char cmd[1000];
     int number = 0;
     if (string != NULL) printf("\n");
-    if (tryTime > 0) PRINTC(YELLOW, "%s", msg);
+    if (tryTime > 0) PRINTC(YELLOW, "%s\n", msg);
     if (string != NULL) printf("%s", string);
     fgets(cmd, 1000, stdin);
     // if cmd is not number, return -1

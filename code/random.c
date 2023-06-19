@@ -152,26 +152,23 @@ int randPickRoad(){
         for(uint8_t i = 0; i < 3; i++){
           uint8_t temp = 0;
           if(pos->road[i] != NULL){
-            if(pos->road[i]->owner == player){// already have road
-
-            }else{
-              if(pos->node[i] != NULL){
-                pNode neighbor = pos->node[i];
-                for(uint8_t j = 0; j < 3; j++){
-                  if(neighbor->node[j] != NULL){
-                    pNode possible = neighbor->node[j];
-                    if(possible->owner != 0 ) continue;// not empty node
-                    for(uint8_t k = 0; k < 3; k++){
-                      if(possible->block[k] != NULL){
-                        temp += abs(possible->block[k]->number - 7 );
-                      }else{
-                        temp += 7;
-                      }
+            if(pos->road[i]->owner == player) break;// already have road
+            if(pos->node[i] != NULL){
+              pNode neighbor = pos->node[i];
+              for(uint8_t j = 0; j < 3; j++){
+                if(neighbor->node[j] != NULL){
+                  pNode possible = neighbor->node[j];
+                  if(possible->owner != 0 ) continue;// not empty node
+                  for(uint8_t k = 0; k < 3; k++){
+                    if(possible->block[k] != NULL){
+                      temp += abs(possible->block[k]->number - 7 );
+                    }else{
+                      temp += 7;
                     }
-                    if(temp < threshold){
-                      threshold = temp;
-                      maxValue = pos->road[i];
-                    }
+                  }
+                  if(temp < threshold){
+                    threshold = temp;
+                    maxValue = pos->road[i];
                   }
                 }
               }
@@ -215,27 +212,29 @@ int randPickNode(){
       return maxValueNode->list.index;
       break;
     case BUILD://not random
-      // forList(game->node, element){
-      //   pNode nodeptr = entry(element, sNode);
-      //   if(nodeptr->owner == game->turn){
-      //     for(uint8_t i = 0 ; i < 3; i++){
-      //       if(nodeptr->road[i] == NULL || nodeptr->owner != 0) continue;
-      //       if(nodeptr->road[i]->owner == game->turn && nodeptr->owner == game->turn ){
-      //         for(uint8_t i = 0 ; i < 3; i++){
-      //           if(nodeptr->block[i] != NULL) {
-      //             temp += abs(nodeptr->block[i]->number - 7);
-      //           }else{
-      //             temp += 7;
-      //           }
-      //         }
-      //         if(temp < min){//find most valuable node
-      //           min = temp;
-      //           minNode = nodeptr;
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
+      forList(game->road, element){
+        pRoad roadptr = entry(element, sRoad);
+        if(roadptr->owner != game->turn) continue;// not my road
+        for(uint8_t i = 0; i < 2; i++){
+          for(uint8_t j = 0; j < 3; j++){
+            temp = 0;
+            pNode neighber = roadptr->node[i]->node[j];
+            if(neighber == NULL) continue;//no neighbor node
+            if(neighber->owner != 0) break;//not empty node
+            for(uint8_t k = 0; k < 3; k++){
+              if(neighber->block[k] != NULL){
+                temp += abs(neighber->block[k]->number - 7);
+              }else{
+                temp += 7;
+              }
+            }
+            if(temp < threshold){
+              threshold = temp;
+              maxValueNode = neighber;
+            }
+          }
+        }
+      }
       if(maxValueNode != NULL) return  maxValueNode->list.index;
       break;
     default:

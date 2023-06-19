@@ -1,8 +1,39 @@
 #include "catan.h"
+#define MUSICPATH "./resources/bgMusic.mp3"
 
 pGame game;
 char msg[10000];
 int roundCount;
+
+int playMusic(){
+     //初始化音頻
+    Mix_Init(MIX_INIT_MP3);
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        SDL_Log("Can not init audio, %s", SDL_GetError());
+        return -1;
+    }
+
+     // 加载音乐文件
+    Mix_Music* music = Mix_LoadMUS(MUSICPATH);
+    if (music == NULL) {
+        printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
+        return -1;
+    }
+
+    //創建音樂
+    music = Mix_LoadMUS(MUSICPATH);
+    if (music == NULL) {
+        printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
+        return -1;
+    }
+
+    // 播放音乐
+    if (Mix_PlayMusic(music, -1) == -1) {
+        printf("Failed to play music! SDL_mixer Error: %s\n", Mix_GetError());
+        return -1;
+    }
+    return 0;
+}
 
 int playGame(int isNewGame) {
     if (isNewGame > 0) {
@@ -10,6 +41,11 @@ int playGame(int isNewGame) {
     }
     // 遊戲開始
     game->state = SETTLE;
+    display();
+    if(playMusic() == -1){
+        return -1;
+    }
+
     display();
     roundCount = 0;
     

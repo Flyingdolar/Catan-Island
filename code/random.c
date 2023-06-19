@@ -109,10 +109,11 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   
 int randPickRoad(){
   uint8_t player = game->turn;
+  pRoad maxValue = NULL;
+  uint8_t threshold = 100;
+
   switch(game->state){
     case SETTLE:
-      pRoad maxValue = NULL;
-      uint8_t threshold = 100;
       forList(game->node, element){
         pNode pos = entry(element, sNode);
         if(pos->owner != player) continue;// not my node

@@ -6,6 +6,7 @@
 
 #define MARGIN 20
 #define ARROW_SIZE 10
+#define RADIOSIZE 13
 
 #define BGFILENAME "./resources/background.png"
 #define FONTPATH "./resources/Ubuntu-Bold.ttf"
@@ -14,6 +15,7 @@
 #define MUSICPATH "./resources/music.mp3"
 
 #define FONTSIZE 50
+#define FONTSIZE_SMALL 25
 #define BLOCK_NUM 19
 
 #define ROAD_WIDTH 20
@@ -29,11 +31,27 @@
     display();
 */
 
+void renderCircle(Display* display, int x, int y, int radius, SDL_Color color) {
+    SDL_SetRenderDrawColor(display->renderer, color.r, color.g, color.b, color.a);
+    for(int w = 0; w < radius * 2; w++) {
+        for(int h = 0; h < radius * 2; h++) {
+            int dx = radius - w; // horizontal offset
+            int dy = radius - h; // vertical offset
+            if((dx*dx + dy*dy) <= (radius * radius)) {
+                SDL_RenderDrawPoint(display->renderer, x + dx, y + dy);
+            }
+        }
+    }
+}
+
+
 void renderText(Display* display, const char* text, int x, int y) {
+    
     SDL_Color color = { 255, 255, 255, 255 };
-    SDL_Surface* surface = TTF_RenderText_Solid(display->font, text, color);
+    SDL_Surface* surface = TTF_RenderText_Solid(display->font2, text, color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(display->renderer, surface);
     SDL_Rect textRect = { x, y, surface->w, surface->h };
+
     SDL_RenderCopy(display->renderer, texture, NULL, &textRect);
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
@@ -132,6 +150,13 @@ Display* create_display() {
     //創建字體
     display->font = TTF_OpenFont(FONTPATH, FONTSIZE);
     if (display->font == NULL) {
+        printf("TTF_OpenFont: %s\n", TTF_GetError());
+        free(display);
+        return NULL;
+    }
+
+    display->font2 = TTF_OpenFont(FONTPATH, FONTSIZE_SMALL);
+    if (display->font2 == NULL) {
         printf("TTF_OpenFont: %s\n", TTF_GetError());
         free(display);
         return NULL;
@@ -397,6 +422,21 @@ void update_display(Display* display) {
     renderAxis(display);
     renderText(display, "x", WIDTH - MARGIN - 30, MARGIN + 10);
     renderText(display, "y", MARGIN + 30, HEIGHT - MARGIN - 50);
+    renderText(display, "You: ", MARGIN + 10, MARGIN + 10);
+    SDL_Color red = {231, 48, 51, 255};
+    renderCircle(display, MARGIN + 85, MARGIN + 25, RADIOSIZE, red);
+
+    renderText(display, "AI 1: ", MARGIN + 10, MARGIN + 45);
+    SDL_Color yellow = {255, 255,0, 255};
+    renderCircle(display, MARGIN + 85, MARGIN + 60, RADIOSIZE, yellow);
+
+    renderText(display, "AI 2: ", MARGIN + 10, MARGIN + 80);
+    SDL_Color blue = {0, 211, 255, 255};
+    renderCircle(display, MARGIN + 85, MARGIN + 95, RADIOSIZE, blue);
+
+    renderText(display, "AI 3: ", MARGIN + 10, MARGIN + 115);
+    SDL_Color green = {0, 211, 0, 255};
+    renderCircle(display, MARGIN + 85, MARGIN + 130, RADIOSIZE, green);
 
 
     SDL_RenderPresent(display->renderer);

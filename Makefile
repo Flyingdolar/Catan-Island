@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -fsanitize=address
 LDLIBS = -lm -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 LDFLAGS = -L./library -I./include
-DEFINES = -DDEBUG -g
+DEFINES = -g
 
 SRCDIR = code
 OBJDIR := $(shell [ -d obj ] || mkdir obj && echo "obj")

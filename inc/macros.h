@@ -29,7 +29,7 @@
 #define CYAN 36
 
 // Clear Terminal
-#define CLEAR()
+#define CLEAR() printf("\033[2J\033[1;1H")
 
 // forever
 #define FOREVER(count) for (int count = 0;; count++)

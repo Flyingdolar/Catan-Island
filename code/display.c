@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+
 #include "catan.h"
 
 #define WIDTH 900
@@ -27,14 +24,11 @@
 
 
 /*Usage:
-if (need to display something ) {
-    Display* display = create_display();
-    if (display) {
-        // 更新 display
-        update_display(display);
-        // 等待一段時間或者直到某些條件滿足
-    }
-}
+
+    display();
+
+    全部結束後呼叫destroy_display()
+
 */
 
 
@@ -47,6 +41,8 @@ Display* create_display() {
         free(display);
         return NULL;
     }
+
+
     //初始化字體
     if (TTF_Init()) {
         SDL_Log("Can not init TTF, %s", SDL_GetError());
@@ -55,7 +51,6 @@ Display* create_display() {
     }
 
     //創建窗口
-
     SDL_DisplayMode dm;
     SDL_GetCurrentDisplayMode(0, &dm);
     int screenWidth = dm.w;
@@ -224,7 +219,7 @@ void renderBlocksAndNumber(Display* display){
         char number[3];
         sprintf(number, "%d", block->number);
         SDL_Surface* surface = TTF_RenderText_Solid(display->font, number, textColor);
-        SDL_Rect textRect = {xpos + 68 - 20, ypos + 80 - 22, surface->w, surface->h};
+        SDL_Rect textRect = {xpos + 68 - 20, ypos + 80 - 24, surface->w, surface->h};
         SDL_Texture* texture = SDL_CreateTextureFromSurface(display->renderer, surface);
         SDL_RenderCopy(display->renderer, texture, NULL, &textRect);
         SDL_FreeSurface(surface);
@@ -387,6 +382,12 @@ void destroy_display(Display* display) {
     SDL_DestroyRenderer(display->renderer);
     SDL_DestroyWindow(display->window);
     TTF_CloseFont(display->font);
+    // // 释放音乐资源
+    // Mix_FreeMusic(display->music);
+
+    // // 关闭SDL_mixer库和SDL库
+    // Mix_CloseAudio();
+    // Mix_Quit();
     TTF_Quit();
     SDL_Quit();
     free(display);
@@ -403,10 +404,12 @@ int event_loop(Display* display) {
         }
         else if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_RETURN) {
-                destroy_display(display);
-                SDL_Quit();
+                //destroy_display(display);
+                //SDL_Quit();
                 return -1; // 代表用户按下了 Enter 键
             }
+        else if(event.type == SDL_MOUSEBUTTONDOWN) //click 
+            return -1;
         }
     }
     return 0;
@@ -425,3 +428,14 @@ int display(){
     }
     return 0;
 }
+
+
+// int display(){
+//     while (1){
+//         update_display(display);
+//         if(event_loop(display) == -1){
+//             return -1;
+//         }
+//         SDL_Delay(1000 / FRAMERATE);
+//     }
+// }

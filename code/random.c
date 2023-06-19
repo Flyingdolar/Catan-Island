@@ -108,25 +108,29 @@ int32_t randMap(){//隨機地圖板塊資源&點數
 }
   
 int randPickRoad(){
+  //sleep(1);
+  //printf("randPickRoad\n");
   uint8_t player = game->turn;
   //PRINTL("player %d pick road", player);
-  pRoad maxValue = NULL, temproad[3] = {NULL};
+  pRoad maxValue = NULL;
+  pNode tempnode = NULL;
   uint8_t threshold = 100 , temp = 0, available = 0, cnt = 0;
   switch(game->state){
     case SETTLE:
       forList(game->node, element){
         pNode pos = entry(element, sNode);
         if(pos->owner != player) continue;// not my node
+        available = 0;
         for(uint8_t i = 0; i < 3; i++){
           if(pos->road[i] == NULL) continue;// no road
-          if(pos->road[i]->owner == player) available = 1;
+          if(pos->road[i]->owner == player) available = 1;// already have road
         }
         if(available == 1) continue;// already have road
-
+        printf("node %d,%d\n", pos->coord[0], pos->coord[1]);
+        tempnode = pos;
         for(uint8_t i = 0; i < 3; i++){
           if(pos->node[i] == NULL) continue;// no road
           pNode neighbor = pos->node[i];
-          temproad[cnt] = pos->road[i];
           cnt++;
           for(uint8_t j = 0; j < 3; j++){
             temp = 0;
@@ -152,14 +156,21 @@ int randPickRoad(){
             }
           }
         }
+        //printf("node %d,%d", pos->coord[0], pos->coord[1]);
       }
-      PRINTL("player:%d road threshold %d",player, threshold);
+      //printf("player:%d road threshold %d",player, threshold);
       if(maxValue != NULL) return maxValue->list.index;
       //sleep(1);
+      for(uint8_t i = 0 ; i < 3 ; i++){
+        if(tempnode->road[i] != NULL){
+          if(tempnode->road[i]->owner == 0) return tempnode->road[i]->list.index;
+        }
+      }
+      //sleep(1);
       //PRINTL("player:%d cnt %d",player, cnt);
-      if(cnt != 0) return temproad[rand() % cnt]->list.index;
       break;
     case BUILD://if cant find best node to build,, random
+      printf("player:%d build road",player);
       forList(game->node, element){
         pNode pos = entry(element, sNode);
         if(pos->owner != player) continue;// not my node
@@ -256,7 +267,7 @@ int randPickNode(){
       return -1;
       break;
   }
-  return -1;
+  return rand() % game->node->index;
 }
 
 int randDiceNum(){
@@ -394,8 +405,7 @@ int randPickBlock(){//rodder; not random
       }
     }
   }
-  PRINTL("leaderblock: %ld\n", leaderblock->list.index);
-  sleep(1);
+  //PRINTL("leaderblock: %ld\n", leaderblock->list.index);
   return leaderblock->list.index;
 }
 

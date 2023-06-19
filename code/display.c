@@ -9,10 +9,10 @@
 #define HEIGHT 800
 #define FRAMERATE 60
 
-#define BGFILENAME "/home/parallels/Documents/Catan_Island/resources/background.png"
-#define FONTPATH "/home/parallels/Documents/Catan_Island/resources/Ubuntu-Bold.ttf"
-#define ROBBERPATH "/home/parallels/Documents/Catan_Island/resources/robber.png"
-#define NODEPATH "/home/parallels/Documents/Catan_Island/resources/button.png"
+#define BGFILENAME "./resources/background.png"
+#define FONTPATH "./resources/Ubuntu-Bold.ttf"
+#define ROBBERPATH "./resources/robber.png"
+#define NODEPATH "./resources/button.png"
 
 #define FONTSIZE 50
 #define BLOCK_NUM 19
@@ -119,15 +119,15 @@ Display* create_display() {
         return NULL;
     }
     //創建village & city
-    char villageFileName[4][100] = {"/home/parallels/Documents/Catan_Island/resources/village1.png",
-                                    "/home/parallels/Documents/Catan_Island/resources/village2.png",
-                                    "/home/parallels/Documents/Catan_Island/resources/village3.png",
-                                    "/home/parallels/Documents/Catan_Island/resources/village4.png"};
+    char villageFileName[4][100] = {"./resources/village1.png",
+                                    "./resources/village2.png",
+                                    "./resources/village3.png",
+                                    "./resources/village4.png"};
 
-    char cityFileName[4][100] = {"/home/parallels/Documents/Catan_Island/resources/city1.png",
-                                 "/home/parallels/Documents/Catan_Island/resources/city2.png",
-                                 "/home/parallels/Documents/Catan_Island/resources/city3.png",
-                                 "/home/parallels/Documents/Catan_Island/resources/city4.png"};
+    char cityFileName[4][100] = {"./resources/city1.png",
+                                 "./resources/city2.png",
+                                 "./resources/city3.png",
+                                 "./resources/city4.png"};
 
     for (int i = 0; i < 4; i++) {
         display->villageTexture[i] = IMG_LoadTexture(display->renderer, villageFileName[i]);
@@ -141,12 +141,12 @@ Display* create_display() {
 
     //創建block
     // define block image file name array
-    char blockFileName[BLOCK_NUM][105] = {"/home/parallels/Documents/Catan_Island/resources/dessert.png",
-                                          "/home/parallels/Documents/Catan_Island/resources/mountain.png",
-                                          "/home/parallels/Documents/Catan_Island/resources/forest.png",
-                                          "/home/parallels/Documents/Catan_Island/resources/wheat_field.png",
-                                          "/home/parallels/Documents/Catan_Island/resources/hill.png",
-                                          "/home/parallels/Documents/Catan_Island/resources/grass.png"};
+    char blockFileName[BLOCK_NUM][105] = {"./resources/dessert.png",
+                                          "./resources/mountain.png",
+                                          "./resources/forest.png",
+                                          "./resources/wheat_field.png",
+                                          "./resources/hill.png",
+                                          "./resources/grass.png"};
     // create block image surface array
     SDL_Surface* blockImg[4][5];
 
@@ -259,9 +259,9 @@ void renderRoads(Display* display) {
         pRoad road = entry(element, sRoad);  // Get the road from the list element
         if ((road->coord[0] % 2) == 1) {     // vertical
             if (road->coord[0] <= 5) {
-                xpos = 316 - 68 * road->coord[0] + road->coord[1] * 136 - ROAD_WIDTH / 2;
-                ypos = 120 + (road->coord[0] / 2) * 120 + ROAD_HEIGHT / 2;
-            } else {
+                xpos = 316 - 68 * (road->coord[0] + 1)/2 + road->coord[1] * 136 - ROAD_WIDTH/2;
+                ypos = 80 + (road->coord[0]/2) * 120 + ROAD_HEIGHT/2;
+                } else {
                 xpos = 180 + 68 * ((road->coord[0] - 7) / 2) + road->coord[1] * 136 - ROAD_WIDTH / 2;
                 ypos = 440 + 120 * ((road->coord[0] - 7) / 2) + ROAD_HEIGHT / 2;
             }

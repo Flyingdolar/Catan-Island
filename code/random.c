@@ -109,36 +109,41 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   
 int randPickRoad(){
   uint8_t player = game->turn;
+  PRINTL("player %d pick road", player);
   pRoad maxValue = NULL;
-  uint8_t threshold = 100;
+  uint8_t threshold = 100 , temp = 0, available = 0;
   switch(game->state){
     case SETTLE:
       forList(game->node, element){
         pNode pos = entry(element, sNode);
         if(pos->owner != player) continue;// not my node
         for(uint8_t i = 0; i < 3; i++){
-          uint8_t temp = 0;
-          if(pos->road[i] != NULL){
-            if(pos->road[i]->owner == player) break;// already have road
-            if(pos->node[i] != NULL){
-              pNode neighbor = pos->node[i];
-              for(uint8_t j = 0; j < 3; j++){
-                if(neighbor->node[j] != NULL){
-                  pNode possible = neighbor->node[j];
-                  if(possible->owner != 0 ) continue;// not empty node
-                  for(uint8_t k = 0; k < 3; k++){
-                    if(possible->block[k] != NULL){
-                      temp += abs(possible->block[k]->number - 7 );
-                    }else{
-                      temp += 7;
-                    }
-                  }
-                  if(temp < threshold){
-                    threshold = temp;
-                    maxValue = pos->road[i];
-                  }
+          if(pos->road[i] == NULL) continue;// no road
+          if(pos->road[i]->owner == player) available = 1;
+        }
+        if(available) continue;;// already have road
+        for(uint8_t i = 0; i < 3; i++){
+          if(pos->node[i] == NULL) continue;// no road
+          pNode neighbor = pos->node[i];
+          
+          for(uint8_t j = 0; j < 3; j++){
+            temp = 0;
+            pNode possible = neighbor->node[j];
+            if(possible == NULL) continue;// no node
+            if(possible->owner != 0 ){// not empty
+              temp += 50;
+            }else{
+              for(uint8_t k = 0; k < 3; k++){
+                if(possible->block[k] != NULL){
+                  temp += abs(possible->block[k]->number - 7 );
+                }else{
+                  temp += 7;
                 }
               }
+            }
+            if(temp < threshold){
+              threshold = temp;
+              maxValue = pos->road[i];
             }
           }
         }
@@ -150,7 +155,7 @@ int randPickRoad(){
         pNode pos = entry(element, sNode);
         if(pos->owner != player) continue;// not my node
         for(uint8_t i = 0; i < 3; i++){
-          uint8_t temp = 0;
+          temp = 0;
           if(pos->road[i] != NULL){
             if(pos->road[i]->owner == player) break;// already have road
             if(pos->node[i] != NULL){
@@ -194,14 +199,14 @@ int randPickNode(){
         if(nodeptr->owner != 0) continue;// not empty node
         temp = 0;
         for(uint8_t i = 0 ; i < 3; i++){
-          if(nodeptr->block[i] != NULL) {
-            for(uint8_t j = 0; j < 3; j++){
-              if(nodeptr->block[i]->node[j] == NULL) continue;
-              if(nodeptr->block[i]->node[j]->owner > 0) break;
-            }
-            temp += abs(nodeptr->block[i]->number - 7);
+          if(nodeptr->node[i] != NULL && nodeptr->node[i]->owner > 0) {
+            temp += 100;
           }else{
-            temp += 7;
+            if(nodeptr->block[i] == NULL){
+              temp += 7;
+            }else{
+              temp += abs(nodeptr->block[i]->number - 7);
+            }
           }
         }
         if(temp < threshold){
@@ -209,7 +214,8 @@ int randPickNode(){
           maxValueNode = nodeptr;
         }
       }
-      return maxValueNode->list.index;
+      PRINTL("threshold %d", threshold);
+      if(maxValueNode != NULL) return maxValueNode->list.index;
       break;
     case BUILD://not random
       forList(game->road, element){

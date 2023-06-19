@@ -1,4 +1,4 @@
-#include "catan.h"
+#include "catan.h" 
 
 // 1 - STATE_SETTLE
 int32_t settleAction() {
@@ -8,7 +8,7 @@ int32_t settleAction() {
     // 1. 第一個輪次，玩家順序由 1 開始
     for (int32_t playerIdx = 1; playerIdx <= 4; playerIdx++) {
         game->turn = playerIdx;
-        PRINTL("輪到玩家 %d 放置村莊", playerIdx);
+        PRINTL("\n輪到玩家 %d 放置村莊", playerIdx);
         FOREVER(Attempt) {  // 直到玩家的操作合法為止
             if (playerIdx == PLAYER1) {
                 // 顯示輸入介面，並獲取玩家輸入的位置
@@ -29,7 +29,7 @@ int32_t settleAction() {
         PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
         display();
 
-        PRINTL("輪到玩家 %d 放置道路", playerIdx);
+        PRINTL("\n輪到玩家 %d 放置道路", playerIdx);
         FOREVER(Attempt) {  // 直到玩家的操作合法為止
             if (playerIdx == PLAYER1) {
                 // 顯示輸入介面，並獲取玩家輸入的位置
@@ -45,13 +45,8 @@ int32_t settleAction() {
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
         display();
-
         printGameInfo(0);
         printf("玩家%d 修建了一條道路", playerIdx);
-        // pList temp = getNode(game->node, pickNode);
-        // pNode node = entry(temp, sNode);
-        //PRINTL("idx: %ld, owner: %d, coord: %d %d", node->list.index, node->owner, node->coord[0], node->coord[1]);
-        // updateMap();
         // 按下 ENTER 繼續
         PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
     }
@@ -59,6 +54,7 @@ int32_t settleAction() {
     PRINTL("第二輪回合，逆向，放置一個村莊、一條道路，並獲得資源");
     // 2. 第二個輪次，玩家順序由 4 開始
     for (int32_t playerIdx = 4; playerIdx >= 1; playerIdx--) {
+        game->turn = playerIdx;
         PRINTL("輪到玩家 %d 放置村莊", playerIdx);
         FOREVER(Attempt) {  // 直到玩家的操作合法為止
             if (playerIdx == 1) {
@@ -87,8 +83,7 @@ int32_t settleAction() {
                 pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                int randNum = rand() % game->road->index;
-                pickRoad = randNum;
+                pickRoad = randPickRoad();
             }
             if (checkRoad(playerIdx, pickRoad) == -1) continue;
             break;

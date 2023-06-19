@@ -279,7 +279,7 @@ int32_t checkRobbable(int32_t playerID, int32_t blockPos) {
 
 // 9. 檢查玩家掠奪行動是否合法
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos) {
-    if (robPlayer == -1) {
+    if (robPlayer == -1 || robPlayer == NONE) {
         setMsg("輸入錯誤 - 請確認輸入的玩家代號是否正確");
         return -1;
     }

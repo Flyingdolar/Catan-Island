@@ -1,13 +1,11 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <stdio.h>
-
 #include "catan.h"
 
 #define WIDTH 900
 #define HEIGHT 800
 #define FRAMERATE 60
+
+#define MARGIN 20
+#define ARROW_SIZE 10
 
 #define BGFILENAME "./resources/background.png"
 #define FONTPATH "./resources/Ubuntu-Bold.ttf"
@@ -27,15 +25,41 @@
 #define NODE_HEIGHT 70
 
 /*Usage:
-if (need to display something ) {
-    Display* display = create_display();
-    if (display) {
-        // 更新 display
-        update_display(display);
-        // 等待一段時間或者直到某些條件滿足
-    }
-}
+    display();
 */
+
+void renderText(Display* display, const char* text, int x, int y) {
+    SDL_Color color = { 255, 255, 255, 255 };
+    SDL_Surface* surface = TTF_RenderText_Solid(display->font, text, color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(display->renderer, surface);
+    SDL_Rect textRect = { x, y, surface->w, surface->h };
+    SDL_RenderCopy(display->renderer, texture, NULL, &textRect);
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+}
+
+void renderArrowY(SDL_Renderer* renderer, int x, int y, int size) {
+    SDL_RenderDrawLine(renderer, x, y, x + size, y - size);
+    SDL_RenderDrawLine(renderer, x, y, x - size, y - size);
+}
+
+void renderArrowX(SDL_Renderer* renderer, int x, int y, int size) {
+    SDL_RenderDrawLine(renderer, x, y, x - size, y - size);
+    SDL_RenderDrawLine(renderer, x, y, x - size, y + size);
+}
+
+void renderAxis(Display* display) {
+    // X轴
+    SDL_SetRenderDrawColor(display->renderer, 255, 255, 255, 255);
+    SDL_RenderDrawLine(display->renderer, MARGIN, MARGIN, WIDTH - MARGIN, MARGIN);
+    renderArrowX(display->renderer, WIDTH - MARGIN, MARGIN, ARROW_SIZE);
+
+    // Y轴
+    SDL_RenderDrawLine(display->renderer, MARGIN, HEIGHT - MARGIN, MARGIN, MARGIN);
+    renderArrowY(display->renderer, MARGIN, HEIGHT - MARGIN, ARROW_SIZE);
+}
+
+
 
 Display* create_display() {
     //初始化Display
@@ -148,7 +172,7 @@ Display* create_display() {
                                           "./resources/hill.png",
                                           "./resources/grass.png"};
     // create block image surface array
-    SDL_Surface* blockImg[4][5];
+    SDL_Surface* blockImg[5][5];
 
     // load block image and create block image texture array
     pList element = game->block->NEXT;  // Start from the first block
@@ -260,10 +284,10 @@ void renderRoads(Display* display) {
         if ((road->coord[0] % 2) == 1) {     // vertical
             if (road->coord[0] <= 5) {
                 xpos = 316 - 68 * (road->coord[0] + 1)/2 + road->coord[1] * 136 - ROAD_WIDTH/2;
-                ypos = 80 + (road->coord[0]/2) * 120 + ROAD_HEIGHT/2;
-                } else {
+                ypos = 120 + (road->coord[0]/2) * 120 + 10;
+            } else {
                 xpos = 180 + 68 * ((road->coord[0] - 7) / 2) + road->coord[1] * 136 - ROAD_WIDTH / 2;
-                ypos = 440 + 120 * ((road->coord[0] - 7) / 2) + ROAD_HEIGHT / 2;
+                ypos = 480 + 120 * ((road->coord[0] - 7) / 2) + 10;
             }
         } else {  //斜
             ypos = 100 + 120 * (road->coord[0] / 2) - ROAD_HEIGHT / 2;
@@ -280,9 +304,9 @@ void renderRoads(Display* display) {
         int r, g, b;
         switch (road->owner) {
             case 1:  // red
-                r = 255;
-                g = 0;
-                b = 0;
+                r = 231;
+                g = 48;
+                b = 51;
                 break;
             case 2:  // yellow
                 r = 255;
@@ -291,12 +315,12 @@ void renderRoads(Display* display) {
                 break;
             case 3:  // blue
                 r = 0;
-                g = 0;
+                g = 211;
                 b = 255;
                 break;
             case 4:  // green
                 r = 0;
-                g = 255;
+                g = 201;
                 b = 0;
                 break;
             default:
@@ -334,12 +358,17 @@ void update_display(Display* display) {
     SDL_RenderClear(display->renderer);
     SDL_RenderCopy(display->renderer, display->bgTexture, NULL, NULL);
     renderBlocksAndNumber(display);
-    renderNodesAndVillage(display);
     renderRoads(display);
+    renderNodesAndVillage(display);
     int robberPosX = display->blockPositons[game->robber->coord[0]][game->robber->coord[1]].x + 70;
     int robberPosY = display->blockPositons[game->robber->coord[0]][game->robber->coord[1]].y + 50;
     SDL_Rect robberRect = (SDL_Rect){robberPosX, robberPosY, ROBBER_WIDTH, ROBBER_HEIGHT};
     SDL_RenderCopy(display->renderer, display->robberTexture, NULL, &(robberRect));
+
+    renderAxis(display);
+    renderText(display, "x", WIDTH - MARGIN - 30, MARGIN + 10);
+    renderText(display, "y", MARGIN + 30, HEIGHT - MARGIN - 50);
+
 
     SDL_RenderPresent(display->renderer);
 }

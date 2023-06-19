@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -95,9 +97,16 @@ Display* create_display();
 void update_display(Display* display);
 void destroy_display(Display* display);
 int event_loop(Display* display);
-void renderBlocks(Display* display);
+void renderBlocksAndNumber(Display* display);
 void renderNodesAndVillage(Display* display);
 void renderRoads(Display* display);
+void renderText(Display* display, const char* text, int x, int y);
+void renderArrowY(SDL_Renderer* renderer, int x, int y, int size);
+void renderArrowX(SDL_Renderer* renderer, int x, int y, int size);
+void renderAxis(Display* display);
+
+//playMusic.c
+int playMusic();
 
 // update.c
 int32_t updateScore(void);

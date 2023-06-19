@@ -1,18 +1,16 @@
 #include "catan.h"
 
 pGame game;
+bool cheat = false;
 char msg[10000];
 int roundCount;
 
-int playGame(int isNewGame) {
-    if (isNewGame > 0) {
-        init();
-    }
+int playGame(void) {
+    init();
     // 遊戲開始
     game->state = SETTLE;
     display();
     roundCount = 0;
-    
 
     // 直到分出勝負前，遊戲都不會結束
     while (1) {
@@ -65,11 +63,13 @@ int main(/*int argc, char *argv[]*/) {
         switch (userChoice) {
             case 1:  // 開始新遊戲
                 printf("     您選擇了開始新遊戲，正在開啟卡坦島...\n");
-                playGame(1);
+                cheat = false;
+                playGame();
                 break;
             case 2:  // 載入遊戲
                 printf("     您選擇了載入遊戲，正在載入卡坦島...\n");
-                playGame(0);
+                cheat = true;
+                playGame();
                 break;
             default:
                 printf("     您選擇了離開遊戲，正在關閉卡坦島...\n");

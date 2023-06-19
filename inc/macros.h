@@ -29,7 +29,7 @@
 #define CYAN 36
 
 // Clear Terminal
-#define CLEAR() printf("\033[H\033[2J");
+#define CLEAR()
 
 // forever
 #define FOREVER(count) for (int count = 0;; count++)
@@ -92,15 +92,15 @@
 #define PLAYER3 3
 #define PLAYER4 4
 
-//random.c macro
-#define UNABLE_ROAD (game->player[game->turn].resource[1]<1 && \
-                        game->player[game->turn].resource[2]<1)
-#define UNABLE_VILLAGE (game->player[game->turn].resource[1]<1 && \
-                        game->player[game->turn].resource[2]<1 && \
-                        game->player[game->turn].resource[3]<1 && \
-                        game->player[game->turn].resource[4]<1)
-#define UNABLE_CITY (game->player[game->turn].resource[3]<2 && \
-                        game->player[game->turn].resource[4]<3) 
-#define UNABLE_BUYCARD (game->player[game->turn].resource[3]<1 && \
-                        game->player[game->turn].resource[4]<1 && \
-                        game->player[game->turn].resource[5]<1)
+// random.c macro
+#define UNABLE_ROAD (game->player[game->turn].resource[1] < 1 && \
+                     game->player[game->turn].resource[2] < 1)
+#define UNABLE_VILLAGE (game->player[game->turn].resource[1] < 1 && \
+                        game->player[game->turn].resource[2] < 1 && \
+                        game->player[game->turn].resource[3] < 1 && \
+                        game->player[game->turn].resource[4] < 1)
+#define UNABLE_CITY (game->player[game->turn].resource[3] < 2 && \
+                     game->player[game->turn].resource[4] < 3)
+#define UNABLE_BUYCARD (game->player[game->turn].resource[3] < 1 && \
+                        game->player[game->turn].resource[4] < 1 && \
+                        game->player[game->turn].resource[5] < 1)

@@ -14,7 +14,6 @@ int32_t settleAction() {
                 // 顯示輸入介面，並獲取玩家輸入的位置
                 pickNode = readPos("選擇一個位置建立建築物，請輸入 X Y 座標：", T_BUILD, Attempt);
             } else {
-                // TODO_T: 讓電腦選擇一個位置
                 pickNode = randPickNode();
                 PRINTL("玩家 %d 選擇村莊(0-53)：%d", playerIdx, pickNode);
             }
@@ -28,7 +27,7 @@ int32_t settleAction() {
         // updateMap();
         // 按下 ENTER 繼續
         PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
-                    display();
+        display();
 
         PRINTL("輪到玩家 %d 放置道路", playerIdx);
         FOREVER(Attempt) {  // 直到玩家的操作合法為止
@@ -37,14 +36,15 @@ int32_t settleAction() {
                 pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                pickRoad = randPickRoad();
+                int randNum = rand() % game->road->index;
+                pickRoad = randNum;
             }
             if (checkRoad(playerIdx, pickRoad) == -1) continue;
             break;
         }
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
-            display();
+        display();
 
         printGameInfo(0);
         printf("玩家%d 修建了一條道路", playerIdx);
@@ -76,8 +76,8 @@ int32_t settleAction() {
         // TODO_S: 更新畫面
         printGameInfo(0);
         printf("玩家%d 修建了一個村莊，並取得了附近的資源", playerIdx);
-        //updateMap();
-        // 按下 ENTER 繼續
+        display();
+        //  按下 ENTER 繼續
         PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
 
         PRINTL("輪到玩家 %d 放置道路", playerIdx);
@@ -87,7 +87,8 @@ int32_t settleAction() {
                 pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                pickRoad = randPickRoad();
+                int randNum = rand() % game->road->index;
+                pickRoad = randNum;
             }
             if (checkRoad(playerIdx, pickRoad) == -1) continue;
             break;
@@ -96,7 +97,7 @@ int32_t settleAction() {
         // TODO_S: 更新畫面
         printGameInfo(0);
         printf("玩家 %d 修建了一條道路", playerIdx);
-        // updateMap();
+        display();
         // 按下 ENTER 繼續
         PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
     }
@@ -496,8 +497,8 @@ int32_t bankTrade() {
     } else {
         // TODO_T: 讓電腦選擇一個位置
         pickResource[0] = 1;
-        for(int i = 1 ; i < 6 ; i ++){
-            if(game->player[game->turn].resource[i] > pickResource[0]) pickResource[0] = i;
+        for (int i = 1; i < 6; i++) {
+            if (game->player[game->turn].resource[i] > pickResource[0]) pickResource[0] = i;
         }
         pickResource[1] = randPickResource();
         // DEV() {

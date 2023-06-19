@@ -8,19 +8,18 @@
 #define HEIGHT 800
 #define FRAMERATE 60
 
-#define BGFILENAME "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/background.png"
-#define FONTPATH "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/Ubuntu-Bold.ttf"
-#define ROBBERPATH "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/robber.png"
-#define NODEPATH "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/button.png"
-//#define VILLAGEPATH "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/village.png"
-//#define CITYPATH "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/city.png"
+#define BGFILENAME "./resources/background.png"
+#define FONTPATH "./resources/Ubuntu-Bold.ttf"
+#define ROBBERPATH "./resources/robber.png"
+#define NODEPATH "./resources/button.png"
+
 #define FONTSIZE 50
 #define BLOCK_NUM 19
 
 #define ROAD_WIDTH 20
 #define ROAD_HEIGHT 60
 
-#define ROBBER_WIDTH 100
+#define ROBBER_WIDTH 50
 #define ROBBER_HEIGHT 100
 
 #define NODE_WIDTH 70
@@ -60,7 +59,7 @@ Display* create_display() {
     SDL_DisplayMode dm;
     SDL_GetCurrentDisplayMode(0, &dm);
     int screenWidth = dm.w;
-    int screenHeight = dm.h;
+    //int screenHeight = dm.h;
     int windowX = screenWidth - WIDTH - 80;  // 计算窗口的x位置
 
     display->window = SDL_CreateWindow(
@@ -125,15 +124,15 @@ Display* create_display() {
         return NULL;
     }
     //創建village & city
-    char villageFileName[4][100] = {"/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/village1.png", 
-                                    "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/village2.png",
-                                    "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/village3.png",
-                                    "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/village4.png"};
+    char villageFileName[4][100] = {"./resources/village1.png", 
+                                    "./resources/village2.png",
+                                    "./resources/village3.png",
+                                    "./resources/village4.png"};
    
-    char cityFileName[4][100] = {"/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/city1.png", 
-                                    "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/city2.png",
-                                    "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/city3.png",
-                                    "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/city4.png"};
+    char cityFileName[4][100] = {"./resources/city1.png", 
+                                    "./resources/city2.png",
+                                    "./resources/city3.png",
+                                    "./resources/city4.png"};
    
     for(int i = 0; i < 4; i++){
         display->villageTexture[i] = IMG_LoadTexture(display->renderer, villageFileName[i]);
@@ -149,7 +148,12 @@ Display* create_display() {
 
     //創建block
     //define block image file name array
-    char blockFileName[BLOCK_NUM][105] = {"/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/dessert.png", "/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/mountain.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/forest.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/wheat_field.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/hill.png","/Users/oldblack/Desktop/F四下/程式設計二/Catan_Island/resources/grass.png"};
+    char blockFileName[BLOCK_NUM][105] = {"./resources/dessert.png",
+                                         "./resources/mountain.png",
+                                         "./resources/forest.png",
+                                         "./resources/wheat_field.png",
+                                         "./resources/hill.png",
+                                         "./resources/grass.png"};
     //create block image surface array
     SDL_Surface *blockImg[4][5];
 
@@ -190,7 +194,7 @@ Display* create_display() {
 
 void renderBlocksAndNumber(Display* display){
     pList element = game->block->NEXT; // Start from the first block
-    int index = 0;
+    //int index = 0;
     while (element != game->block) { 
         int xpos = 0;
         int ypos = 0;
@@ -211,11 +215,11 @@ void renderBlocksAndNumber(Display* display){
         SDL_Color textColor;
         if(block->number == 6 || block->number == 8){
             // red
-            textColor = (SDL_Color){ 250, 0, 0 };
+            textColor = (SDL_Color){ 250, 0, 0 , 250};
         }
         else{
             // white
-            textColor = (SDL_Color){ 244, 234, 219};
+            textColor = (SDL_Color){ 244, 234, 219, 250};
         }
         char number[3];
         sprintf(number, "%d", block->number);
@@ -227,13 +231,13 @@ void renderBlocksAndNumber(Display* display){
         SDL_DestroyTexture(texture);
 
         element = element->NEXT; // Move to the next block
-        index++;
+        //index++;
     }
 
 }
 void renderNodesAndVillage(Display* display){
     pList element = game->node->NEXT; // Start from the first node
-    int index = 0;
+    //int index = 0;
     while (element != game->node) { 
         int xpos = 0;
         int ypos = 0;
@@ -260,13 +264,13 @@ void renderNodesAndVillage(Display* display){
             }
         }
         element = element->NEXT; // Move to the next node
-        index++;
+        //index++;
     }
 }
 
 void renderRoads(Display* display){
     pList element = game->road->NEXT; // Start from the first road
-    int index = 0;
+    //int index = 0;
     while (element != game->road) { 
         int xpos = 0;
         int ypos = 0;
@@ -341,7 +345,7 @@ void renderRoads(Display* display){
             SDL_RenderCopyEx(display->renderer, texture, NULL, &roadRect, rotate_angle, NULL, SDL_FLIP_NONE);
         }
         element = element->NEXT; // Move to the next road
-        index++;
+        //index++;
     }
 }
 
@@ -357,7 +361,7 @@ void update_display(Display* display) {
     renderBlocksAndNumber(display);
     renderNodesAndVillage(display);
     renderRoads(display);
-    int robberPosX = display->blockPositons[game->robber->coord[0]][game->robber->coord[1]].x + 60;
+    int robberPosX = display->blockPositons[game->robber->coord[0]][game->robber->coord[1]].x + 70;
     int robberPosY = display->blockPositons[game->robber->coord[0]][game->robber->coord[1]].y + 50;
     SDL_Rect robberRect = (SDL_Rect){robberPosX, robberPosY, ROBBER_WIDTH, ROBBER_HEIGHT};
     SDL_RenderCopy(display->renderer, display->robberTexture, NULL, &(robberRect));

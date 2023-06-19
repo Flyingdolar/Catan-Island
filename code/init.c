@@ -54,9 +54,6 @@ int32_t init(){// 初始化遊戲
   if(initHarbor()) return -5;
   PRINTL("Harbor initialized");
 
-  // 初始化robber
-  game->robber = NULL;
-
   //初始化地圖，將板塊 節點 道路連結起來
   if(initMap()) return -5;
   PRINTL("Map initialized");
@@ -64,6 +61,16 @@ int32_t init(){// 初始化遊戲
   //隨機化地圖板塊資源、數字，以及港口
   if(randMap()) return -6;
   PRINTL("Map randomized");
+
+   // 初始化robber
+  game->robber = NULL;
+  forList(game->block, node){
+    pBlock block = entry(node, sBlock);
+    if(block->resource == DESERT){
+      game->robber = block;
+      break;
+    }
+  }
 
   // 初始化最長道路
   game->armyKing.owner = 0;

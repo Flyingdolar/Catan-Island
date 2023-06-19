@@ -2,6 +2,8 @@
 // Include Standard Library
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -85,6 +87,19 @@ int32_t checkDiscard(int32_t playerID, int32_t selectCard[6]);
 int32_t checkRobberPos(int32_t blockPos);
 int32_t checkRobbable(int32_t playerID, int32_t blockPos);
 int32_t checkRobAct(int32_t robPlayer, int32_t blockPos);
+
+//screen.c
+int display();
+Display* create_display();
+void update_display(Display* display);
+void destroy_display(Display* display);
+int event_loop(Display* display);
+void renderBlocks(Display* display);
+void renderNodesAndVillage(Display* display);
+void renderRoads(Display* display);
+
+// update.c
+int32_t updateScore(void);
 
 // debug.c
 void printGraph(void);

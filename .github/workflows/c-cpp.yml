@@ -21,6 +21,12 @@ jobs:
       
     - name: Install sdl/sdl2
       run: sudo apt-get install libsdl2-dev
+    
+    - name: Install sdl/libsdl_image
+      run: sudo apt install libsdl2-image-dev
+      
+    - name: Install sdl/libsdl_tff
+      run: sudo apt-get install -y libsdl2-ttf-dev
       
     - name: Build by Makefile
       run: make

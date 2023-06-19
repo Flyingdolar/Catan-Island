@@ -41,6 +41,24 @@ typedef struct _sDevcard_* pDevcard;
 typedef struct _sPlayer_*  pPlayer;
 typedef struct _sGame_*    pGame;
 
+typedef struct {
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    TTF_Font* font;
+
+    SDL_Texture *bgTexture;
+    SDL_Texture *blockTexture[5][6];
+    SDL_Rect blockPositons[5][6];
+
+    SDL_Texture *villageTexture[4];
+    SDL_Texture *cityTexture[4];
+
+    SDL_Texture *nodeTexture;
+    SDL_Texture *robberTexture; 
+    SDL_Rect nodePositions[6][11];
+} Display;
+
+
 typedef struct _sDevcard_ {  // 發展卡
     uint8_t type;            // --種類
     uint8_t status;          // --卡片狀態 (0: unused 1:avaiable 2:used)

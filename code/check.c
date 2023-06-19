@@ -213,21 +213,21 @@ int32_t checkBankTrade(int32_t playerID, int32_t giveRes, int32_t takeRes) {
 }
 
 // 6. 檢查捨棄的資源張數是否合法
-int32_t checkDiscard(int32_t playerID, int32_t discards, int32_t selectCard[5]) {
-    int32_t total = 0, holds;
+int32_t checkDiscard(int32_t playerID, int32_t selectCard[6]) {
+    int32_t holds;
+    int32_t discards = game->player[playerID].resource[ALL] / 2;
 
     // 檢查每種資源的張數是否合法
-    for (int32_t ndx = 0; ndx < 5; ndx++) {
-        holds = game->player[playerID].resource[ndx + 1];
+    for (int32_t ndx = 1; ndx <= 5; ndx++) {
+        holds = game->player[playerID].resource[ndx];
         if (selectCard[ndx] < 0 || selectCard[ndx] > holds) {
             setMsg("輸入錯誤 - 捨棄的資源張數與持有手牌不相符");
             return -1;
         }
-        total += selectCard[ndx];
     }
 
     // 檢查捨棄的資源總張數是否合法
-    if (total != discards) {
+    if (selectCard[ALL] != discards) {
         setMsg("輸入錯誤 - 捨棄的資源總張數不相符");
         return -1;
     }
@@ -237,14 +237,25 @@ int32_t checkDiscard(int32_t playerID, int32_t discards, int32_t selectCard[5]) 
 }
 
 // 7. 檢查盜賊移動是否合法
-int32_t checkRobber(int32_t playerID, int32_t blockPos) {
-    // FIXME
+int32_t checkRobberPos(int32_t blockPos) {
+    // 確定盜賊的移動位置是否合法
+    if (blockPos < 0 || blockPos > 18) {
+        setMsg("輸入錯誤 - 盜賊的移動位置不合法");
+        return -1;
+    }
+
+    // 確定盜賊的移動位置是否與原本的位置相同
+    if (game->robber->list.index == (size_t)blockPos) {
+        setMsg("輸入錯誤 - 盜賊的移動位置與原本的位置相同");
+        return -1;
+    }
+
     // 合法的盜賊移動
     return 0;
 }
 
 // 8. 檢查玩家是否可以進行盜賊掠奪
-int32_t checkRobPlayer(int32_t playerID, int32_t blockPos) {
+int32_t checkRobbable(int32_t playerID, int32_t blockPos) {
     pBlock block = entry(getNode(game->block, blockPos), sBlock);
     bool hasTown = false;
 

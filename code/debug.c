@@ -59,29 +59,29 @@ void printGraph() {
     }
     printf("\n\n");
 
-    printf("Print Players:\n");
-    for (int idx = 0; idx < 4; idx++) {
-        pPlayer player = &game->player[idx];
-        printf("Player %d: %d pt\n", idx, player->score);
-        printf("--Resource(木/磚/羊/稻/石): %d %d %d %d %d\n", player->resource[0], player->resource[1], player->resource[2], player->resource[3], player->resource[4]);
-        printf("--DevCard:");
-        forList(player->devcard, listNode) {
-            pDevcard devCard = entry(listNode, sDevcard);
-            printf(" %d", devCard->type);
-        }
-        printf("\n");
-        printf("--Building(路/村/市):");
-        for (int idx = 0; idx < 3; idx++) {
-            printf(" %d", player->building[idx]);
-        }
-        printf("\n");
-        printf("--Harbor(3/木/磚/羊/稻/石):");
-        for (int idx = 0; idx < 6; idx++) {
-            printf(" %d", player->harbor[idx]);
-        }
-        printf("\n");
-        printf("--King(Road/Army):");
-        printf(" %d", player->roadlength);
-        printf(" %d\n\n", player->armySize);
-    }
+    // printf("Print Players:\n");
+    // for (int idx = 0; idx < 4; idx++) {
+    //     pPlayer player = &game->player[idx];
+    //     printf("Player %d: %d pt\n", idx, player->score);
+    //     printf("--Resource(木/磚/羊/稻/石): %d %d %d %d %d\n", player->resource[0], player->resource[1], player->resource[2], player->resource[3], player->resource[4]);
+    //     printf("--DevCard:");
+    //     forList(player->devcard, listNode) {
+    //         pDevcard devCard = entry(listNode, sDevcard);
+    //         printf(" %d", devCard->type);
+    //     }
+    //     printf("\n");
+    //     printf("--Building(路/村/市):");
+    //     for (int idx = 0; idx < 3; idx++) {
+    //         printf(" %d", player->building[idx]);
+    //     }
+    //     printf("\n");
+    //     printf("--Harbor(3/木/磚/羊/稻/石):");
+    //     for (int idx = 0; idx < 6; idx++) {
+    //         printf(" %d", player->harbor[idx]);
+    //     }
+    //     printf("\n");
+    //     printf("--King(Road/Army):");
+    //     printf(" %d", player->roadlength);
+    //     printf(" %d\n\n", player->armySize);
+    // }
 }

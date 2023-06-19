@@ -45,9 +45,9 @@ int32_t settleAction() {
         // TODO_S: 更新畫面
         printGameInfo(0);
         printf("玩家%d 修建了一條道路", playerIdx);
-        pList temp = getNode(game->node, pickNode);
-        pNode node = entry(temp, sNode);
-        PRINTL("idx: %ld, owner: %d, coord: %d %d", node->list.index, node->owner, node->coord[0], node->coord[1]);
+        // pList temp = getNode(game->node, pickNode);
+        // pNode node = entry(temp, sNode);
+        //PRINTL("idx: %ld, owner: %d, coord: %d %d", node->list.index, node->owner, node->coord[0], node->coord[1]);
         // updateMap();
         // 按下 ENTER 繼續
         PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);

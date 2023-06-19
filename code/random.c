@@ -136,7 +136,6 @@ int randPickRoad(){
                   if(temp < threshold){
                     threshold = temp;
                     maxValue = pos->road[i];
-                    PRINTL("maxValue %ld", maxValue->list.index);
                   }
                 }
               }
@@ -144,17 +143,30 @@ int randPickRoad(){
           }
         }
       }
-
       if(maxValue != NULL) return maxValue->list.index;
+      if(maxValue != NULL) PRINTL("maxValue %ld", maxValue->list.index);
+      //sleep(1);
       break;
     case BUILD:
-
-
+      forList(game->road, element){
+        pRoad pos = entry(element, sRoad);
+        if(pos->owner != player) continue;// not my road
+        for(uint8_t i = 0; i < 2; i++){
+          pNode neighbor = pos->node[i];
+          if(neighbor->owner != 0) continue;// not empty node
+          for(uint8_t j = 0; j < 3; j++){//can build settlement
+            if(neighbor->node[j] != NULL){
+              if(neighbor->node[j]->owner != 0) continue;// not empty block
+              return pos->list.index;
+            }
+          }
+        }
+      }
       break; 
     default:
       break;
   }
-  return rand() % game->road->index;
+  return rand() % game->road->index; 
 }
 
 // int randPickRoad2(){//random
@@ -219,7 +231,7 @@ int randPickRoad(){
 // }
 
 int randPickNode(){
-  PRINTL("TURN %d", game->turn);
+  //PRINTL("TURN %d", game->turn);
   return rand() % 54;
   pNode minNode = NULL;
   uint8_t min = 100, temp = 0;
@@ -249,8 +261,11 @@ int randPickNode(){
             if(nodeptr->road[i] == NULL) continue;
             if(nodeptr->road[i]->owner == game->turn && nodeptr->owner == game->turn ){
               for(uint8_t i = 0 ; i < 3; i++){
-                if(nodeptr->block[i] == NULL) continue;
-                temp += abs(nodeptr->block[i]->number - 7);
+                if(nodeptr->block[i] != NULL) {
+                  temp += abs(nodeptr->block[i]->number - 7);
+                }else{
+                  temp += 7;
+                }
               }
               if(temp < min){//find most valuable node
                 min = temp;
@@ -303,35 +318,37 @@ int randDiceNum(){
 }
 
 int randAction(){
-  int idx = rand() % 6;
+  int idx = rand() % 11+1;
   switch(idx){
-    case 1://BUILD_ROAD
+    case 1:case 11://BUILD_ROAD
       if(UNABLE_ROAD)//have not enough resource
-        return randAction();
+        randAction();
       return 1;
-    case 2://BUILD_NODE
+    case 2:case 10://BUILD_NODE
       if(UNABLE_VILLAGE || UNABLE_CITY)//have not enough resource
-        return randAction();
+        randAction();
       return 2;
-    case 3://BUY_CARD
+    case 3:case 9://BUY_CARD
       if(UNABLE_BUYCARD)//have not enough resource
-        return randAction();
+        randAction();
       return 3;
-    case 4://USE_CARD
+    case 4:case 8://USE_CARD
       forList(game->player[game->turn].devcard, element){//have not enough resource
         pDevcard cardptr = entry(element, sDevcard);
         if(cardptr->status == 1){
           return 4;
         }
       }
-      return randAction();
-    case 5://TRADE_N
-      return randDiceNum();
+      randAction();
+      break;
+    case 5:case 7://TRADE_N
+      randDiceNum();
       break;
     default:
       return 0;
       break;
   }
+  return 0;
 }
 
 int randPickCard(){//random
@@ -416,6 +433,8 @@ int randPickBlock(){//rodder; not random
       }
     }
   }
+  PRINTL("leaderblock: %ld\n", leaderblock->list.index);
+  sleep(1);
   return leaderblock->list.index;
 }
 
@@ -427,6 +446,13 @@ int randBuyCard(){
   pList idxList = getNode(game->player[0].devcard, randIdx);
 
   push(game->player[game->turn].devcard, idxList, BACK);
+  //change resource to bank
+  game->player[game->turn].resource[0] -= 3;
+  game->player[0].resource[0] += 3;
+  for(uint8_t i = 0 ; i < 3 ; i++){
+    game->player[game->turn].resource[3+i]--;
+    game->player[game->turn].resource[3+i]++;
+  }
   return 0;
 }
 
@@ -450,8 +476,9 @@ int randRobPlayer(int target){
   if(game->player[target].resource[type] == 0) {
     randRobPlayer(target);
     return 0;
+  }else{
+    game->player[target].resource[type]--;
+    game->player[game->turn].resource[type]++;
   }
-  game->player[target].resource[type]--;
-  game->player[game->turn].resource[type]++;
   return 0;
 }

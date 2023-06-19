@@ -11,6 +11,7 @@
 #define FONTPATH "./resources/Ubuntu-Bold.ttf"
 #define ROBBERPATH "./resources/robber.png"
 #define NODEPATH "./resources/button.png"
+#define MUSICPATH "./resources/music.mp3"
 
 #define FONTSIZE 50
 #define BLOCK_NUM 19
@@ -59,7 +60,29 @@ void renderAxis(Display* display) {
     renderArrowY(display->renderer, MARGIN, HEIGHT - MARGIN, ARROW_SIZE);
 }
 
+int playMusic(Display* display){
+    //init audio
+    if(SDL_Init(SDL_INIT_AUDIO) < 0){
+        SDL_Log("Can not init audio, %s", SDL_GetError());
+        return 1;
+    }
 
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        SDL_Log("Can not init audio, %s", SDL_GetError());
+        return 1;
+    }
+    display->music = Mix_LoadMUS(MUSICPATH);
+    if (display->music == NULL) {
+        SDL_Log("Can not load music, %s", SDL_GetError());
+        return 1;
+    }
+    if (Mix_PlayMusic(display->music, 0) == -1) {
+        printf("Error playing music: %s\n", Mix_GetError());
+        return 1;
+    }
+    return 0;
+
+}
 
 Display* create_display() {
     //初始化Display
@@ -69,6 +92,7 @@ Display* create_display() {
         free(display);
         return NULL;
     }
+
     //初始化字體
     if (TTF_Init()) {
         SDL_Log("Can not init TTF, %s", SDL_GetError());
@@ -199,7 +223,12 @@ Display* create_display() {
             display->nodePositions[i][j] = (SDL_Rect){0, 0, 0, 0};
         }
     }
-
+    display->music = NULL;
+    if (playMusic(display) == -1)
+    {
+        printf("playMusic error\n");
+        return NULL;
+    }
     // 返回 display 結構
     return display;
 }
@@ -345,7 +374,7 @@ void renderRoads(Display* display) {
             SDL_FreeSurface(surface);
             SDL_RenderCopyEx(display->renderer, texture, NULL, &roadRect, rotate_angle, NULL, SDL_FLIP_NONE);
         }
-        element = element->NEXT;  // Move to the next road
+        //element = element->NEXT;  // Move to the next road
         // index++;
     }
 }
@@ -386,6 +415,9 @@ void destroy_display(Display* display) {
         SDL_DestroyTexture(display->cityTexture[i]);
         SDL_DestroyTexture(display->villageTexture[i]);
     }
+    //destroy audio
+    SDL_CloseAudio();
+    Mix_FreeMusic(display->music);
     SDL_DestroyTexture(display->bgTexture);
     SDL_DestroyTexture(display->robberTexture);
     SDL_DestroyTexture(display->nodeTexture);
@@ -417,11 +449,12 @@ int event_loop(Display* display) {
 
 int display() {
     Display* display = create_display();
+    
     if (display) {
         while (1) {
             update_display(display);
             if (event_loop(display) == -1) {
-                return -1;
+                return 0;
             }
             SDL_Delay(1000 / FRAMERATE);
         }

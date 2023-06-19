@@ -9,7 +9,10 @@ int playGame(void) {
     init();
     // 遊戲開始
     game->state = SETTLE;
-    display();
+    printGameInfo(0);
+    PRINTC(PURPLE, "卡坦島地圖加載完成，遊戲開始！\n");
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+    display();  // 按下 ENTER 繼續
     roundCount = 0;
 
     // 直到分出勝負前，遊戲都不會結束
@@ -51,8 +54,8 @@ int main(/*int argc, char *argv[]*/) {
         while (1) {
             CLEAR();
             printf("------歡迎遊玩卡坦島，請選擇遊戲模式------\n");
-            printf("              開始新遊戲[1]\n");
-            printf("               載入遊戲[2]\n");
+            printf("               一般模式[1]\n");
+            printf("               透視模式[2]\n");
             printf("               離開遊戲[0]\n");
             printf("-------------------------------------------\n");
             userChoice = readCMD("你的選擇：", 0, 2, 0);
@@ -62,12 +65,12 @@ int main(/*int argc, char *argv[]*/) {
         }
         switch (userChoice) {
             case 1:  // 開始新遊戲
-                printf("     您選擇了開始新遊戲，正在開啟卡坦島...\n");
+                printf("     您選擇了一般模式，正在開啟卡坦島...\n");
                 cheat = false;
                 playGame();
                 break;
             case 2:  // 載入遊戲
-                printf("     您選擇了載入遊戲，正在載入卡坦島...\n");
+                printf("     您選擇了透視模式，正在加載透視眼鏡...\n");
                 cheat = true;
                 playGame();
                 break;

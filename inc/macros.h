@@ -93,14 +93,14 @@
 #define PLAYER4 4
 
 // random.c macro
-#define UNABLE_ROAD (game->player[game->turn].resource[1] < 1 && \
-                     game->player[game->turn].resource[2] < 1)
-#define UNABLE_VILLAGE (game->player[game->turn].resource[1] < 1 && \
-                        game->player[game->turn].resource[2] < 1 && \
-                        game->player[game->turn].resource[3] < 1 && \
-                        game->player[game->turn].resource[4] < 1)
-#define UNABLE_CITY (game->player[game->turn].resource[3] < 2 && \
-                     game->player[game->turn].resource[4] < 3)
-#define UNABLE_BUYCARD (game->player[game->turn].resource[3] < 1 && \
-                        game->player[game->turn].resource[4] < 1 && \
-                        game->player[game->turn].resource[5] < 1)
+#define UNABLE_ROAD (game->player[game->turn].resource[1] > 0 && \
+                     game->player[game->turn].resource[2] > 0)
+#define UNABLE_VILLAGE (game->player[game->turn].resource[1] > 0 && \
+                        game->player[game->turn].resource[2] > 0 && \
+                        game->player[game->turn].resource[3] > 0 && \
+                        game->player[game->turn].resource[4] > 0)
+#define UNABLE_CITY (game->player[game->turn].resource[4] > 1 && \
+                     game->player[game->turn].resource[5] > 2)
+#define UNABLE_BUYCARD (game->player[game->turn].resource[3] > 0 && \
+                        game->player[game->turn].resource[4] > 0 && \
+                        game->player[game->turn].resource[5] > 0)

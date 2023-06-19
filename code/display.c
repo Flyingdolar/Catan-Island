@@ -345,7 +345,7 @@ void renderRoads(Display* display) {
             SDL_FreeSurface(surface);
             SDL_RenderCopyEx(display->renderer, texture, NULL, &roadRect, rotate_angle, NULL, SDL_FLIP_NONE);
         }
-        element = element->NEXT;  // Move to the next road
+        //element = element->NEXT;  // Move to the next road
         // index++;
     }
 }

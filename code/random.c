@@ -126,7 +126,7 @@ int randPickRoad(){
         for(uint8_t i = 0; i < 3; i++){
           if(pos->node[i] == NULL) continue;// no road
           pNode neighbor = pos->node[i];
-          temproad[i] = pos->road[cnt];
+          temproad[cnt] = pos->road[i];
           cnt++;
           for(uint8_t j = 0; j < 3; j++){
             temp = 0;
@@ -273,8 +273,10 @@ int randAction(){
   int idx = rand() % 11+1;
   switch(idx){
     case 1:case 11://BUILD_ROAD
-      if(UNABLE_ROAD)//have not enough resource
-        randAction();
+      if(UNABLE_ROAD){//have not enough resource
+        
+
+      }
       return 1;
     case 2:case 10://BUILD_NODE
       if(UNABLE_VILLAGE || UNABLE_CITY)//have not enough resource
@@ -337,7 +339,9 @@ int randPickResource(){//gain resource; not random
 }
 
 int randLostResource(int32_t lostResource[5]){//robber; not random
+  sleep(1);
   uint8_t totalResource = game->player[game->turn].resource[0];
+  PRINTL("totalResource %d", totalResource);
   if (totalResource < 8) return -1;
   for(uint8_t i = 0 ; i < totalResource / 2 ; i++){
     int max = 1;
@@ -357,6 +361,10 @@ int randLostResource(int32_t lostResource[5]){//robber; not random
     PRINTL("player %d resource %d\n", game->turn, game->player[game->turn].resource[i]);
   }
   game->player[game->turn].resource[0] -= totalResource / 2;
+  for(uint8_t i = 0 ; i < 6 ; i++){
+    PRINTL("player %d resource %d\n", game->turn, game->player[game->turn].resource[i]);
+  }
+
   return 0;
 }
 

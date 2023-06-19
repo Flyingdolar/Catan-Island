@@ -41,6 +41,9 @@ int32_t settleAction() {
             if (checkRoad(playerIdx, pickRoad) == -1) continue;
             break;
         }
+        pList a = getNode(game->road, pickRoad);
+        pRoad b = entry(a, sRoad);
+        PRINTL("ROADinfo %d %d %d %ld", b->coord[0], b->coord[1], b->owner, b->list.index);
         placeRoad(playerIdx, pickRoad);
         // TODO_S: 更新畫面
         display();
@@ -193,6 +196,7 @@ int32_t buildAction() {
     game->state = DICE;
     game->turn = (game->turn + 1) % 4 + 1;
     updateCard();
+    display();
     return 0;
 }
 
@@ -240,10 +244,6 @@ int32_t buildNode() {
     } else {
         // TODO_T: 讓電腦選擇一個位置
         pickNode = randPickNode();
-        DEV() {
-            printf("玩家 %d 請選擇建設村莊的位置：", game->turn);
-            scanf("%d", &pickNode);
-        }
     }
     PRINTL("玩家 %d 選擇在 %d 建設村莊", game->turn, pickNode);
     if (checkNode(game->turn, pickNode) == -1) {
@@ -291,10 +291,6 @@ int32_t useCard() {
     } else {
         // TODO_T: 讓電腦選擇一個位置
         pickCard = randPickCard();
-        DEV() {
-            printf("玩家 %d 請選擇使用的發展卡：", game->turn);
-            scanf("%d", &pickCard);
-        }
     }
     PRINTL("玩家 %d 選擇使用 %d 號發展卡", game->turn, pickCard);
     // 檢查是否合法
@@ -320,10 +316,6 @@ int32_t useCard() {
             } else {
                 // TODO_T: 讓電腦選擇一個位置
                 pickBlock = randPickBlock();
-                DEV() {
-                    printf("玩家 %d 請選擇放置強盜的位置：", game->turn);
-                    scanf("%d", &pickBlock);
-                }
             }
             PRINTL("玩家 %d 選擇在 %d 放置強盜", game->turn, pickBlock);
             if (checkRobberPos(pickBlock) == -1) {
@@ -352,10 +344,6 @@ int32_t useCard() {
                 } else {
                     // TODO_T: 讓電腦選擇一個位置
                     pickPlayer = randPickPlayer(pickBlock);
-                    DEV() {
-                        printf("玩家 %d 請選擇搶奪資源的玩家：", game->turn);
-                        scanf("%d", &pickPlayer);
-                    }
                 }
                 PRINTL("玩家 %d 選擇搶奪玩家 %d 的資源", game->turn, pickPlayer);
                 if (checkRobbable(game->turn, pickBlock) == -1) continue;
@@ -381,10 +369,6 @@ int32_t useCard() {
                     } else {
                         // TODO_T: 讓電腦選擇一個位置
                         pickRoad = randPickRoad();
-                        DEV() {
-                            printf("玩家%d 請選擇建設道路的位置：", game->turn);
-                            scanf("%d", &pickRoad);
-                        }
                     }
                     PRINTL("玩家%d 修建了一條道路", game->turn);
                     if (checkRoad(game->turn, pickRoad) == -1) continue;
@@ -452,10 +436,7 @@ int32_t useCard() {
                 } else {
                     // TODO_T: 讓電腦選擇一個位置
                     resourceType = randPickResource();
-                    DEV() {
-                        printf("玩家 %d 請選擇獨佔的資源(0~4)：", game->turn);
-                        scanf("%d", &resourceType);
-                    }
+
                 }
                 if (resourceType == -1) {
                     setMsg("輸入錯誤 - 輸入的資源類型不存在，請重新輸入");
@@ -605,5 +586,6 @@ int32_t robberAction() {
     // 按下 ENTER 繼續
     PRINTC(BLUE, ".........[按下 ENTER 繼續]"), readCMD(NO_ARG);
     game->state = BUILD;
+    display();
     return 0;
 }

@@ -36,8 +36,7 @@ int32_t settleAction() {
                 pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                int randNum = rand() % game->road->index;
-                pickRoad = randNum;
+                pickRoad = randPickRoad();
             }
             if (checkRoad(playerIdx, pickRoad) == -1) continue;
             break;
@@ -192,7 +191,7 @@ int32_t buildAction() {
     }
     PRINTL("玩家 %d 結束回合", game->turn);
     game->state = DICE;
-    game->turn = (game->turn + 1) % 4;
+    game->turn = (game->turn + 1) % 4 + 1;
     updateCard();
     return 0;
 }

@@ -109,9 +109,9 @@ int32_t randMap(){//隨機地圖板塊資源&點數
   
 int randPickRoad(){
   uint8_t player = game->turn;
-  PRINTL("player %d pick road", player);
-  pRoad maxValue = NULL;
-  uint8_t threshold = 100 , temp = 0, available = 0;
+  //PRINTL("player %d pick road", player);
+  pRoad maxValue = NULL, temproad[3] = {NULL};
+  uint8_t threshold = 100 , temp = 0, available = 0, cnt = 0;
   switch(game->state){
     case SETTLE:
       forList(game->node, element){
@@ -121,11 +121,13 @@ int randPickRoad(){
           if(pos->road[i] == NULL) continue;// no road
           if(pos->road[i]->owner == player) available = 1;
         }
-        if(available) continue;;// already have road
+        if(available == 1) continue;// already have road
+
         for(uint8_t i = 0; i < 3; i++){
           if(pos->node[i] == NULL) continue;// no road
           pNode neighbor = pos->node[i];
-          
+          temproad[i] = pos->road[cnt];
+          cnt++;
           for(uint8_t j = 0; j < 3; j++){
             temp = 0;
             pNode possible = neighbor->node[j];
@@ -134,6 +136,9 @@ int randPickRoad(){
               temp += 50;
             }else{
               for(uint8_t k = 0; k < 3; k++){
+                if(possible->node[k] != NULL){
+                  if(possible->node[k]->owner > 0 ) temp += 50;
+                }
                 if(possible->block[k] != NULL){
                   temp += abs(possible->block[k]->number - 7 );
                 }else{
@@ -148,7 +153,11 @@ int randPickRoad(){
           }
         }
       }
+      PRINTL("player:%d road threshold %d",player, threshold);
       if(maxValue != NULL) return maxValue->list.index;
+      //sleep(1);
+      //PRINTL("player:%d cnt %d",player, cnt);
+      if(cnt != 0) return temproad[rand() % cnt]->list.index;
       break;
     case BUILD://if cant find best node to build,, random
       forList(game->node, element){
@@ -260,6 +269,7 @@ int randDiceNum(){
 }
 
 int randAction(){
+  PRINTL("%d randAction", game->turn);
   int idx = rand() % 11+1;
   switch(idx){
     case 1:case 11://BUILD_ROAD
@@ -346,6 +356,7 @@ int randLostResource(int32_t lostResource[5]){//robber; not random
   for(uint8_t i = 0 ; i < 6 ; i++){
     PRINTL("player %d resource %d\n", game->turn, game->player[game->turn].resource[i]);
   }
+  game->player[game->turn].resource[0] -= totalResource / 2;
   return 0;
 }
 

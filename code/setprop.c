@@ -12,11 +12,11 @@ int32_t placeNode(int32_t playerID, int32_t nodePos) {
         return -1;
     }
     buildNode = entry(nodeList, sNode);
-    PRINTL("正在座標 %d, %d 的地點建造村莊，等級為 %d\n", buildNode->coord[0], buildNode->coord[1], buildNode->building + 1);
+    PRINTL("正在座標 %d, %d 的地點建造村莊，等級為 %d", buildNode->coord[0], buildNode->coord[1], buildNode->building + 1);
     buildNode->owner = playerID, buildNode->building++;
 
     if (buildNode->harbor != NULL) {  // 如果建造的節點有港口，則將港口的資源加入玩家資源
-        PRINTL("正在將港口資源 %d 加入玩家資源\n", buildNode->harbor->type);
+        PRINTL("正在將港口資源 %d 加入玩家資源", buildNode->harbor->type);
         player->harbor[buildNode->harbor->type]++;
         buildNode->harbor->owner = playerID;
     }
@@ -61,7 +61,7 @@ int32_t placeRoad(int32_t playerID, int32_t roadPos) {
         return -1;
     }
     buildRoad = entry(roadList, sRoad);
-    PRINTL("正在座標 %d, %d 的地點建造道路\n", buildRoad->coord[0], buildRoad->coord[1]);
+    PRINTL("正在座標 %d, %d 的地點建造道路", buildRoad->coord[0], buildRoad->coord[1]);
     buildRoad->owner = playerID;
 
     PRINTL("正在放置道路標記於道路上");
@@ -95,7 +95,7 @@ int32_t placeRobberPos(int32_t robberPos) {
         return -1;
     }
     placeBlock = entry(blockList, sBlock);
-    PRINTL("正在座標 %d, %d 的地點放置盜賊\n", placeBlock->coord[0], placeBlock->coord[1]);
+    PRINTL("正在座標 %d, %d 的地點放置盜賊", placeBlock->coord[0], placeBlock->coord[1]);
     game->robber = placeBlock;
 
     // 更新玩家分數

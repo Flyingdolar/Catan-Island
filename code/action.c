@@ -1,4 +1,4 @@
-#include "catan.h"
+#include "catan.h" 
 
 // 1 - STATE_SETTLE  
 int32_t settleAction() {
@@ -27,21 +27,19 @@ int32_t settleAction() {
         PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
 
-        PRINTL("輪到玩家 %d 放置道路", playerIdx);
+        PRINTL("\n輪到玩家 %d 放置道路", playerIdx);
         FOREVER(Attempt) {  // 直到玩家的操作合法為止
             if (playerIdx == PLAYER1) {
                 // 顯示輸入介面，並獲取玩家輸入的位置
                 pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                int randNum = rand() % game->road->index;
-                pickRoad = randNum;
+                pickRoad = randPickRoad();
             }
             if (checkRoad(playerIdx, pickRoad) == -1) continue;
             break;
         }
         placeRoad(playerIdx, pickRoad);
-
         printGameInfo(0);
         printf("玩家%d 修建了一條道路", playerIdx);
         PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
@@ -79,8 +77,7 @@ int32_t settleAction() {
                 pickRoad = readPos("選擇一個位置建立道路，請輸入 X Y 座標：", T_ROAD, Attempt);
             } else {
                 // TODO_T: 讓電腦選擇一個位置
-                int randNum = rand() % game->road->index;
-                pickRoad = randNum;
+                pickRoad = randPickRoad();
             }
             if (checkRoad(playerIdx, pickRoad) == -1) continue;
             break;

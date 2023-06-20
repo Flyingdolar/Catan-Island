@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -fsanitize=address
+CFLAGS =  -std=c11
 LDLIBS = -lm -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 LDFLAGS = -L./library -I./include
 DEFINES = -g

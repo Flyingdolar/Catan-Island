@@ -10,17 +10,8 @@ void test() {
 
     game->turn = 1;
     placeNode(1, 0);
-    gainSettleResource(1, 0);
-    gainSettleResource(1, 3);
-    gainSettleResource(1, 6);
-    gainSettleResource(1, 9);
-    gainSettleResource(1, 12);
+    for (int i = 10; i < 30; i++) gainSettleResource(1, i);
     placeNode(1, 2);
-    gainSettleResource(1, 10);
-    gainSettleResource(1, 14);
-    gainSettleResource(1, 16);
-    gainSettleResource(1, 18);
-    gainSettleResource(1, 20);
     placeNode(2, 4);
     game->turn = 2;
     gainSettleResource(2, 4);
@@ -40,7 +31,7 @@ void test() {
     placeRoad(1, 0);
     placeRoad(1, 1);
 
-    game->turn = 1;
+    game->turn = 1, roundCount = 3;
     game->armyKing.owner = 1;
     game->roadKing.owner = 1;
     game->state = DICE;

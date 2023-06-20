@@ -29,6 +29,7 @@ int32_t readCard(char *string, int32_t tryTime) {
     if (tryTime < 0) infoMode -= tryTime;
     printGameInfo(infoMode);
     if (tryTime > 0) PRINTC(YELLOW, "%s", msg);
+
     PRINTC(BLUE, "\n顯示地圖提示，敲擊 [ENTER] 關閉地圖繼續輸入......\n");
     display();
     printf("\n%s\n", string);
@@ -119,6 +120,7 @@ int32_t readPos(char *string, int32_t type, int32_t tryTime) {
     if (tryTime < 0) infoMode -= tryTime;
     while (posX < 0 || posY < 0) {
         printGameInfo(infoMode);
+
         if (tryTime > 0 && posX == -2 && posY == -2) {
             PRINTC(YELLOW, "%s", msg);
             PRINTC(BLUE, "\n顯示地圖提示，敲擊 [ENTER] 關閉地圖繼續輸入......\n");

@@ -15,6 +15,20 @@ all: Catan
 run:
 	./Catan 2> /dev/null
 
+configure: sdl sdl_image sdl_ttf sdl_mixer
+
+sdl:
+	apt-get install libsdl2-dev
+
+sdl_image:
+	apt-get install libsdl2-image-dev
+
+sdl_ttf:
+	apt-get install libsdl2-ttf-dev
+
+sdl_mixer:
+	apt-get install libsdl2-mixer-dev
+
 Catan: $(patsubst %.c, $(OBJDIR)/%.o, $(SRC))
 	$(CC) $(CFLAGS) $(filter %.o, $^) -o $@ $(LDLIBS)
 

@@ -4,7 +4,7 @@ int32_t readCMD(char *string, int32_t lower, int32_t upper, int32_t tryTime) {
     char cmd[1000];
     int number = 0;
     if (string != NULL) printf("\n");
-    if (tryTime > 0) PRINTC(YELLOW, "%s", msg);
+    if (tryTime > 0) PRINTC(YELLOW, "%s\n", msg);
     if (string != NULL) printf("%s", string);
     fgets(cmd, 1000, stdin);
     // if cmd is not number, return -1
@@ -29,7 +29,8 @@ int32_t readCard(char *string, int32_t tryTime) {
     if (tryTime < 0) infoMode -= tryTime;
     printGameInfo(infoMode);
     if (tryTime > 0) PRINTC(YELLOW, "%s", msg);
-    PRINTC(BLUE, "顯示地圖提示，敲擊 [ENTER] 關閉地圖繼續輸入......");
+
+    PRINTC(BLUE, "\n顯示地圖提示，敲擊 [ENTER] 關閉地圖繼續輸入......\n");
     display();
     printf("\n%s\n", string);
     PRINTC(GREEN, "可使用卡片一覽 >>>");
@@ -119,10 +120,11 @@ int32_t readPos(char *string, int32_t type, int32_t tryTime) {
     if (tryTime < 0) infoMode -= tryTime;
     while (posX < 0 || posY < 0) {
         printGameInfo(infoMode);
-        if (tryTime > 0 && posX != -1 && posY != -1) {
+
+        if (tryTime > 0 && posX == -2 && posY == -2) {
             PRINTC(YELLOW, "%s", msg);
-            PRINTC(BLUE, "顯示地圖提示，敲擊 [ENTER] 關閉地圖繼續輸入......");
-            display();
+            PRINTC(BLUE, "\n顯示地圖提示，敲擊 [ENTER] 關閉地圖繼續輸入......\n");
+            display();  // 顯示地圖
         }
         if (posX == -1 || posY == -1)
             PRINTC(YELLOW, "  輸入格式錯誤，請重新輸入");

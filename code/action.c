@@ -1,4 +1,4 @@
-#include "catan.h" 
+#include "catan.h"
 
 // 1 - STATE_SETTLE
 int32_t settleAction() {
@@ -24,7 +24,8 @@ int32_t settleAction() {
 
         printGameInfo(0);
         printf("玩家%d 修建了一個村莊", playerIdx);
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
 
         PRINTL("\n輪到玩家 %d 放置道路", playerIdx);
@@ -43,10 +44,7 @@ int32_t settleAction() {
 
         printGameInfo(0);
         printf("玩家%d 修建了一條道路", playerIdx);
-        // pList temp = getNode(game->node, pickNode);
-        // pNode node = entry(temp, sNode);
-        // PRINTL("idx: %ld, owner: %d, coord: %d %d", node->list.index, node->owner, node->coord[0], node->coord[1]);
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
     }
 
@@ -71,7 +69,8 @@ int32_t settleAction() {
 
         printGameInfo(0);
         printf("玩家%d 修建了一個村莊，並取得了附近的資源", playerIdx);
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  //  按下 ENTER 繼續
 
         PRINTL("輪到玩家 %d 放置道路", playerIdx);
@@ -90,8 +89,7 @@ int32_t settleAction() {
 
         printGameInfo(0);
         printf("玩家 %d 修建了一條道路", playerIdx);
-
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
     }
 
@@ -121,7 +119,8 @@ int32_t diceAction() {
     printGameInfo(0);
     printf("玩家 %d 擲骰擲出了 %d 與 %d ，一共是 %d 點", game->turn, game->dice[0], game->dice[1], diceSum);
 
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
 
     if (diceSum == 7) {
@@ -136,7 +135,7 @@ int32_t diceAction() {
     printGameInfo(0);
     printf("在 %d 點的位置有建築物的玩家獲得資源", diceSum);
 
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
     game->state = BUILD;
     return 0;
@@ -151,6 +150,7 @@ int32_t buildAction() {
             FOREVER(Attempt) {
                 // 顯示地圖
                 printGameInfo(NONE);
+              
                 printf("請點擊 [ENTER] 關閉地圖，並選擇建設操作......");
                 display();  // 等待玩家按下 ENTER
                 // 獲取玩家輸入的操作
@@ -158,10 +158,12 @@ int32_t buildAction() {
                 printf("建設道路[1] 建設村莊[2] 購買發展卡[3] 使用發展卡[4] 與銀行交易[5] 結束回合[0]：\n");
                 PRINTC(PURPLE, ">>>>  保存並退出遊戲[7]\n\n");
                 userCmd = readCMD("建設操作：", 0, 7, Attempt);
+
                 if (userCmd == -1) {
                     setMsg("輸入錯誤 - 未知的指令，請重新輸入");
                     continue;
                 }
+
                 break;
             }
         } else {
@@ -216,7 +218,8 @@ int32_t buildRoad() {
         printGameInfo(BUILD_ROAD);
         PRINTC(YELLOW, "%s\n", msg);
         PRINTC(YELLOW, "建設道路失敗，請重新選擇");
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
         return -1;
     }
@@ -226,7 +229,8 @@ int32_t buildRoad() {
     printGameInfo(BUILD_ROAD);
     printf("玩家 %d 修建了一條道路", game->turn);
 
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
     return 0;
 }
@@ -247,7 +251,8 @@ int32_t buildNode() {
         printGameInfo(BUILD_NODE);
         PRINTC(YELLOW, "%s\n", msg);
         PRINTC(YELLOW, "修建村莊失敗，請重新選擇");
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
         return -1;
     }
@@ -257,7 +262,8 @@ int32_t buildNode() {
     printGameInfo(BUILD_NODE);
     printf("玩家 %d 修建了一個村莊", game->turn);
 
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
     return 0;
 }
@@ -269,14 +275,16 @@ int32_t buyCard() {
         printGameInfo(BUY_CARD);
         PRINTC(YELLOW, "%s\n", msg);
         PRINTC(YELLOW, "購買發展卡失敗，請重新選擇");
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
         return -1;
     }
     PRINTL("玩家 %d 購買發展卡", game->turn);
     randBuyCard();
     printf("玩家 %d 購買了一張發展卡", game->turn);
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
     return 0;
 }
@@ -299,7 +307,8 @@ int32_t useCard() {
         printGameInfo(USE_CARD);
         PRINTC(YELLOW, "%s\n", msg);
         PRINTC(YELLOW, "使用發展卡失敗，請重新選擇");
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
         return -1;
     }
@@ -324,7 +333,8 @@ int32_t useCard() {
                 printGameInfo(USE_CARD);
                 PRINTC(YELLOW, "%s\n", msg);
                 PRINTC(YELLOW, "使用騎士卡失敗，請重新選擇");
-                PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+                PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
                 display();  // 按下 ENTER 繼續
                 return -1;
             }
@@ -332,7 +342,8 @@ int32_t useCard() {
 
             printGameInfo(USE_CARD);
             printf("玩家%d 使用了騎士卡", game->turn);
-            PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
             display();  // 按下 ENTER 繼續
 
             // 檢查是否有玩家可以搶奪
@@ -343,7 +354,8 @@ int32_t useCard() {
                     // 顯示輸入介面，並獲取玩家輸入的位置
                     printGameInfo(USE_CARD);
                     printf("該板塊上有其他玩家的村莊或城堡，可以搶奪玩家");
-                    PRINTC(BLUE, ".........按下 [ENTER] 以關閉地圖，進行選擇");
+
+                    PRINTC(BLUE, ".........按下 [ENTER] 以關閉地圖，進行選擇\n");
                     display();  // 按下 ENTER 繼續
                     pickPlayer = readCMD("請選擇欲搶奪資源的玩家：", 2, 4, Attempt);
                 } else {
@@ -357,7 +369,8 @@ int32_t useCard() {
                 // 更新畫面
                 printGameInfo(USE_CARD);
                 printf("玩家%d 搶奪了玩家%d 的資源\n", game->turn, pickPlayer);
-                PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+                PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
                 display();  // 按下 ENTER 繼續
                 break;
             }
@@ -384,7 +397,8 @@ int32_t useCard() {
             // TODO_S: 更新畫面
             printGameInfo(USE_CARD);
             printf("玩家%d 使用了建路卡", game->turn);
-            PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
             display();  // 按下 ENTER 繼續
             break;
         case YEAR_OF_PLENTY:
@@ -414,7 +428,8 @@ int32_t useCard() {
             // 更新畫面
             printGameInfo(USE_CARD);
             printf("玩家%d 使用豐收卡獲得了兩個資源", game->turn);
-            PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
             display();  // 按下 ENTER 繼續
             break;
         case MONOPOLY:
@@ -441,7 +456,8 @@ int32_t useCard() {
             // 更新畫面
             printGameInfo(USE_CARD);
             printf("玩家%d 使用獨佔卡霸佔了一種資源", game->turn);
-            PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+            PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
             display();  // 按下 ENTER 繼續
             break;
     }
@@ -478,7 +494,7 @@ int32_t bankTrade() {
     // 更新畫面
     printGameInfo(NONE);
     printf("玩家%d 以 %d 資源換取了 %d 資源", game->turn, pickResource[0], pickResource[1]);
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
     return 0;
 }
@@ -510,7 +526,8 @@ int32_t robberAction() {
         // 更新畫面
         printGameInfo(NONE);
         printf("玩家%d 丟棄了 %d 個資源", playerIdx, lostResource[ALL] / 2);
-        PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+        PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
         display();  // 按下 ENTER 繼續
     }
 
@@ -531,11 +548,14 @@ int32_t robberAction() {
     // 更新畫面
     printGameInfo(NONE);
     printf("玩家%d 將強盜放置在 %d", game->turn, pickBlock);
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
 
     // 如果可以掠奪，選擇要掠奪的玩家
-    if (checkRobbable(game->turn, pickBlock) == -1) return 0;
+    if (checkRobbable(game->turn, pickBlock) == -1) {
+        game->state = BUILD;
+        return 0;
+    }
     PRINTL("可以掠奪，選擇要掠奪的玩家");
     FOREVER(Attempt) {  // 直到玩家合法的選擇掠奪玩家為止
         if (game->turn == PLAYER1) {
@@ -556,7 +576,8 @@ int32_t robberAction() {
     // 更新畫面
     printGameInfo(NONE);
     printf("玩家%d 掠奪了 玩家%d 的資源", game->turn, robPlayer);
-    PRINTC(BLUE, ".........[按下 ENTER 繼續]");
+
+    PRINTC(BLUE, ".........[按下 ENTER 繼續]\n");
     display();  // 按下 ENTER 繼續
     game->state = BUILD;
     display();

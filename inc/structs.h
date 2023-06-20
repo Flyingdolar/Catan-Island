@@ -44,8 +44,10 @@ typedef struct _sGame_*    pGame;
 typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
-    TTF_Font* font;
+    TTF_Font* font;    
+    TTF_Font* font2;
 
+    Mix_Music *music;
     SDL_Texture *bgTexture;
     SDL_Texture *blockTexture[5][6];
     SDL_Rect blockPositons[5][6];

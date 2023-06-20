@@ -32,7 +32,7 @@ int playGame(void) {
                 break;
             case BUILD:  // 每回合的建設行動
                 PRINTL("輪到 %d 建設行動", game->turn);
-                buildAction();
+                if (buildAction() == 1) return 0;
                 break;
             case ROBBER:  // 每回合的強盜行動
                 PRINTL("輪到 %d 強盜行動", game->turn);

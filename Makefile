@@ -12,6 +12,9 @@ SRC=$(notdir $(wildcard $(SRCDIR)/*.c))
 
 all: Catan
 
+run:
+	./Catan 2> /dev/null
+
 Catan: $(patsubst %.c, $(OBJDIR)/%.o, $(SRC))
 	$(CC) $(CFLAGS) $(filter %.o, $^) -o $@ $(LDLIBS)
 

@@ -7,7 +7,7 @@ on:
     branches: [ "main", "feat/*", "fix/*"  ]
   schedule:
   - cron: "0 3 * * 1"
-  
+
 jobs:
   build:
     name: Build and Test
@@ -15,18 +15,21 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      
+
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y build-essential
-      
+
     - name: Install sdl/sdl2
       run: sudo apt-get install libsdl2-dev
-    
+
     - name: Install sdl/libsdl_image
       run: sudo apt install libsdl2-image-dev
-      
+
     - name: Install sdl/libsdl_tff
       run: sudo apt-get install -y libsdl2-ttf-dev
-      
+
+    - name: Install sdl/libsdl_mixer
+      run: sudo apt-get install -y libsdl2-mixer-dev
+
     - name: Build by Makefile
       run: make
